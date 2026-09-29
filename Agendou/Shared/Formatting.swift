@@ -39,10 +39,14 @@ enum Formatting {
 
     /// "19:00 – 07:00 (+1)": the "+n" counts the days the shift runs past its start day.
     static func timeRange(_ occurrence: Occurrence) -> String {
-        let start = Date(epochSeconds: occurrence.startsAt)
-        let end = Date(epochSeconds: occurrence.endsAt)
-        let startDay = CivilCalendar.date(containing: occurrence.startsAt)
-        let endDay = CivilCalendar.date(containing: occurrence.endsAt)
+        timeRange(startsAt: occurrence.startsAt, endsAt: occurrence.endsAt)
+    }
+
+    static func timeRange(startsAt: Int64, endsAt: Int64) -> String {
+        let start = Date(epochSeconds: startsAt)
+        let end = Date(epochSeconds: endsAt)
+        let startDay = CivilCalendar.date(containing: startsAt)
+        let endDay = CivilCalendar.date(containing: endsAt)
         let days =
             CivilCalendar.calendar.dateComponents(
                 [.day], from: Date(epochSeconds: CivilCalendar.interval(of: startDay).lowerBound),
@@ -50,6 +54,38 @@ enum Formatting {
             ).day ?? 0
         let range = "\(time(start)) – \(time(end))"
         return days > 0 ? "\(range) (+\(days))" : range
+    }
+
+    /// "07h", or "07h30" off the hour: a start time as the shared picture shows it.
+    static func hourLabel(_ instant: Int64) -> String {
+        let clock = time(Date(epochSeconds: instant))
+        return clock.hasSuffix(":00") ? "\(clock.prefix(2))h" : clock.replacingOccurrences(of: ":", with: "h")
+    }
+
+    /// "07:00 – 19:00", or "19:00 – 07:00 (+1)", from a time of day in seconds and a length.
+    static func clockRange(startOfDay start: Int64, duration: Int64) -> String {
+        func clock(_ seconds: Int64) -> String {
+            let seconds = Int(((seconds % 86_400) + 86_400) % 86_400)
+            return String(format: "%02d:%02d", seconds / 3_600, seconds % 3_600 / 60)
+        }
+        let days = (start + duration) / 86_400
+        let range = "\(clock(start)) – \(clock(start + duration))"
+        return days > 0 ? "\(range) (+\(days))" : range
+    }
+
+    /// "outubro de 2026".
+    static func monthYear(_ month: CivilMonth) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: month.firstDay, hour: 12, minute: 0))
+        return noon.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .month(.wide).year())
+    }
+
+    /// "dom", "seg", …, Sunday first, as the calendars in the app.
+    static var weekdayInitials: [String] {
+        var calendar = CivilCalendar.calendar
+        calendar.locale = locale
+        return calendar.shortWeekdaySymbols.map { $0.replacingOccurrences(of: ".", with: "") }
     }
 
     /// "ter.".
