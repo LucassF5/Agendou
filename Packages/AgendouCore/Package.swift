@@ -9,6 +9,10 @@ let package = Package(
     ],
     targets: [
         .target(name: "AgendouCore"),
-        .testTarget(name: "AgendouCoreTests", dependencies: ["AgendouCore"]),
+        .testTarget(
+            name: "AgendouCoreTests",
+            dependencies: ["AgendouCore"],
+            resources: [.copy("Fixtures/schedule_cases.json")]
+        ),
     ]
 )
