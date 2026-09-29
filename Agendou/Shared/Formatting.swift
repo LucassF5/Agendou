@@ -75,6 +75,19 @@ enum Formatting {
         return formatter
     }()
 
+    /// "setembro".
+    static func monthName(_ month: CivilMonth) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: month.firstDay, hour: 12, minute: 0))
+        return noon.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .month(.wide))
+    }
+
+    /// "1 plantão", "11 plantões".
+    static func shiftCount(_ count: Int) -> String {
+        count == 1 ? String(localized: "1 plantão") : String(localized: "\(count) plantões")
+    }
+
     /// "terça-feira, 29 de setembro".
     static func dayTitle(_ day: CivilDate) -> String {
         let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))

@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "pt-BR",
   "strings" : {
+    "%@ · %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ · %@ no ano" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ no ano"
+          }
+        }
+      }
+    },
     "%@ – atual" : {
 
     },
@@ -8,6 +28,12 @@
 
     },
     "%lld" : {
+
+    },
+    "%lld plantões" : {
+
+    },
+    "1 plantão" : {
 
     },
     "A categoria tem histórico e não pode ser excluída. Arquive em vez disso." : {
@@ -38,6 +64,12 @@
 
     },
     "Ajustes" : {
+
+    },
+    "Ano" : {
+
+    },
+    "Ano anterior" : {
 
     },
     "Anotação" : {
@@ -229,6 +261,9 @@
     "Nenhum plantão" : {
 
     },
+    "Nenhum plantão neste mês" : {
+
+    },
     "Nenhum plantão pela frente" : {
 
     },
@@ -265,6 +300,9 @@
     "Primeiro plantão na escala nova" : {
 
     },
+    "Próximo ano" : {
+
+    },
     "Próximo plantão" : {
 
     },
@@ -275,6 +313,9 @@
 
     },
     "Restaurar" : {
+
+    },
+    "Resumo de %@" : {
 
     },
     "Rosa" : {
@@ -314,6 +355,12 @@
 
     },
     "Vermelho" : {
+
+    },
+    "horas" : {
+
+    },
+    "no mês" : {
 
     },
     "Índigo" : {

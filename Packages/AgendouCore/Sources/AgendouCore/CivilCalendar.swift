@@ -26,6 +26,11 @@ public enum CivilCalendar {
         return calendar.date(from: components)!.epochSeconds
     }
 
+    /// 1 = Sunday … 7 = Saturday, as `Calendar` numbers weekdays.
+    public static func weekday(of date: CivilDate) -> Int {
+        calendar.component(.weekday, from: Date(epochSeconds: instant(of: date, hour: 12, minute: 0)))
+    }
+
     /// `[start of the day, start of the next day)`.
     public static func interval(of date: CivilDate) -> Range<Int64> {
         let start = instant(of: date, hour: 0, minute: 0)

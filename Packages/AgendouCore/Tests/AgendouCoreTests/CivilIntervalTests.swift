@@ -40,4 +40,10 @@ struct CivilIntervalTests {
             of: CivilDate(year: 2026, month: 1, day: 31), hour: 7, minute: 30, second: 15)
         #expect(withSeconds == january31 + 7 * 3_600 + 30 * 60 + 15)
     }
+
+    @Test func weekdayOfTheFirstDaySundayFirst() {
+        #expect(CivilCalendar.weekday(of: CivilDate(year: 2026, month: 9, day: 1)) == 3)  // terça
+        #expect(CivilCalendar.weekday(of: CivilDate(year: 2026, month: 11, day: 1)) == 1)  // domingo
+        #expect(CivilCalendar.weekday(of: CivilDate(year: 2026, month: 10, day: 31)) == 7)  // sábado
+    }
 }

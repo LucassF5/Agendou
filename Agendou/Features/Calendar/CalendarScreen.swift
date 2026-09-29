@@ -6,17 +6,32 @@ struct CalendarScreen: View {
     @Environment(AgendaStore.self) private var store
     @State private var visibleMonth = CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds))
     @State private var selectedDay: CivilDate?
+    @State private var showingYear = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                MonthCalendarView(visibleMonth: $visibleMonth, dots: dots()) { selectedDay = $0 }
-                    .padding(.horizontal)
+                VStack(spacing: 16) {
+                    MonthCalendarView(visibleMonth: $visibleMonth, dots: dots()) { selectedDay = $0 }
+                    MonthSummaryView(month: visibleMonth)
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
             }
             .navigationTitle("Calendário")
             .toolbar {
-                Button("Hoje") {
-                    visibleMonth = CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds))
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button("Ano") { showingYear = true }
+                        .accessibilityIdentifier("calendar.year")
+                    Button("Hoje") {
+                        visibleMonth = CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds))
+                    }
+                }
+            }
+            .navigationDestination(isPresented: $showingYear) {
+                YearScreen(year: visibleMonth.year) { month in
+                    visibleMonth = month
+                    showingYear = false
                 }
             }
             .sheet(item: $selectedDay) { day in
