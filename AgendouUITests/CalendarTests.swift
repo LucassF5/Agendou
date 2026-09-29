@@ -92,4 +92,24 @@ final class CalendarTests: XCTestCase {
         XCTAssertTrue(app.textViews["day.note"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.textViews["day.note"].value as? String, "Troquei com a Ana")
     }
+
+    /// Regression: a day with shifts of two categories lost its dots.
+    @MainActor
+    func testShowsDotsOnDaysWithTwoCategories() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI")
+        app.addCategory("PS", preset: "24x72")
+
+        // 12x36 and 24x72 from the same 07:00: both on the first day, only UTI two days later.
+        let both = app.calendarCell(WorkplaceCalendar.nextShiftDay())
+        snapshot(app, "two-categories")
+        XCTAssertTrue(app.cellShowsDots(both), "day with UTI and PS")
+
+        app.terminate()
+        app.launch()
+        app.createCategory("UTI")
+        let one = app.calendarCell(WorkplaceCalendar.nextShiftDay(plusDays: 2))
+        XCTAssertTrue(app.cellShowsDots(one), "day with UTI only")
+    }
 }

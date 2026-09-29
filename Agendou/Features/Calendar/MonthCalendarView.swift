@@ -95,7 +95,11 @@ struct MonthCalendarView: UIViewRepresentable {
 /// Up to three small dots side by side, for days with shifts of several categories.
 private final class DotsView: UIStackView {
     init(colors: [UIColor]) {
-        super.init(frame: .zero)
+        // UICalendarView keeps a custom decoration at the frame it is created with and never sizes it, so
+        // the view must start at its final size. With `.zero` the dots were laid out in nothing and days
+        // with shifts of two or more categories showed no dot at all.
+        let count = CGFloat(colors.count)
+        super.init(frame: CGRect(x: 0, y: 0, width: count * 6 + (count - 1) * 2, height: 6))
         axis = .horizontal
         spacing = 2
         for color in colors {

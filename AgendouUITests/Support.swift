@@ -70,3 +70,55 @@ enum WorkplaceCalendar {
         return calendar.dateComponents([.year, .month, .day], from: day)
     }
 }
+
+extension XCUIApplication {
+    /// Adds another category through the "+" button, with a preset schedule starting at the next 07:00.
+    func addCategory(_ name: String, preset: String) {
+        tabBars.buttons["Categorias"].tap()
+        buttons["Nova categoria"].tap()
+        let field = textFields["category.name"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(name)
+        buttons["preset.\(preset)"].tap()
+        buttons["category.save"].tap()
+        XCTAssertTrue(buttons["category.row.\(name)"].waitForExistence(timeout: 5))
+    }
+
+    /// The grid cell of `date` in the Calendar tab, moving to the next month if needed.
+    func calendarCell(_ date: DateComponents) -> XCUIElement {
+        tabBars.buttons["Calendário"].tap()
+        let today = WorkplaceCalendar.calendar.dateComponents([.year, .month], from: .now)
+        if (date.year!, date.month!) != (today.year!, today.month!) {
+            buttons["DatePicker.NextMonth"].tap()
+        }
+        let month = WorkplaceCalendar.monthNames[date.month! - 1]
+        let cell = buttons.matching(NSPredicate(format: "label ENDSWITH %@", ", \(date.day!) de \(month)")).firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 5), "day \(date)")
+        return cell
+    }
+
+    /// Whether the area under the day number of a grid cell has colored (not gray) pixels: the dots.
+    /// Decorations are not in the accessibility tree, so the screenshot is the only way to see them.
+    func cellShowsDots(_ cell: XCUIElement) -> Bool {
+        let image = XCUIScreen.main.screenshot().image
+        guard let cgImage = image.cgImage, let data = cgImage.dataProvider?.data,
+            let bytes = CFDataGetBytePtr(data)
+        else { return false }
+        let scale = image.scale
+        let frame = cell.frame
+        // Dots sit in the lower part of the cell, below the number (which is tinted on today).
+        let area = CGRect(
+            x: frame.minX * scale, y: (frame.minY + frame.height * 0.62) * scale,
+            width: frame.width * scale, height: frame.height * 0.33 * scale)
+        let bytesPerPixel = cgImage.bitsPerPixel / 8
+        for y in Int(area.minY)..<min(Int(area.maxY), cgImage.height) {
+            for x in Int(area.minX)..<min(Int(area.maxX), cgImage.width) {
+                let offset = y * cgImage.bytesPerRow + x * bytesPerPixel
+                let channels = [bytes[offset], bytes[offset + 1], bytes[offset + 2]].map(Int.init)
+                if channels.max()! - channels.min()! > 60 { return true }
+            }
+        }
+        return false
+    }
+}
