@@ -88,6 +88,26 @@ enum Formatting {
         count == 1 ? String(localized: "1 plantão") : String(localized: "\(count) plantões")
     }
 
+    /// "sexta-feira, 31/10/2026".
+    static func longDay(_ day: CivilDate) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))
+        return
+            "\(noon.formatted(Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone).weekday(.wide))), \(date(noon))"
+    }
+
+    /// "31/10".
+    static func shortDay(_ day: CivilDate) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))
+        return noon.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .day(.twoDigits).month(.twoDigits))
+    }
+
+    /// Last day of a period ending (exclusively) at `repeatsUntil`.
+    static func lastDay(ofPeriodEndingAt repeatsUntil: Date) -> CivilDate {
+        CivilCalendar.date(containing: repeatsUntil.epochSeconds - 1)
+    }
+
     /// "terça-feira, 29 de setembro".
     static func dayTitle(_ day: CivilDate) -> String {
         let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))

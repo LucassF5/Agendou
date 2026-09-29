@@ -19,6 +19,7 @@ struct CategoryForm: View {
     @State private var draft = ScheduleDraft()
     @State private var anchor = DefaultTimes.nextShiftStart(after: .now)
     @State private var startsAt = DefaultTimes.nextShiftStart(after: .now)
+    @State private var repeatDraft = RepeatDraft()
     @State private var errorMessage: String?
 
     init(mode: Mode) {
@@ -54,6 +55,7 @@ struct CategoryForm: View {
                     if hasSchedule {
                         ScheduleFields(draft: $draft)
                         FirstScheduleDates(anchor: $anchor, startsAt: $startsAt)
+                        RepeatFields(draft: $repeatDraft, startDay: CivilCalendar.date(containing: anchor.epochSeconds))
                     }
                 }
             }
@@ -82,7 +84,8 @@ struct CategoryForm: View {
                     do {
                         try store.startFirstSchedule(
                             for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds,
-                            anchorAt: anchor, startsAt: startsAt, period: .months(1))
+                            anchorAt: anchor, startsAt: startsAt,
+                            period: repeatDraft.period(startingOn: CivilCalendar.date(containing: anchor.epochSeconds)))
                     } catch {
                         try? store.deletePermanently(category)
                         throw error

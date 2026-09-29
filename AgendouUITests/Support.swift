@@ -21,8 +21,9 @@ extension XCTestCase {
 }
 
 extension XCUIApplication {
-    /// Creates a category with a preset schedule through the onboarding. The first shift is the next 07:00.
-    func createCategory(_ name: String, preset: String = "12x36") {
+    /// Creates a category with a preset schedule through the onboarding. The first shift is the next 07:00;
+    /// `months` is the repeat period ("1", "3", "6"), long by default so tests near a month's end hold.
+    func createCategory(_ name: String, preset: String = "12x36", repeat months: String = "6") {
         tabBars.buttons["Categorias"].tap()
         buttons["onboarding.start"].tap()
         let field = textFields["category.name"]
@@ -30,6 +31,7 @@ extension XCUIApplication {
         field.tap()
         field.typeText(name)
         buttons["preset.\(preset)"].tap()
+        buttons["repeat.\(months)"].revealed(in: self).tap()
         buttons["category.save"].tap()
         XCTAssertTrue(buttons["category.row.\(name)"].waitForExistence(timeout: 5))
     }
@@ -81,6 +83,7 @@ extension XCUIApplication {
         field.tap()
         field.typeText(name)
         buttons["preset.\(preset)"].tap()
+        buttons["repeat.6"].revealed(in: self).tap()
         buttons["category.save"].tap()
         XCTAssertTrue(buttons["category.row.\(name)"].waitForExistence(timeout: 5))
     }
@@ -120,5 +123,17 @@ extension XCUIApplication {
             }
         }
         return false
+    }
+}
+
+extension XCUIElement {
+    /// Swipes up until the element exists: Form rows below the fold are only created when scrolled to.
+    func revealed(in app: XCUIApplication, attempts: Int = 4) -> XCUIElement {
+        var tries = 0
+        while !waitForExistence(timeout: 1) && tries < attempts {
+            app.swipeUp()
+            tries += 1
+        }
+        return self
     }
 }

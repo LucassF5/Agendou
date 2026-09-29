@@ -8,7 +8,7 @@ struct CategoryDetailScreen: View {
     @Environment(\.dismiss) private var dismiss
 
     private enum Sheet: Identifiable {
-        case edit, first, change, correct
+        case edit, first, change, correct, renew
 
         var id: Self { self }
     }
@@ -40,6 +40,13 @@ struct CategoryDetailScreen: View {
                         .accessibilityIdentifier("schedule.current")
                 }
                 if let open {
+                    HStack {
+                        Text("Vale até")
+                        Spacer()
+                        Text(until(open))
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("schedule.until")
+                    }
                     LabeledContent("Em vigor desde", value: Formatting.dateTime(open.startsAt))
                     if let next = nextShift(of: open) {
                         LabeledContent("Próximo plantão", value: Formatting.dateTime(next))
@@ -53,6 +60,8 @@ struct CategoryDetailScreen: View {
             if !isArchived {
                 Section {
                     if let open {
+                        Button("Renovar escala") { sheet = .renew }
+                            .accessibilityIdentifier("schedule.renew")
                         Button("Mudei de escala") { sheet = .change }
                             .accessibilityIdentifier("schedule.change")
                         if store.isEditable(open) {
@@ -114,6 +123,8 @@ struct CategoryDetailScreen: View {
             case .change: ScheduleForm(mode: .change(category), store: store)
             case .correct:
                 if let open { ScheduleForm(mode: .correct(open), store: store) }
+            case .renew:
+                if let open { RenewForm(schedule: open) }
             }
         }
         .confirmationDialog("Arquivar \(category.name)?", isPresented: $confirmingArchive, titleVisibility: .visible) {
@@ -142,6 +153,11 @@ struct CategoryDetailScreen: View {
     private func nextShift(of schedule: CategorySchedule) -> Date? {
         store.version(of: schedule)?.firstOccurrenceStart(atOrAfter: Date.now.epochSeconds)
             .map(Date.init(epochSeconds:))
+    }
+
+    private func until(_ schedule: CategorySchedule) -> String {
+        guard let end = schedule.repeatsUntil else { return String(localized: "Sem prazo") }
+        return Formatting.longDay(Formatting.lastDay(ofPeriodEndingAt: end))
     }
 
     private func period(of schedule: CategorySchedule) -> String {

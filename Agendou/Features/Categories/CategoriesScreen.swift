@@ -66,7 +66,12 @@ struct CategoriesScreen: View {
 
     private func subtitle(_ category: ShiftCategory) -> String {
         if category.archivedAt != nil { return String(localized: "Arquivada") }
-        return store.openSchedule(of: category).map(Formatting.scheduleLabel) ?? String(localized: "Sem escala")
+        guard let open = store.openSchedule(of: category) else { return String(localized: "Sem escala") }
+        let label = Formatting.scheduleLabel(open)
+        guard let end = open.repeatsUntil else { return label }
+        return
+            "\(label) · \(String(localized: "até \(Formatting.shortDay(Formatting.lastDay(ofPeriodEndingAt: end)))"))"
+
     }
 }
 

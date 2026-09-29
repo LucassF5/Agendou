@@ -30,7 +30,13 @@
     "%lld" : {
 
     },
+    "%lld meses" : {
+
+    },
     "%lld plantões" : {
+
+    },
+    "1 mês" : {
 
     },
     "1 plantão" : {
@@ -316,6 +322,9 @@
     "O backup tem dados inconsistentes e não foi importado. Nada foi alterado." : {
 
     },
+    "O prazo precisa cobrir o primeiro plantão e, ao renovar, passar do prazo atual." : {
+
+    },
     "O que aconteceu nesse dia?" : {
 
     },
@@ -328,6 +337,9 @@
     "Personalizada" : {
 
     },
+    "Personalizado" : {
+
+    },
     "Plantão extra" : {
 
     },
@@ -335,6 +347,9 @@
 
     },
     "Plantões da escala que foram desmarcados." : {
+
+    },
+    "Prazo atual" : {
 
     },
     "Primeiro plantão na escala nova" : {
@@ -350,6 +365,12 @@
 
     },
     "Recuar a data preenche o passado no calendário com essa escala." : {
+
+    },
+    "Renovar escala" : {
+
+    },
+    "Repetir" : {
 
     },
     "Restaurar" : {
@@ -373,6 +394,9 @@
     "Sem escala, a categoria serve para plantões avulsos." : {
 
     },
+    "Sem prazo" : {
+
+    },
     "Substituir" : {
 
     },
@@ -394,6 +418,12 @@
     "Um vínculo: o lugar e o tipo de plantão." : {
 
     },
+    "Vale até" : {
+
+    },
+    "Vale até %@" : {
+
+    },
     "Verde" : {
 
     },
@@ -406,6 +436,9 @@
     "Versão" : {
 
     },
+    "até %@" : {
+
+    },
     "horas" : {
 
     },
@@ -413,6 +446,9 @@
 
     },
     "Índigo" : {
+
+    },
+    "Último dia" : {
 
     },
     "“Desde quando” não pode ser depois do próximo plantão." : {

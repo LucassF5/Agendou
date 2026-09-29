@@ -17,6 +17,7 @@ struct ScheduleForm: View {
     @State private var draft: ScheduleDraft
     @State private var anchor: Date
     @State private var startsAt: Date
+    @State private var repeatDraft: RepeatDraft
     @State private var errorMessage: String?
 
     init(mode: Mode, store: AgendaStore) {
@@ -28,22 +29,28 @@ struct ScheduleForm: View {
             _draft = State(initialValue: ScheduleDraft())
             _anchor = State(initialValue: anchor)
             _startsAt = State(initialValue: anchor)
+            _repeatDraft = State(initialValue: RepeatDraft())
         case .change(let category):
             // Next shift of the current rotation that is still ahead, so the change lands on a real shift.
+            // The rotation is followed past its period: a one-month schedule changed right away would
+            // otherwise have no shift left and fall back to its own anchor.
             let open = store.openSchedule(of: category)
-            let version = open.flatMap(store.version(of:))
-            let after = max(now.epochSeconds, version?.startsAt ?? 0) + 1
-            let next = version?.firstOccurrenceStart(atOrAfter: after).map(Date.init(epochSeconds:))
+            var rotation = open.flatMap(store.version(of:))
+            rotation?.endsAt = nil
+            let after = max(now.epochSeconds, rotation?.startsAt ?? 0) + 1
+            let next = rotation?.firstOccurrenceStart(atOrAfter: after).map(Date.init(epochSeconds:))
             _draft = State(
                 initialValue: open.map { ScheduleDraft(workSeconds: $0.workSeconds, restSeconds: $0.restSeconds) }
                     ?? ScheduleDraft())
             _anchor = State(initialValue: next ?? DefaultTimes.nextShiftStart(after: now))
             _startsAt = State(initialValue: next ?? DefaultTimes.nextShiftStart(after: now))
+            _repeatDraft = State(initialValue: RepeatDraft())
         case .correct(let schedule):
             _draft = State(
                 initialValue: ScheduleDraft(workSeconds: schedule.workSeconds, restSeconds: schedule.restSeconds))
             _anchor = State(initialValue: schedule.anchorAt)
             _startsAt = State(initialValue: schedule.startsAt)
+            _repeatDraft = State(initialValue: RepeatDraft(repeatsUntil: schedule.repeatsUntil))
         }
     }
 
@@ -78,6 +85,7 @@ struct ScheduleForm: View {
                         Text("A escala nova começa nesse plantão. O que já passou não muda.")
                     }
                 }
+                RepeatFields(draft: $repeatDraft, startDay: anchorDay)
             }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
@@ -94,21 +102,30 @@ struct ScheduleForm: View {
         }
     }
 
+    /// The months of the period count from the anchor's day.
+    private var anchorDay: CivilDate {
+        CivilCalendar.date(containing: anchor.epochSeconds)
+    }
+
+    private var period: RepeatPeriod {
+        repeatDraft.period(startingOn: anchorDay)
+    }
+
     private func save() {
         do {
             switch mode {
             case .first(let category):
                 try store.startFirstSchedule(
                     for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
-                    startsAt: startsAt, period: .months(1))
+                    startsAt: startsAt, period: period)
             case .change(let category):
                 try store.changeSchedule(
                     for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
-                    period: .months(1))
+                    period: period)
             case .correct(let schedule):
                 try store.correctSchedule(
                     schedule, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
-                    startsAt: asksStartDate ? startsAt : nil, period: .months(1))
+                    startsAt: asksStartDate ? startsAt : nil, period: period)
             }
             dismiss()
         } catch {
