@@ -72,6 +72,13 @@ public struct CivilMonth: Hashable, Comparable, Sendable {
         month == 1 ? CivilMonth(year: year - 1, month: 12) : CivilMonth(year: year, month: month - 1)
     }
 
+    /// The month `months` later (earlier when negative).
+    public func adding(months: Int) -> CivilMonth {
+        let index = year * 12 + (month - 1) + months
+        let year = Int(floorDiv(Int64(index), 12))
+        return CivilMonth(year: year, month: index - year * 12 + 1)
+    }
+
     public var numberOfDays: Int {
         switch month {
         case 2: isLeapYear ? 29 : 28
