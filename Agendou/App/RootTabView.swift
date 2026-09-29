@@ -1,18 +1,25 @@
+import AgendouStore
 import SwiftUI
 
+enum AppTab: Hashable {
+    case home, calendar, categories, settings
+}
+
 struct RootTabView: View {
+    @State private var tab = AppTab.home
+
     var body: some View {
-        TabView {
-            Tab("Início", systemImage: "house") {
-                HomeScreen()
+        TabView(selection: $tab) {
+            Tab("Início", systemImage: "house", value: .home) {
+                HomeScreen { tab = .categories }
             }
-            Tab("Calendário", systemImage: "calendar") {
+            Tab("Calendário", systemImage: "calendar", value: .calendar) {
                 CalendarScreen()
             }
-            Tab("Categorias", systemImage: "square.stack") {
+            Tab("Categorias", systemImage: "square.stack", value: .categories) {
                 CategoriesScreen()
             }
-            Tab("Ajustes", systemImage: "gearshape") {
+            Tab("Ajustes", systemImage: "gearshape", value: .settings) {
                 SettingsScreen()
             }
         }
@@ -21,4 +28,6 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView()
+        .environment(AgendaStore.preview)
+        .agendouEnvironment()
 }

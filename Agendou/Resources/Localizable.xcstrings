@@ -1,7 +1,471 @@
 {
   "sourceLanguage" : "pt-BR",
   "strings" : {
+    "%@ · %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ · %@ no ano" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ no ano"
+          }
+        }
+      }
+    },
+    "%@ – atual" : {
 
+    },
+    "%@, com plantão" : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld meses" : {
+
+    },
+    "%lld plantões" : {
+
+    },
+    "1 mês" : {
+
+    },
+    "1 plantão" : {
+
+    },
+    "A categoria tem histórico e não pode ser excluída. Arquive em vez disso." : {
+
+    },
+    "A duração precisa ser maior que zero." : {
+
+    },
+    "A escala anterior, se houver, volta a valer." : {
+
+    },
+    "A escala nova começa nesse plantão. O que já passou não muda." : {
+
+    },
+    "A escala nova não pode começar no passado." : {
+
+    },
+    "A escala nova precisa começar depois do início da escala atual." : {
+
+    },
+    "A escala termina agora e os extras futuros são apagados. Não dá para desarquivar." : {
+
+    },
+    "Adicionar extra" : {
+
+    },
+    "Ajustado" : {
+
+    },
+    "Ajustes" : {
+
+    },
+    "Ano" : {
+
+    },
+    "Ano anterior" : {
+
+    },
+    "Anotação" : {
+
+    },
+    "Arquivada" : {
+
+    },
+    "Arquivada em" : {
+
+    },
+    "Arquivadas" : {
+
+    },
+    "Arquivar" : {
+
+    },
+    "Arquivar %@?" : {
+
+    },
+    "Arquivar categoria" : {
+
+    },
+    "Arquivar encerra a escala agora e apaga os extras futuros. O passado continua no calendário." : {
+
+    },
+    "Ativas" : {
+
+    },
+    "Azul" : {
+
+    },
+    "Backup" : {
+
+    },
+    "Backup do Agendou" : {
+
+    },
+    "Cadastre onde você trabalha e a sua escala para ver aqui o próximo plantão." : {
+
+    },
+    "Calendário" : {
+
+    },
+    "Cancelados" : {
+
+    },
+    "Cancelar" : {
+
+    },
+    "Cancelar plantão" : {
+
+    },
+    "Categoria" : {
+
+    },
+    "Categoria excluída" : {
+
+    },
+    "Categorias" : {
+
+    },
+    "Começa %@" : {
+
+    },
+    "Configurar escala" : {
+
+    },
+    "Configurar minha escala" : {
+
+    },
+    "Configure sua escala" : {
+
+    },
+    "Cor" : {
+
+    },
+    "Corrigir escala" : {
+
+    },
+    "Dados importados" : {
+
+    },
+    "Definir escala" : {
+
+    },
+    "Desde quando você trabalha nessa escala?" : {
+
+    },
+    "Desfazer ajuste" : {
+
+    },
+    "Diga onde você trabalha e qual é a escala (12x36, 24x48…). O calendário se preenche sozinho." : {
+
+    },
+    "Duração" : {
+
+    },
+    "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
+
+    },
+    "Dê um nome à categoria." : {
+
+    },
+    "Editar" : {
+
+    },
+    "Editar categoria" : {
+
+    },
+    "Editar horário" : {
+
+    },
+    "Em andamento" : {
+
+    },
+    "Em vigor desde" : {
+
+    },
+    "Escala" : {
+
+    },
+    "Escala atual" : {
+
+    },
+    "Escala termina em %@" : {
+
+    },
+    "Escala terminou em %@" : {
+
+    },
+    "Escalas terminando" : {
+
+    },
+    "Essa escala não pode mais ser alterada: um plantão dela já começou e ela tem mais de 24 horas. Use “Mudei de escala”." : {
+
+    },
+    "Esse plantão não foi ajustado." : {
+
+    },
+    "Esta categoria está arquivada." : {
+
+    },
+    "Esta categoria já tem escala. Use “Mudei de escala”." : {
+
+    },
+    "Esta categoria não tem escala em vigor." : {
+
+    },
+    "Este backup foi feito por uma versão mais nova do Agendou. Atualize o app para importar." : {
+
+    },
+    "Ex.: UTI Hospital X" : {
+
+    },
+    "Excluir" : {
+
+    },
+    "Excluir %@?" : {
+
+    },
+    "Excluir a escala atual?" : {
+
+    },
+    "Excluir categoria" : {
+
+    },
+    "Excluir escala" : {
+
+    },
+    "Excluir plantão" : {
+
+    },
+    "Exportar dados" : {
+
+    },
+    "Extra" : {
+
+    },
+    "Fim" : {
+
+    },
+    "Folga" : {
+
+    },
+    "Histórico de escalas" : {
+
+    },
+    "Hoje" : {
+
+    },
+    "Importar dados" : {
+
+    },
+    "Início" : {
+
+    },
+    "Já existe um plantão dessa categoria nesse horário." : {
+
+    },
+    "Laranja" : {
+
+    },
+    "Marrom" : {
+
+    },
+    "Menta" : {
+
+    },
+    "Mudei de escala" : {
+
+    },
+    "Nenhum plantão" : {
+
+    },
+    "Nenhum plantão neste mês" : {
+
+    },
+    "Nenhum plantão pela frente" : {
+
+    },
+    "Nome" : {
+
+    },
+    "Nova categoria" : {
+
+    },
+    "Não encontrado." : {
+
+    },
+    "Não foi possível importar" : {
+
+    },
+    "Não foi possível salvar" : {
+
+    },
+    "O arquivo não é um backup do Agendou ou está corrompido." : {
+
+    },
+    "O arquivo tem %lld categorias, %lld escalas, %lld marcações e %lld anotações. Tudo o que está no app agora será apagado." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "O arquivo tem %1$lld categorias, %2$lld escalas, %3$lld marcações e %4$lld anotações. Tudo o que está no app agora será apagado."
+          }
+        }
+      }
+    },
+    "O arquivo tem as categorias, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app." : {
+
+    },
+    "O backup tem dados inconsistentes e não foi importado. Nada foi alterado." : {
+
+    },
+    "O prazo precisa cobrir o primeiro plantão e, ao renovar, passar do prazo atual." : {
+
+    },
+    "O que aconteceu nesse dia?" : {
+
+    },
+    "OK" : {
+
+    },
+    "Os dados ficam só neste iPhone: o app não usa internet nem conta." : {
+
+    },
+    "Personalizada" : {
+
+    },
+    "Personalizado" : {
+
+    },
+    "Plantão extra" : {
+
+    },
+    "Plantões" : {
+
+    },
+    "Plantões da escala que foram desmarcados." : {
+
+    },
+    "Prazo atual" : {
+
+    },
+    "Primeiro plantão na escala nova" : {
+
+    },
+    "Próximo ano" : {
+
+    },
+    "Próximo plantão" : {
+
+    },
+    "Quando começa seu próximo plantão?" : {
+
+    },
+    "Recuar a data preenche o passado no calendário com essa escala." : {
+
+    },
+    "Renovar" : {
+
+    },
+    "Renovar escala" : {
+
+    },
+    "Repetir" : {
+
+    },
+    "Restaurar" : {
+
+    },
+    "Resumo de %@" : {
+
+    },
+    "Rosa" : {
+
+    },
+    "Roxo" : {
+
+    },
+    "Salvar" : {
+
+    },
+    "Sem escala" : {
+
+    },
+    "Sem escala, a categoria serve para plantões avulsos." : {
+
+    },
+    "Sem prazo" : {
+
+    },
+    "Substituir" : {
+
+    },
+    "Substituir todos os dados?" : {
+
+    },
+    "Só plantões da escala podem ser cancelados." : {
+
+    },
+    "Tem escala fixa" : {
+
+    },
+    "Termina %@" : {
+
+    },
+    "Trabalho" : {
+
+    },
+    "Um vínculo: o lugar e o tipo de plantão." : {
+
+    },
+    "Vale até" : {
+
+    },
+    "Vale até %@" : {
+
+    },
+    "Verde" : {
+
+    },
+    "Verde-azulado" : {
+
+    },
+    "Vermelho" : {
+
+    },
+    "Versão" : {
+
+    },
+    "até %@" : {
+
+    },
+    "horas" : {
+
+    },
+    "no mês" : {
+
+    },
+    "Índigo" : {
+
+    },
+    "Último dia" : {
+
+    },
+    "“Desde quando” não pode ser depois do próximo plantão." : {
+
+    }
   },
   "version" : "1.0"
 }

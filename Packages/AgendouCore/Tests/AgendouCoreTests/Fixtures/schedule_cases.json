@@ -1,0 +1,266 @@
+[
+  {
+    "name": "12x36 night shift belongs to the day it starts",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T19:00:00-03:00", "startsAt": "2026-01-05T19:00:00-03:00" }
+    ],
+    "day": "2026-01-05",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T19:00:00-03:00", "endsAt": "2026-01-06T07:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "12x36 night shift does not count on the day it ends",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T19:00:00-03:00", "startsAt": "2026-01-05T19:00:00-03:00" }
+    ],
+    "day": "2026-01-06",
+    "expected": []
+  },
+  {
+    "name": "window entirely before the schedule starts is empty",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-02-02T07:00:00-03:00", "startsAt": "2026-02-02T07:00:00-03:00" }
+    ],
+    "month": "2026-01",
+    "expected": [],
+    "expectedSummary": { "hours": 0, "count": 0, "byCategory": {} }
+  },
+  {
+    "name": "first schedule starting before the anchor fills the past (negative k, window off-cycle)",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-20T07:00:00-03:00", "startsAt": "2026-01-10T00:00:00-03:00" }
+    ],
+    "from": "2026-01-11T10:00:00-03:00",
+    "to": "2026-01-17T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-12T07:00:00-03:00", "endsAt": "2026-01-12T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-14T07:00:00-03:00", "endsAt": "2026-01-14T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-16T07:00:00-03:00", "endsAt": "2026-01-16T19:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "schedule start bounds the past it fills",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-20T07:00:00-03:00", "startsAt": "2026-01-10T00:00:00-03:00" }
+    ],
+    "month": "2026-01",
+    "expectedSummary": { "hours": 132, "count": 11, "byCategory": { "A": { "hours": 132, "count": 11 } } }
+  },
+  {
+    "name": "24x72 skips whole days",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 24, "restHours": 72, "anchorAt": "2026-03-02T07:00:00-03:00", "startsAt": "2026-03-02T07:00:00-03:00" }
+    ],
+    "from": "2026-03-01T00:00:00-03:00",
+    "to": "2026-03-15T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-03-02T07:00:00-03:00", "endsAt": "2026-03-03T07:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-03-06T07:00:00-03:00", "endsAt": "2026-03-07T07:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-03-10T07:00:00-03:00", "endsAt": "2026-03-11T07:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-03-14T07:00:00-03:00", "endsAt": "2026-03-15T07:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "month border: shift starting Jan 31 19:00 counts in January",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 24, "restHours": 72, "anchorAt": "2026-01-31T19:00:00-03:00", "startsAt": "2026-01-31T19:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "B", "kind": "extra", "startsAt": "2026-02-01T00:00:00-03:00", "endsAt": "2026-02-01T06:00:00-03:00" }
+    ],
+    "month": "2026-01",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-31T19:00:00-03:00", "endsAt": "2026-02-01T19:00:00-03:00", "origin": "scheduled:s1" }
+    ],
+    "expectedSummary": { "hours": 24, "count": 1, "byCategory": { "A": { "hours": 24, "count": 1 } } }
+  },
+  {
+    "name": "month border: shift starting Feb 1 00:00 counts in February, Jan 31 night shift does not",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 24, "restHours": 72, "anchorAt": "2026-01-31T19:00:00-03:00", "startsAt": "2026-01-31T19:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "B", "kind": "extra", "startsAt": "2026-02-01T00:00:00-03:00", "endsAt": "2026-02-01T06:00:00-03:00" }
+    ],
+    "month": "2026-02",
+    "expected": [
+      { "category": "B", "startsAt": "2026-02-01T00:00:00-03:00", "endsAt": "2026-02-01T06:00:00-03:00", "origin": "extra:o1" },
+      { "category": "A", "startsAt": "2026-02-04T19:00:00-03:00", "endsAt": "2026-02-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-08T19:00:00-03:00", "endsAt": "2026-02-09T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-12T19:00:00-03:00", "endsAt": "2026-02-13T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-16T19:00:00-03:00", "endsAt": "2026-02-17T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-20T19:00:00-03:00", "endsAt": "2026-02-21T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-24T19:00:00-03:00", "endsAt": "2026-02-25T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-02-28T19:00:00-03:00", "endsAt": "2026-03-01T19:00:00-03:00", "origin": "scheduled:s1" }
+    ],
+    "expectedSummary": {
+      "hours": 174,
+      "count": 8,
+      "byCategory": { "A": { "hours": 168, "count": 7 }, "B": { "hours": 6, "count": 1 } }
+    }
+  },
+  {
+    "name": "cancellation suppresses only the generated occurrence of its category and start",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "A", "kind": "cancellation", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T19:00:00-03:00" },
+      { "id": "o2", "category": "B", "kind": "cancellation", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00" }
+    ],
+    "from": "2026-01-05T00:00:00-03:00",
+    "to": "2026-01-10T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-09T07:00:00-03:00", "endsAt": "2026-01-09T19:00:00-03:00", "origin": "scheduled:s1" }
+    ],
+    "expectedCancelled": [
+      { "category": "A", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T19:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "extra on a rest day",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "A", "kind": "extra", "startsAt": "2026-01-06T13:00:00-03:00", "endsAt": "2026-01-06T19:00:00-03:00" }
+    ],
+    "from": "2026-01-05T00:00:00-03:00",
+    "to": "2026-01-07T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-06T13:00:00-03:00", "endsAt": "2026-01-06T19:00:00-03:00", "origin": "extra:o1" }
+    ]
+  },
+  {
+    "name": "adjustment: cancellation plus extra at the same instant replaces the generated occurrence",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "A", "kind": "cancellation", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T19:00:00-03:00" },
+      { "id": "o2", "category": "A", "kind": "extra", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T13:00:00-03:00" }
+    ],
+    "day": "2026-01-07",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T13:00:00-03:00", "origin": "adjusted:o2:s1" }
+    ],
+    "expectedCancelled": [],
+    "expectedSummary": { "hours": 6, "count": 1, "byCategory": { "A": { "hours": 6, "count": 1 } } }
+  },
+  {
+    "name": "double shift: two occurrences of the same category on one day",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00" }
+    ],
+    "overrides": [
+      { "id": "o1", "category": "A", "kind": "extra", "startsAt": "2026-01-05T19:00:00-03:00", "endsAt": "2026-01-06T07:00:00-03:00" }
+    ],
+    "day": "2026-01-05",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-05T19:00:00-03:00", "endsAt": "2026-01-06T07:00:00-03:00", "origin": "extra:o1" }
+    ],
+    "expectedSummary": { "hours": 24, "count": 2, "byCategory": { "A": { "hours": 24, "count": 2 } } }
+  },
+  {
+    "name": "two categories active at the same time",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00" },
+      { "id": "s2", "category": "B", "workHours": 24, "restHours": 72, "anchorAt": "2026-01-06T07:00:00-03:00", "startsAt": "2026-01-06T07:00:00-03:00" }
+    ],
+    "from": "2026-01-05T00:00:00-03:00",
+    "to": "2026-01-11T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "B", "startsAt": "2026-01-06T07:00:00-03:00", "endsAt": "2026-01-07T07:00:00-03:00", "origin": "scheduled:s2" },
+      { "category": "A", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-09T07:00:00-03:00", "endsAt": "2026-01-09T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "B", "startsAt": "2026-01-10T07:00:00-03:00", "endsAt": "2026-01-11T07:00:00-03:00", "origin": "scheduled:s2" }
+    ],
+    "expectedSummary": {
+      "hours": 84,
+      "count": 5,
+      "byCategory": { "A": { "hours": 36, "count": 3 }, "B": { "hours": 48, "count": 2 } }
+    }
+  },
+  {
+    "name": "schedule change mid-window: occurrence crossing the change stays with the old version",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T19:00:00-03:00", "startsAt": "2026-01-05T19:00:00-03:00", "endsAt": "2026-01-10T06:00:00-03:00" },
+      { "id": "s2", "category": "A", "workHours": 24, "restHours": 48, "anchorAt": "2026-01-10T06:00:00-03:00", "startsAt": "2026-01-10T06:00:00-03:00" }
+    ],
+    "from": "2026-01-08T00:00:00-03:00",
+    "to": "2026-01-14T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-09T19:00:00-03:00", "endsAt": "2026-01-10T07:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-10T06:00:00-03:00", "endsAt": "2026-01-11T06:00:00-03:00", "origin": "scheduled:s2" },
+      { "category": "A", "startsAt": "2026-01-13T06:00:00-03:00", "endsAt": "2026-01-14T06:00:00-03:00", "origin": "scheduled:s2" }
+    ]
+  },
+  {
+    "name": "day after a schedule change does not repeat the crossing occurrence",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T19:00:00-03:00", "startsAt": "2026-01-05T19:00:00-03:00", "endsAt": "2026-01-10T06:00:00-03:00" },
+      { "id": "s2", "category": "A", "workHours": 24, "restHours": 48, "anchorAt": "2026-01-10T06:00:00-03:00", "startsAt": "2026-01-10T06:00:00-03:00" }
+    ],
+    "day": "2026-01-10",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-10T06:00:00-03:00", "endsAt": "2026-01-11T06:00:00-03:00", "origin": "scheduled:s2" }
+    ]
+  },
+  {
+    "name": "schedule ending exactly at an occurrence start excludes it (half-open)",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2026-01-05T07:00:00-03:00", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-09T07:00:00-03:00" }
+    ],
+    "from": "2026-01-05T00:00:00-03:00",
+    "to": "2026-01-12T00:00:00-03:00",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T07:00:00-03:00", "endsAt": "2026-01-05T19:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-07T07:00:00-03:00", "endsAt": "2026-01-07T19:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "closed past schedule keeps its own cycle (frozen past)",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2025-12-01T07:00:00-03:00", "startsAt": "2025-12-01T07:00:00-03:00", "endsAt": "2026-01-02T07:00:00-03:00" },
+      { "id": "s2", "category": "A", "workHours": 24, "restHours": 48, "anchorAt": "2026-01-02T07:00:00-03:00", "startsAt": "2026-01-02T07:00:00-03:00" }
+    ],
+    "month": "2025-12",
+    "expectedSummary": { "hours": 192, "count": 16, "byCategory": { "A": { "hours": 192, "count": 16 } } }
+  },
+  {
+    "name": "month after a schedule change uses only the new cycle",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 36, "anchorAt": "2025-12-01T07:00:00-03:00", "startsAt": "2025-12-01T07:00:00-03:00", "endsAt": "2026-01-02T07:00:00-03:00" },
+      { "id": "s2", "category": "A", "workHours": 24, "restHours": 48, "anchorAt": "2026-01-02T07:00:00-03:00", "startsAt": "2026-01-02T07:00:00-03:00" }
+    ],
+    "month": "2026-01",
+    "expectedSummary": { "hours": 240, "count": 10, "byCategory": { "A": { "hours": 240, "count": 10 } } }
+  },
+  {
+    "name": "8x8 cycle (16h) puts two occurrences on the same day",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 8, "restHours": 8, "anchorAt": "2026-01-05T06:00:00-03:00", "startsAt": "2026-01-05T06:00:00-03:00" }
+    ],
+    "day": "2026-01-05",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T06:00:00-03:00", "endsAt": "2026-01-05T14:00:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-05T22:00:00-03:00", "endsAt": "2026-01-06T06:00:00-03:00", "origin": "scheduled:s1" }
+    ]
+  },
+  {
+    "name": "12x11 cycle (23h) collides on the day it wraps",
+    "schedules": [
+      { "id": "s1", "category": "A", "workHours": 12, "restHours": 11, "anchorAt": "2026-01-05T00:30:00-03:00", "startsAt": "2026-01-05T00:30:00-03:00" }
+    ],
+    "day": "2026-01-05",
+    "expected": [
+      { "category": "A", "startsAt": "2026-01-05T00:30:00-03:00", "endsAt": "2026-01-05T12:30:00-03:00", "origin": "scheduled:s1" },
+      { "category": "A", "startsAt": "2026-01-05T23:30:00-03:00", "endsAt": "2026-01-06T11:30:00-03:00", "origin": "scheduled:s1" }
+    ]
+  }
+]
