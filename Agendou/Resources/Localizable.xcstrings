@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "pt-BR",
   "strings" : {
+    "%@ a %@ · toque num dia para ver os plantões" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ a %2$@ · toque num dia para ver os plantões"
+          }
+        }
+      }
+    },
+    "%@ de %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ de %2$@"
+          }
+        }
+      }
+    },
     "%@ · %@" : {
       "localizations" : {
         "pt-BR" : {
@@ -24,7 +44,27 @@
     "%@ – atual" : {
 
     },
-    "%@, com plantão" : {
+    "%@, %lld plantões, o primeiro às %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$lld plantões, o primeiro às %3$@"
+          }
+        }
+      }
+    },
+    "%@, plantão às %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, plantão às %2$@"
+          }
+        }
+      }
+    },
+    "%@, sem plantão" : {
 
     },
     "%lld" : {
@@ -103,6 +143,9 @@
 
     },
     "Ativas" : {
+
+    },
+    "Até hoje" : {
 
     },
     "Azul" : {
@@ -267,6 +310,9 @@
     "Hoje" : {
 
     },
+    "Hoje, %@" : {
+
+    },
     "Importar dados" : {
 
     },
@@ -295,6 +341,9 @@
 
     },
     "Nenhum plantão pela frente" : {
+
+    },
+    "No mês" : {
 
     },
     "Nome" : {
@@ -370,6 +419,9 @@
     "Próximo plantão" : {
 
     },
+    "Próximos plantões" : {
+
+    },
     "Quando começa seu próximo plantão?" : {
 
     },
@@ -436,6 +488,9 @@
     "Vale até %@" : {
 
     },
+    "Ver no calendário" : {
+
+    },
     "Verde" : {
 
     },
@@ -451,6 +506,9 @@
     "até %@" : {
 
     },
+    "hoje" : {
+
+    },
     "horas" : {
 
     },
@@ -461,6 +519,12 @@
 
     },
     "Último dia" : {
+
+    },
+    "Últimos e próximos dias" : {
+
+    },
+    "“Até hoje” conta os plantões que já começaram; “no mês” soma também os que ainda vão acontecer." : {
 
     },
     "“Desde quando” não pode ser depois do próximo plantão." : {

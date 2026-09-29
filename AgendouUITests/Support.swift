@@ -63,6 +63,20 @@ enum WorkplaceCalendar {
         "novembro", "dezembro",
     ]
 
+    /// "27/09" for the day `daysFromToday` away.
+    static func dayMonth(daysFromToday days: Int) -> String {
+        let components = calendar.dateComponents(
+            [.day, .month], from: calendar.date(byAdding: .day, value: days, to: .now)!)
+        return String(format: "%02d/%02d", components.day!, components.month!)
+    }
+
+    /// Identifier of a day in the Home strip, `daysFromToday` away.
+    static func homeDayID(daysFromToday days: Int) -> String {
+        let components = calendar.dateComponents(
+            [.year, .month, .day], from: calendar.date(byAdding: .day, value: days, to: .now)!)
+        return String(format: "home.day.%04d-%02d-%02d", components.year!, components.month!, components.day!)
+    }
+
     /// Day of the next 07:00, where a category created with the default dates has its first shift.
     static func nextShiftDay(plusDays days: Int = 0) -> DateComponents {
         let now = Date.now

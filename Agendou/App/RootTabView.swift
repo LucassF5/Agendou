@@ -11,7 +11,7 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $tab) {
             Tab("Início", systemImage: "house", value: .home) {
-                HomeScreen { tab = .categories }
+                HomeScreen(onSetup: { tab = .categories }, onOpenCalendar: { tab = .calendar })
             }
             Tab("Calendário", systemImage: "calendar", value: .calendar) {
                 CalendarScreen()

@@ -108,6 +108,15 @@ enum Formatting {
         CivilCalendar.date(containing: repeatsUntil.epochSeconds - 1)
     }
 
+    /// "Extra" or "Ajustado"; `nil` for a shift of the schedule.
+    static func originTag(_ occurrence: Occurrence) -> String? {
+        switch occurrence.origin {
+        case .scheduled: nil
+        case .extra: String(localized: "Extra")
+        case .adjusted: String(localized: "Ajustado")
+        }
+    }
+
     /// "terça-feira, 29 de setembro".
     static func dayTitle(_ day: CivilDate) -> String {
         let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))

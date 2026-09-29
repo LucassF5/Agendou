@@ -167,7 +167,7 @@ struct ShiftRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            if let tag = tag {
+            if let tag = Formatting.originTag(occurrence) {
                 Text(tag)
                     .font(.caption)
                     .padding(.horizontal, 8)
@@ -176,14 +176,6 @@ struct ShiftRow: View {
             }
         }
         .accessibilityElement(children: .combine)
-    }
-
-    private var tag: String? {
-        switch occurrence.origin {
-        case .scheduled: nil
-        case .extra: String(localized: "Extra")
-        case .adjusted: String(localized: "Ajustado")
-        }
     }
 }
 

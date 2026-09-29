@@ -185,6 +185,17 @@ public final class AgendaStore {
         return ScheduleEngine.currentOrNext(schedules: schedules, overrides: overrides, now: now)
     }
 
+    /// How far ahead `upcomingShifts` looks.
+    public static let upcomingHorizonDays = 60
+
+    /// The shifts after `shift` (the one on the Home card), starting within the next 60 days, soonest
+    /// first. Another category's shift starting at the same instant as `shift` is included.
+    public func upcomingShifts(after shift: Occurrence, limit: Int) -> [Occurrence] {
+        let horizon = now + Int64(Self.upcomingHorizonDays) * 86_400
+        guard shift.startsAt < horizon else { return [] }
+        return Array(expand(in: shift.startsAt..<horizon).occurrences.filter { $0 != shift }.prefix(limit))
+    }
+
     private func engineInput() -> ([ScheduleVersion], [Override]) {
         _ = revision
         let schedules = (try? context.fetch(FetchDescriptor<CategorySchedule>())) ?? []

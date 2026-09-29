@@ -2,10 +2,12 @@ import AgendouCore
 import AgendouStore
 import SwiftUI
 
-/// The shift in progress or the next one, and the days around today.
+/// The shift in progress or the next one, the days around today, the next shifts and the month so far.
 struct HomeScreen: View {
     /// Switches to the Categories tab.
     var onSetup: () -> Void
+    /// Switches to the Calendar tab.
+    var onOpenCalendar: () -> Void
     @Environment(AgendaStore.self) private var store
     @State private var selectedDay: CivilDate?
 
@@ -19,16 +21,23 @@ struct HomeScreen: View {
                                 .padding()
                                 .background(.fill.quinary, in: RoundedRectangle(cornerRadius: 16))
                         }
-                        if let shift = store.currentOrNextShift() {
+                        let shift = store.currentOrNextShift()
+                        if let shift {
                             ShiftCard(shift: shift, now: context.date) {
                                 selectedDay = CivilCalendar.date(containing: shift.startsAt)
                             }
                         } else {
                             emptyState
                         }
-                        FiveDayStrip(today: CivilCalendar.date(containing: context.date.epochSeconds)) {
+                        DayStrip(today: CivilCalendar.date(containing: context.date.epochSeconds)) {
                             selectedDay = $0
                         }
+                        if let shift {
+                            UpcomingShiftsSection(shifts: store.upcomingShifts(after: shift, limit: 4)) {
+                                selectedDay = $0
+                            }
+                        }
+                        MonthProgressSection(now: context.date, onOpenCalendar: onOpenCalendar)
                     }
                     .padding()
                 }
@@ -102,67 +111,8 @@ private struct ShiftCard: View {
     }
 }
 
-/// Today and the two days on each side, with a dot per category that has a shift starting that day.
-private struct FiveDayStrip: View {
-    let today: CivilDate
-    let onSelect: (CivilDate) -> Void
-    @Environment(AgendaStore.self) private var store
-
-    var body: some View {
-        let first = today.adding(days: -2)
-        let range =
-            CivilCalendar.interval(of: first).lowerBound..<CivilCalendar.interval(of: today.adding(days: 2)).upperBound
-        let occurrences = store.expand(in: range).occurrences
-        HStack(spacing: 8) {
-            ForEach(0..<5, id: \.self) { offset in
-                let day = first.adding(days: offset)
-                let colors = colors(on: day, occurrences)
-                Button {
-                    onSelect(day)
-                } label: {
-                    VStack(spacing: 6) {
-                        Text(Formatting.shortWeekday(day))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text("\(day.day)")
-                            .font(.title3.weight(day == today ? .bold : .regular))
-                            .monospacedDigit()
-                        HStack(spacing: 3) {
-                            ForEach(Array(colors.prefix(3).enumerated()), id: \.offset) { _, color in
-                                Circle().fill(color).frame(width: 6, height: 6)
-                            }
-                        }
-                        .frame(height: 6)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background {
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(day == today ? AnyShapeStyle(.tint.opacity(0.15)) : AnyShapeStyle(.fill.quinary))
-                    }
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(accessibilityLabel(day, count: colors.count))
-                .accessibilityIdentifier("home.day.\(day.string)")
-            }
-        }
-    }
-
-    private func colors(on day: CivilDate, _ occurrences: [Occurrence]) -> [Color] {
-        let interval = CivilCalendar.interval(of: day)
-        var seen: Set<UUID> = []
-        return occurrences.filter { interval.contains($0.startsAt) && seen.insert($0.categoryID).inserted }
-            .map { store.category(id: $0.categoryID)?.color ?? .gray }
-    }
-
-    private func accessibilityLabel(_ day: CivilDate, count: Int) -> String {
-        let title = Formatting.dayTitle(day)
-        return count == 0 ? title : String(localized: "\(title), com plantão")
-    }
-}
-
 #Preview {
-    HomeScreen {}
+    HomeScreen(onSetup: {}, onOpenCalendar: {})
         .environment(AgendaStore.preview)
         .agendouEnvironment()
 }
