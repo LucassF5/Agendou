@@ -22,9 +22,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A6E0000000000000000000C1 /* AgendouUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgendouUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6E000000000000000000004 /* Agendou.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Agendou.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6E000000000000000000011 /* Agendou.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Agendou.entitlements; sourceTree = "<group>"; };
+		A6E0000000000000000000C1 /* AgendouUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgendouUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
