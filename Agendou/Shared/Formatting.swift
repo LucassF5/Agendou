@@ -52,6 +52,29 @@ enum Formatting {
         return days > 0 ? "\(range) (+\(days))" : range
     }
 
+    /// "ter.".
+    static func shortWeekday(_ day: CivilDate) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))
+        return noon.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .weekday(.abbreviated))
+    }
+
+    /// "em 4 horas", "há 2 horas", relative to `now`.
+    static func relative(_ date: Date, from now: Date) -> String {
+        relativeFormatter.localizedString(for: date, relativeTo: now)
+    }
+
+    private static let relativeFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.locale = locale
+        formatter.calendar = CivilCalendar.calendar
+        formatter.unitsStyle = .full
+        formatter.dateTimeStyle = .named
+        formatter.formattingContext = .middleOfSentence
+        return formatter
+    }()
+
     /// "terça-feira, 29 de setembro".
     static func dayTitle(_ day: CivilDate) -> String {
         let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))

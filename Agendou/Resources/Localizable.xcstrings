@@ -4,6 +4,12 @@
     "%@ – atual" : {
 
     },
+    "%@, com plantão" : {
+
+    },
+    "%lld" : {
+
+    },
     "A categoria tem histórico e não pode ser excluída. Arquive em vez disso." : {
 
     },
@@ -64,6 +70,9 @@
     "Azul" : {
 
     },
+    "Cadastre onde você trabalha e a sua escala para ver aqui o próximo plantão." : {
+
+    },
     "Calendário" : {
 
     },
@@ -83,6 +92,12 @@
 
     },
     "Categorias" : {
+
+    },
+    "Começa %@" : {
+
+    },
+    "Configurar escala" : {
 
     },
     "Configurar minha escala" : {
@@ -125,6 +140,9 @@
 
     },
     "Editar horário" : {
+
+    },
+    "Em andamento" : {
 
     },
     "Em construção" : {
@@ -211,6 +229,9 @@
     "Nenhum plantão" : {
 
     },
+    "Nenhum plantão pela frente" : {
+
+    },
     "Nome" : {
 
     },
@@ -275,6 +296,9 @@
 
     },
     "Tem escala fixa" : {
+
+    },
+    "Termina %@" : {
 
     },
     "Trabalho" : {

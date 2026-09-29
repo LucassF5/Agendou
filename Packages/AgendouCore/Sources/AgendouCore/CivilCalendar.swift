@@ -45,3 +45,12 @@ public enum CivilCalendar {
         return instant(of: start, hour: 0, minute: 0)..<instant(of: end, hour: 0, minute: 0)
     }
 }
+
+extension CivilDate {
+    /// The civil day `days` after this one (before it when negative).
+    public func adding(days: Int) -> CivilDate {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: self, hour: 12, minute: 0))
+        let moved = CivilCalendar.calendar.date(byAdding: .day, value: days, to: noon)!
+        return CivilCalendar.date(containing: moved.epochSeconds)
+    }
+}

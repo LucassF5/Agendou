@@ -169,11 +169,21 @@ public final class AgendaStore {
 
     /// Occurrences starting in `range`, archived categories included: their past stays on the calendar.
     public func expand(in range: Range<Int64>) -> Expansion {
+        let (schedules, overrides) = engineInput()
+        return ScheduleEngine.expand(schedules: schedules, overrides: overrides, in: range)
+    }
+
+    /// The shift in progress now, or else the next one.
+    public func currentOrNextShift() -> Occurrence? {
+        let (schedules, overrides) = engineInput()
+        return ScheduleEngine.currentOrNext(schedules: schedules, overrides: overrides, now: now)
+    }
+
+    private func engineInput() -> ([ScheduleVersion], [Override]) {
         _ = revision
         let schedules = (try? context.fetch(FetchDescriptor<CategorySchedule>())) ?? []
         let overrides = (try? context.fetch(FetchDescriptor<ShiftOverride>())) ?? []
-        return ScheduleEngine.expand(
-            schedules: schedules.compactMap(version(of:)), overrides: overrides.compactMap(snapshot(of:)), in: range)
+        return (schedules.compactMap(version(of:)), overrides.compactMap(snapshot(of:)))
     }
 
     // MARK: - Helpers
