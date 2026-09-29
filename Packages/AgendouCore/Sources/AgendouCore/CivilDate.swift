@@ -1,5 +1,5 @@
 /// A day on the wall calendar (no time, no time zone), such as the day a note belongs to.
-public struct CivilDate: Hashable, Comparable, Sendable {
+public struct CivilDate: Hashable, Comparable, Sendable, Identifiable {
     public let year: Int
     public let month: Int
     public let day: Int
@@ -24,6 +24,10 @@ public struct CivilDate: Hashable, Comparable, Sendable {
     /// `AAAA-MM-DD`.
     public var string: String {
         "\(pad(year, 4))-\(pad(month, 2))-\(pad(day, 2))"
+    }
+
+    public var id: String {
+        string
     }
 
     public static func < (lhs: CivilDate, rhs: CivilDate) -> Bool {

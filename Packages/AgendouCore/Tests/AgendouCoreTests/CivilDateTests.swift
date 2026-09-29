@@ -21,6 +21,10 @@ struct CivilDateTests {
         #expect(CivilDate(string: "2028-02-29") == CivilDate(year: 2028, month: 2, day: 29))
     }
 
+    @Test func isIdentifiedByItsISOString() {
+        #expect(CivilDate(year: 2026, month: 9, day: 29).id == "2026-09-29")
+    }
+
     @Test func ordersChronologically() {
         #expect(CivilDate(year: 2025, month: 12, day: 31) < CivilDate(year: 2026, month: 1, day: 1))
         #expect(CivilDate(year: 2026, month: 1, day: 31) < CivilDate(year: 2026, month: 2, day: 1))

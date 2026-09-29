@@ -22,7 +22,7 @@ enum Formatting {
 
     /// Always in the workplace time zone and pt-BR, e.g. "29/09/2026 07:00".
     static func dateTime(_ date: Date) -> String {
-        date.formatted(style(date: .numeric, time: .shortened))
+        "\(Self.date(date)) \(time(date))"
     }
 
     /// "29/09/2026".
@@ -30,9 +30,34 @@ enum Formatting {
         date.formatted(style(date: .numeric, time: .omitted))
     }
 
-    /// "07:00".
+    /// "07:00", with the leading zero as it is written in Brazil.
     static func time(_ date: Date) -> String {
-        date.formatted(style(date: .omitted, time: .shortened))
+        date.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+    }
+
+    /// "19:00 – 07:00 (+1)": the "+n" counts the days the shift runs past its start day.
+    static func timeRange(_ occurrence: Occurrence) -> String {
+        let start = Date(epochSeconds: occurrence.startsAt)
+        let end = Date(epochSeconds: occurrence.endsAt)
+        let startDay = CivilCalendar.date(containing: occurrence.startsAt)
+        let endDay = CivilCalendar.date(containing: occurrence.endsAt)
+        let days =
+            CivilCalendar.calendar.dateComponents(
+                [.day], from: Date(epochSeconds: CivilCalendar.interval(of: startDay).lowerBound),
+                to: Date(epochSeconds: CivilCalendar.interval(of: endDay).lowerBound)
+            ).day ?? 0
+        let range = "\(time(start)) – \(time(end))"
+        return days > 0 ? "\(range) (+\(days))" : range
+    }
+
+    /// "terça-feira, 29 de setembro".
+    static func dayTitle(_ day: CivilDate) -> String {
+        let noon = Date(epochSeconds: CivilCalendar.instant(of: day, hour: 12, minute: 0))
+        return noon.formatted(
+            Date.FormatStyle(locale: locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone)
+                .weekday(.wide).day().month(.wide))
     }
 
     static func style(date: Date.FormatStyle.DateStyle, time: Date.FormatStyle.TimeStyle) -> Date.FormatStyle {

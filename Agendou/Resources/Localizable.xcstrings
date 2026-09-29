@@ -25,7 +25,16 @@
     "A escala termina agora e os extras futuros são apagados. Não dá para desarquivar." : {
 
     },
+    "Adicionar extra" : {
+
+    },
+    "Ajustado" : {
+
+    },
     "Ajustes" : {
+
+    },
+    "Anotação" : {
 
     },
     "Arquivada" : {
@@ -58,7 +67,16 @@
     "Calendário" : {
 
     },
+    "Cancelados" : {
+
+    },
     "Cancelar" : {
+
+    },
+    "Cancelar plantão" : {
+
+    },
+    "Categoria" : {
 
     },
     "Categoria excluída" : {
@@ -85,7 +103,13 @@
     "Desde quando você trabalha nessa escala?" : {
 
     },
+    "Desfazer ajuste" : {
+
+    },
     "Diga onde você trabalha e qual é a escala (12x36, 24x48…). O calendário se preenche sozinho." : {
+
+    },
+    "Duração" : {
 
     },
     "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
@@ -98,6 +122,9 @@
 
     },
     "Editar categoria" : {
+
+    },
+    "Editar horário" : {
 
     },
     "Em construção" : {
@@ -145,10 +172,22 @@
     "Excluir escala" : {
 
     },
+    "Excluir plantão" : {
+
+    },
+    "Extra" : {
+
+    },
+    "Fim" : {
+
+    },
     "Folga" : {
 
     },
     "Histórico de escalas" : {
+
+    },
+    "Hoje" : {
 
     },
     "Início" : {
@@ -169,6 +208,9 @@
     "Mudei de escala" : {
 
     },
+    "Nenhum plantão" : {
+
+    },
     "Nome" : {
 
     },
@@ -181,10 +223,22 @@
     "Não foi possível salvar" : {
 
     },
+    "O que aconteceu nesse dia?" : {
+
+    },
     "OK" : {
 
     },
     "Personalizada" : {
+
+    },
+    "Plantão extra" : {
+
+    },
+    "Plantões" : {
+
+    },
+    "Plantões da escala que foram desmarcados." : {
 
     },
     "Primeiro plantão na escala nova" : {
@@ -197,6 +251,9 @@
 
     },
     "Recuar a data preenche o passado no calendário com essa escala." : {
+
+    },
+    "Restaurar" : {
 
     },
     "Rosa" : {
