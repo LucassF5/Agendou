@@ -7,6 +7,7 @@ struct CalendarScreen: View {
     @State private var visibleMonth = CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds))
     @State private var selectedDay: CivilDate?
     @State private var showingYear = false
+    @State private var sharing = false
 
     var body: some View {
         NavigationStack {
@@ -21,6 +22,8 @@ struct CalendarScreen: View {
             .navigationTitle("Calendário")
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button("Enviar", systemImage: "square.and.arrow.up") { sharing = true }
+                        .accessibilityIdentifier("calendar.share")
                     Button("Ano") { showingYear = true }
                         .accessibilityIdentifier("calendar.year")
                     Button("Hoje") {
@@ -37,6 +40,9 @@ struct CalendarScreen: View {
             .sheet(item: $selectedDay) { day in
                 DaySheet(day: day)
                     .presentationDetents([.medium, .large])
+            }
+            .sheet(isPresented: $sharing) {
+                ShareMonthScreen(month: visibleMonth)
             }
         }
     }
