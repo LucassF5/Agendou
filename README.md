@@ -21,9 +21,23 @@ Config/                  entitlements (App Group group.com.lucasfranco.agendou)
 Packages/AgendouCore/    lógica pura da escala, sem SwiftUI nem SwiftData
 ```
 
-## Rodando
+## Abrindo no Xcode
 
-App: abrir `Agendou.xcodeproj`, scheme `Agendou`, simulador de iPhone.
+Na raiz do repositório:
+
+```sh
+open Agendou.xcodeproj
+```
+
+`xed .` ou duplo clique em `Agendou.xcodeproj` no Finder também servem. O projeto já referencia o package local `Packages/AgendouCore`, e o Xcode resolve ele sozinho na primeira abertura.
+
+Com o projeto aberto: scheme `Agendou`, um simulador de iPhone como destino na barra de cima, ⌘R.
+
+Pra rodar num iPhone de verdade, o team em Signing & Capabilities precisa ter acesso ao App Group `group.com.lucasfranco.agendou`, e o iPhone precisa estar com o Modo de Desenvolvedor ligado.
+
+## Rodando pela linha de comando
+
+App:
 
 ```sh
 xcodebuild -project Agendou.xcodeproj -scheme Agendou \
@@ -36,7 +50,7 @@ Testes do núcleo (Swift Testing, rodam no Mac, sem simulador):
 swift test --package-path Packages/AgendouCore
 ```
 
-Pra rodar pelo Xcode com ⌘U, abrir o package direto: `xed Packages/AgendouCore`.
+Pra rodar esses testes pelo Xcode com ⌘U, abrir o package direto: `xed Packages/AgendouCore`. O ⌘U no `Agendou.xcodeproj` não roda os testes do núcleo.
 
 ## Formatação
 
