@@ -102,6 +102,12 @@
     "Azul" : {
 
     },
+    "Backup" : {
+
+    },
+    "Backup do Agendou" : {
+
+    },
     "Cadastre onde você trabalha e a sua escala para ver aqui o próximo plantão." : {
 
     },
@@ -144,6 +150,9 @@
     "Corrigir escala" : {
 
     },
+    "Dados importados" : {
+
+    },
     "Definir escala" : {
 
     },
@@ -177,9 +186,6 @@
     "Em andamento" : {
 
     },
-    "Em construção" : {
-
-    },
     "Em vigor desde" : {
 
     },
@@ -204,6 +210,9 @@
     "Esta categoria não tem escala em vigor." : {
 
     },
+    "Este backup foi feito por uma versão mais nova do Agendou. Atualize o app para importar." : {
+
+    },
     "Ex.: UTI Hospital X" : {
 
     },
@@ -225,6 +234,9 @@
     "Excluir plantão" : {
 
     },
+    "Exportar dados" : {
+
+    },
     "Extra" : {
 
     },
@@ -238,6 +250,9 @@
 
     },
     "Hoje" : {
+
+    },
+    "Importar dados" : {
 
     },
     "Início" : {
@@ -276,13 +291,38 @@
     "Não encontrado." : {
 
     },
+    "Não foi possível importar" : {
+
+    },
     "Não foi possível salvar" : {
+
+    },
+    "O arquivo não é um backup do Agendou ou está corrompido." : {
+
+    },
+    "O arquivo tem %lld categorias, %lld escalas, %lld marcações e %lld anotações. Tudo o que está no app agora será apagado." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "O arquivo tem %1$lld categorias, %2$lld escalas, %3$lld marcações e %4$lld anotações. Tudo o que está no app agora será apagado."
+          }
+        }
+      }
+    },
+    "O arquivo tem as categorias, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app." : {
+
+    },
+    "O backup tem dados inconsistentes e não foi importado. Nada foi alterado." : {
 
     },
     "O que aconteceu nesse dia?" : {
 
     },
     "OK" : {
+
+    },
+    "Os dados ficam só neste iPhone: o app não usa internet nem conta." : {
 
     },
     "Personalizada" : {
@@ -333,6 +373,12 @@
     "Sem escala, a categoria serve para plantões avulsos." : {
 
     },
+    "Substituir" : {
+
+    },
+    "Substituir todos os dados?" : {
+
+    },
     "Só plantões da escala podem ser cancelados." : {
 
     },
@@ -355,6 +401,9 @@
 
     },
     "Vermelho" : {
+
+    },
+    "Versão" : {
 
     },
     "horas" : {

@@ -35,9 +35,9 @@ func userMessage(for error: any Error) -> String {
 
 extension View {
     /// Shows `message` in an alert while it is not `nil`.
-    func errorAlert(_ message: Binding<String?>) -> some View {
+    func errorAlert(_ message: Binding<String?>, title: LocalizedStringKey = "Não foi possível salvar") -> some View {
         alert(
-            "Não foi possível salvar",
+            title,
             isPresented: Binding(get: { message.wrappedValue != nil }, set: { if !$0 { message.wrappedValue = nil } })
         ) {
             Button("OK") {}

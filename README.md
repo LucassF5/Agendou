@@ -52,7 +52,14 @@ Testes do núcleo e das regras de dados (Swift Testing, rodam no Mac, sem simula
 swift test --package-path Packages/AgendouCore
 ```
 
-Pra rodar esses testes pelo Xcode com ⌘U, abrir o package direto: `xed Packages/AgendouCore`. O ⌘U no `Agendou.xcodeproj` não roda os testes do núcleo.
+Pra rodar esses testes pelo Xcode com ⌘U, abrir o package direto: `xed Packages/AgendouCore`. O ⌘U no `Agendou.xcodeproj` roda os testes de interface (`AgendouUITests`), não os do package.
+
+Testes de interface (simulador; o app abre com `-ui-testing`, num banco em memória):
+
+```sh
+xcodebuild -project Agendou.xcodeproj -scheme Agendou \
+  -destination 'platform=iOS Simulator,name=iPhone 17' test
+```
 
 ## Formatação
 
