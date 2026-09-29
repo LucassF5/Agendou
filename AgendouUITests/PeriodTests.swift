@@ -48,4 +48,41 @@ final class PeriodTests: XCTestCase {
         XCTAssertTrue(until.label.hasPrefix("Vale até"), until.label)
         snapshot(app, "period-form")
     }
+
+    @MainActor
+    func testHomeWarnsWhenTheScheduleEndsWithinAWeek() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI", repeat: "1")
+        app.tabBars.buttons["Início"].tap()
+
+        // "1 mês" ends when the first shift's month ends; the warning shows in its last 7 days.
+        let first = WorkplaceCalendar.calendar.date(from: WorkplaceCalendar.nextShiftDay())!
+        let monthEnd = WorkplaceCalendar.calendar.dateInterval(of: .month, for: first)!.end
+        let warns = monthEnd.timeIntervalSinceNow <= 7 * 86_400
+        let banner = app.buttons["renewal.UTI"]
+        if warns {
+            XCTAssertTrue(banner.waitForExistence(timeout: 5))
+            snapshot(app, "home-renewal")
+            banner.tap()
+            XCTAssertTrue(app.buttons["renew.save"].waitForExistence(timeout: 5))
+            app.buttons["repeat.3"].revealed(in: app).tap()
+            app.buttons["renew.save"].tap()
+            XCTAssertTrue(banner.waitForNonExistence(timeout: 5))
+        } else {
+            XCTAssertFalse(banner.waitForExistence(timeout: 2))
+        }
+    }
+
+    @MainActor
+    func testCategoriesListsSchedulesEndingSoon() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI", repeat: "1")
+
+        let first = WorkplaceCalendar.calendar.date(from: WorkplaceCalendar.nextShiftDay())!
+        let monthEnd = WorkplaceCalendar.calendar.dateInterval(of: .month, for: first)!.end
+        let warns = monthEnd.timeIntervalSinceNow <= 7 * 86_400
+        XCTAssertEqual(app.buttons["renewal.UTI"].waitForExistence(timeout: warns ? 5 : 2), warns)
+    }
 }

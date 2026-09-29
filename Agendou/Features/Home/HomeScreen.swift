@@ -14,6 +14,11 @@ struct HomeScreen: View {
             TimelineView(.everyMinute) { context in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
+                        ForEach(store.schedulesNeedingRenewal()) { schedule in
+                            RenewalBanner(schedule: schedule)
+                                .padding()
+                                .background(.fill.quinary, in: RoundedRectangle(cornerRadius: 16))
+                        }
                         if let shift = store.currentOrNextShift() {
                             ShiftCard(shift: shift, now: context.date) {
                                 selectedDay = CivilCalendar.date(containing: shift.startsAt)

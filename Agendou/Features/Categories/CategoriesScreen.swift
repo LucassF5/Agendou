@@ -10,6 +10,12 @@ struct CategoriesScreen: View {
             let active = store.activeCategories()
             let archived = store.archivedCategories()
             List {
+                let ending = store.schedulesNeedingRenewal()
+                if !ending.isEmpty {
+                    Section("Escalas terminando") {
+                        ForEach(ending) { RenewalBanner(schedule: $0) }
+                    }
+                }
                 if !active.contains(where: { store.openSchedule(of: $0) != nil }) {
                     Section {
                         VStack(alignment: .leading, spacing: 8) {

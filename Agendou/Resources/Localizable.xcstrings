@@ -201,6 +201,15 @@
     "Escala atual" : {
 
     },
+    "Escala termina em %@" : {
+
+    },
+    "Escala terminou em %@" : {
+
+    },
+    "Escalas terminando" : {
+
+    },
     "Essa escala não pode mais ser alterada: um plantão dela já começou e ela tem mais de 24 horas. Use “Mudei de escala”." : {
 
     },
@@ -365,6 +374,9 @@
 
     },
     "Recuar a data preenche o passado no calendário com essa escala." : {
+
+    },
+    "Renovar" : {
 
     },
     "Renovar escala" : {
