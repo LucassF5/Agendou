@@ -36,8 +36,15 @@ public struct ScheduleVersion: Hashable, Sendable, Identifiable {
 
     /// Start of the first occurrence that belongs to this version, or `nil` if it ends before any.
     public var firstOccurrenceStart: Int64? {
+        firstOccurrenceStart(atOrAfter: startsAt)
+    }
+
+    /// Start of the first occurrence of this version at or after `instant`, or `nil` if the version ends
+    /// before it.
+    public func firstOccurrenceStart(atOrAfter instant: Int64) -> Int64? {
         guard workSeconds > 0, restSeconds > 0 else { return nil }
-        let start = anchorAt + ceilDiv(startsAt - anchorAt, cycleSeconds) * cycleSeconds
+        let lower = max(startsAt, instant)
+        let start = anchorAt + ceilDiv(lower - anchorAt, cycleSeconds) * cycleSeconds
         if let endsAt, start >= endsAt { return nil }
         return start
     }

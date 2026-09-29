@@ -30,7 +30,7 @@ extension AgendaStore {
         let now = self.now
         return category.overrides.isEmpty
             && category.schedules.allSatisfy { schedule in
-                guard let first = snapshot(of: schedule)?.firstOccurrenceStart else { return true }
+                guard let first = version(of: schedule)?.firstOccurrenceStart else { return true }
                 return first > now
             }
     }

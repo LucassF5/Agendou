@@ -30,6 +30,18 @@ struct ScheduleVersionTests {
         #expect(version(anchor: at(20, 7), startsAt: at(10, 0), endsAt: at(10, 5)).firstOccurrenceStart == nil)
     }
 
+    @Test func nextOccurrenceAtOrAfterAnInstant() {
+        let schedule = version(anchor: at(5, 7), startsAt: at(5, 7))
+        #expect(schedule.firstOccurrenceStart(atOrAfter: at(5, 7)) == at(5, 7))
+        #expect(schedule.firstOccurrenceStart(atOrAfter: at(5, 7) + 1) == at(7, 7))
+        #expect(schedule.firstOccurrenceStart(atOrAfter: at(1, 0)) == at(5, 7))
+    }
+
+    @Test func noOccurrenceAfterTheVersionEnds() {
+        let schedule = version(anchor: at(5, 7), startsAt: at(5, 7), endsAt: at(7, 7))
+        #expect(schedule.firstOccurrenceStart(atOrAfter: at(6, 0)) == nil)
+    }
+
     @Test func cycleIsWorkPlusRest() {
         #expect(version(anchor: 0, startsAt: 0).cycleSeconds == 172_800)
     }

@@ -1,7 +1,246 @@
 {
   "sourceLanguage" : "pt-BR",
   "strings" : {
+    "%@ – atual" : {
 
+    },
+    "A categoria tem histórico e não pode ser excluída. Arquive em vez disso." : {
+
+    },
+    "A duração precisa ser maior que zero." : {
+
+    },
+    "A escala anterior, se houver, volta a valer." : {
+
+    },
+    "A escala nova começa nesse plantão. O que já passou não muda." : {
+
+    },
+    "A escala nova não pode começar no passado." : {
+
+    },
+    "A escala nova precisa começar depois do início da escala atual." : {
+
+    },
+    "A escala termina agora e os extras futuros são apagados. Não dá para desarquivar." : {
+
+    },
+    "Ajustes" : {
+
+    },
+    "Arquivada" : {
+
+    },
+    "Arquivada em" : {
+
+    },
+    "Arquivadas" : {
+
+    },
+    "Arquivar" : {
+
+    },
+    "Arquivar %@?" : {
+
+    },
+    "Arquivar categoria" : {
+
+    },
+    "Arquivar encerra a escala agora e apaga os extras futuros. O passado continua no calendário." : {
+
+    },
+    "Ativas" : {
+
+    },
+    "Azul" : {
+
+    },
+    "Calendário" : {
+
+    },
+    "Cancelar" : {
+
+    },
+    "Categoria excluída" : {
+
+    },
+    "Categorias" : {
+
+    },
+    "Configurar minha escala" : {
+
+    },
+    "Configure sua escala" : {
+
+    },
+    "Cor" : {
+
+    },
+    "Corrigir escala" : {
+
+    },
+    "Definir escala" : {
+
+    },
+    "Desde quando você trabalha nessa escala?" : {
+
+    },
+    "Diga onde você trabalha e qual é a escala (12x36, 24x48…). O calendário se preenche sozinho." : {
+
+    },
+    "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
+
+    },
+    "Dê um nome à categoria." : {
+
+    },
+    "Editar" : {
+
+    },
+    "Editar categoria" : {
+
+    },
+    "Em construção" : {
+
+    },
+    "Em vigor desde" : {
+
+    },
+    "Escala" : {
+
+    },
+    "Escala atual" : {
+
+    },
+    "Essa escala não pode mais ser alterada: um plantão dela já começou e ela tem mais de 24 horas. Use “Mudei de escala”." : {
+
+    },
+    "Esse plantão não foi ajustado." : {
+
+    },
+    "Esta categoria está arquivada." : {
+
+    },
+    "Esta categoria já tem escala. Use “Mudei de escala”." : {
+
+    },
+    "Esta categoria não tem escala em vigor." : {
+
+    },
+    "Ex.: UTI Hospital X" : {
+
+    },
+    "Excluir" : {
+
+    },
+    "Excluir %@?" : {
+
+    },
+    "Excluir a escala atual?" : {
+
+    },
+    "Excluir categoria" : {
+
+    },
+    "Excluir escala" : {
+
+    },
+    "Folga" : {
+
+    },
+    "Histórico de escalas" : {
+
+    },
+    "Início" : {
+
+    },
+    "Já existe um plantão dessa categoria nesse horário." : {
+
+    },
+    "Laranja" : {
+
+    },
+    "Marrom" : {
+
+    },
+    "Menta" : {
+
+    },
+    "Mudei de escala" : {
+
+    },
+    "Nome" : {
+
+    },
+    "Nova categoria" : {
+
+    },
+    "Não encontrado." : {
+
+    },
+    "Não foi possível salvar" : {
+
+    },
+    "OK" : {
+
+    },
+    "Personalizada" : {
+
+    },
+    "Primeiro plantão na escala nova" : {
+
+    },
+    "Próximo plantão" : {
+
+    },
+    "Quando começa seu próximo plantão?" : {
+
+    },
+    "Recuar a data preenche o passado no calendário com essa escala." : {
+
+    },
+    "Rosa" : {
+
+    },
+    "Roxo" : {
+
+    },
+    "Salvar" : {
+
+    },
+    "Sem escala" : {
+
+    },
+    "Sem escala, a categoria serve para plantões avulsos." : {
+
+    },
+    "Só plantões da escala podem ser cancelados." : {
+
+    },
+    "Tem escala fixa" : {
+
+    },
+    "Trabalho" : {
+
+    },
+    "Um vínculo: o lugar e o tipo de plantão." : {
+
+    },
+    "Verde" : {
+
+    },
+    "Verde-azulado" : {
+
+    },
+    "Vermelho" : {
+
+    },
+    "Índigo" : {
+
+    },
+    "“Desde quando” não pode ser depois do próximo plantão." : {
+
+    }
   },
   "version" : "1.0"
 }

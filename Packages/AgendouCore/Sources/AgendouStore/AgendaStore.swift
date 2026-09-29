@@ -126,7 +126,7 @@ public final class AgendaStore {
         _ = revision
         guard schedule.endsAt == nil else { return false }
         if now - schedule.createdAt.epochSeconds < 86_400 { return true }
-        guard let first = snapshot(of: schedule)?.firstOccurrenceStart else { return true }
+        guard let first = version(of: schedule)?.firstOccurrenceStart else { return true }
         return first > now
     }
 
@@ -141,7 +141,7 @@ public final class AgendaStore {
         try validateDurations(workSeconds, restSeconds)
         let anchor = anchorAt.epochSeconds
 
-        if let previous = predecessor(of: schedule) {
+        if let previous = previousSchedule(of: schedule) {
             guard anchor >= min(now, schedule.anchorAt.epochSeconds) else { throw AgendaError.anchorInPast }
             guard anchor > previous.startsAt.epochSeconds else { throw AgendaError.anchorNotAfterCurrentStart }
             previous.endsAt = Date(epochSeconds: anchor)
@@ -160,7 +160,7 @@ public final class AgendaStore {
     /// Deletes an editable version and reopens the previous one, if any.
     public func deleteSchedule(_ schedule: CategorySchedule) throws {
         guard isEditable(schedule) else { throw AgendaError.scheduleLocked }
-        predecessor(of: schedule)?.endsAt = nil
+        previousSchedule(of: schedule)?.endsAt = nil
         context.delete(schedule)
         try save()
     }
@@ -173,7 +173,7 @@ public final class AgendaStore {
         let schedules = (try? context.fetch(FetchDescriptor<CategorySchedule>())) ?? []
         let overrides = (try? context.fetch(FetchDescriptor<ShiftOverride>())) ?? []
         return ScheduleEngine.expand(
-            schedules: schedules.compactMap(snapshot(of:)), overrides: overrides.compactMap(snapshot(of:)), in: range)
+            schedules: schedules.compactMap(version(of:)), overrides: overrides.compactMap(snapshot(of:)), in: range)
     }
 
     // MARK: - Helpers
@@ -209,11 +209,12 @@ public final class AgendaStore {
     }
 
     /// The version closed exactly where this one starts.
-    private func predecessor(of schedule: CategorySchedule) -> CategorySchedule? {
+    public func previousSchedule(of schedule: CategorySchedule) -> CategorySchedule? {
         schedule.category?.schedules.first { $0.id != schedule.id && $0.endsAt == schedule.startsAt }
     }
 
-    func snapshot(of schedule: CategorySchedule) -> ScheduleVersion? {
+    /// The version as the schedule engine sees it.
+    public func version(of schedule: CategorySchedule) -> ScheduleVersion? {
         guard let categoryID = schedule.category?.id else { return nil }
         return ScheduleVersion(
             id: schedule.id, categoryID: categoryID, workSeconds: Int64(schedule.workSeconds),

@@ -217,6 +217,18 @@ struct CorrectScheduleTests {
         }
     }
 
+    @Test func exposesThePreviousVersion() throws {
+        let agenda = TestAgenda(now: at(2026, 9, 29, 12))
+        let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
+        let old = try #require(agenda.store.openSchedule(of: category))
+        let new = try agenda.store.changeSchedule(
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+
+        #expect(agenda.store.previousSchedule(of: new)?.id == old.id)
+        #expect(agenda.store.previousSchedule(of: old) == nil)
+        #expect(agenda.store.version(of: new)?.firstOccurrenceStart == at(2026, 10, 3, 7).epochSeconds)
+    }
+
     @Test func deletingAnEditableChangeReopensThePreviousVersion() throws {
         let agenda = TestAgenda(now: at(2026, 9, 29, 12))
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
