@@ -18,7 +18,6 @@ Agendou/                 app SwiftUI (Swift 6, MainActor por padrão)
   Features/              uma pasta por aba: Home, Calendar, Categories, Settings
   Resources/             Assets.xcassets, Localizable.xcstrings (pt-BR)
 Config/                  entitlements (App Group group.com.lucasfranco.agendou)
-Design/AppIcon.swift     gera o ícone: swift Design/AppIcon.swift Agendou/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png
 Packages/AgendouCore/    Swift package com dois módulos:
   AgendouCore             lógica pura da escala e do calendário civil, sem SwiftUI nem SwiftData
   AgendouStore            modelos SwiftData e AgendaStore, a única porta de escrita (regras testadas)
