@@ -35,4 +35,23 @@ final class HomeTests: XCTestCase {
         app.buttons[todayID].tap()
         XCTAssertTrue(app.buttons["day.done"].waitForExistence(timeout: 5))
     }
+
+    /// Times are always in America/Sao_Paulo, never the device's time zone.
+    @MainActor
+    func testShowsWorkplaceTimesWhateverTheDeviceTimeZone() {
+        let app = XCUIApplication.agendou()
+        app.launchEnvironment["TZ"] = "Asia/Tokyo"
+        app.launch()
+        app.createCategory("UTI")
+        app.buttons["category.row.UTI"].tap()
+        let since = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH 'Em vigor desde,'"))
+            .firstMatch
+        XCTAssertTrue(since.waitForExistence(timeout: 5))
+        XCTAssertTrue(since.label.hasSuffix("07:00"), since.label)
+
+        app.tabBars.buttons["Início"].tap()
+        let card = app.buttons["home.card"]
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertTrue(card.label.contains("07:00 – 19:00"), card.label)
+    }
 }
