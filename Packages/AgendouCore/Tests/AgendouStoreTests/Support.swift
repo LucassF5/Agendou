@@ -22,7 +22,8 @@ final class TestAgenda {
     func category12x36(name: String = "UTI", anchor: Date, startsAt: Date? = nil) throws -> ShiftCategory {
         let category = try store.createCategory(name: name, color: .teal)
         try store.startFirstSchedule(
-            for: category, workSeconds: 43_200, restSeconds: 129_600, anchorAt: anchor, startsAt: startsAt ?? anchor)
+            for: category, workSeconds: 43_200, restSeconds: 129_600, anchorAt: anchor, startsAt: startsAt ?? anchor,
+            period: .months(24))
         return category
     }
 

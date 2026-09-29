@@ -77,10 +77,11 @@ public final class AgendaStore {
     }
 
     /// First version of a category. `startsAt` ("desde quando") may go back and fill the past, but never
-    /// past the anchor.
+    /// past the anchor. The period counts from the anchor's month, so going back does not use it up.
     @discardableResult
     public func startFirstSchedule(
-        for category: ShiftCategory, workSeconds: Int, restSeconds: Int, anchorAt: Date, startsAt: Date
+        for category: ShiftCategory, workSeconds: Int, restSeconds: Int, anchorAt: Date, startsAt: Date,
+        period: RepeatPeriod
     ) throws -> CategorySchedule {
         try requireActive(category)
         guard category.schedules.isEmpty else { throw AgendaError.categoryAlreadyHasSchedule }
@@ -88,11 +89,12 @@ public final class AgendaStore {
         let anchor = anchorAt.epochSeconds
         let start = startsAt.epochSeconds
         guard start <= anchor else { throw AgendaError.startsAfterAnchor }
+        let end = try periodEnd(period, anchor: anchor)
 
         let schedule = CategorySchedule(
             category: category, workSeconds: workSeconds, restSeconds: restSeconds,
             anchorAt: Date(epochSeconds: anchor), startsAt: Date(epochSeconds: start),
-            createdAt: Date(epochSeconds: now))
+            repeatsUntil: Date(epochSeconds: end), createdAt: Date(epochSeconds: now))
         context.insert(schedule)
         try save()
         return schedule
@@ -101,21 +103,22 @@ public final class AgendaStore {
     /// "Mudei de escala": the new version starts at the new anchor, never in the past, and closes the
     /// open one at that instant.
     @discardableResult
-    public func changeSchedule(for category: ShiftCategory, workSeconds: Int, restSeconds: Int, anchorAt: Date)
-        throws -> CategorySchedule
-    {
+    public func changeSchedule(
+        for category: ShiftCategory, workSeconds: Int, restSeconds: Int, anchorAt: Date, period: RepeatPeriod
+    ) throws -> CategorySchedule {
         try requireActive(category)
         guard let open = openSchedule(of: category) else { throw AgendaError.noOpenSchedule }
         try validateDurations(workSeconds, restSeconds)
         let anchor = anchorAt.epochSeconds
         guard anchor >= now else { throw AgendaError.anchorInPast }
         guard anchor > open.startsAt.epochSeconds else { throw AgendaError.anchorNotAfterCurrentStart }
+        let end = try periodEnd(period, anchor: anchor)
 
         open.endsAt = Date(epochSeconds: anchor)
         let schedule = CategorySchedule(
             category: category, workSeconds: workSeconds, restSeconds: restSeconds,
             anchorAt: Date(epochSeconds: anchor), startsAt: Date(epochSeconds: anchor),
-            createdAt: Date(epochSeconds: now))
+            repeatsUntil: Date(epochSeconds: end), createdAt: Date(epochSeconds: now))
         context.insert(schedule)
         try save()
         return schedule
@@ -134,12 +137,14 @@ public final class AgendaStore {
     /// after a change the version starts at its anchor, and the previous one follows it. The previous
     /// version's history up to the earlier of now and the original anchor never changes.
     public func correctSchedule(
-        _ schedule: CategorySchedule, workSeconds: Int, restSeconds: Int, anchorAt: Date, startsAt: Date?
+        _ schedule: CategorySchedule, workSeconds: Int, restSeconds: Int, anchorAt: Date, startsAt: Date?,
+        period: RepeatPeriod
     ) throws {
         guard isEditable(schedule) else { throw AgendaError.scheduleLocked }
         if let category = schedule.category { try requireActive(category) }
         try validateDurations(workSeconds, restSeconds)
         let anchor = anchorAt.epochSeconds
+        let end = try periodEnd(period, anchor: anchor)
 
         if let previous = previousSchedule(of: schedule) {
             guard anchor >= min(now, schedule.anchorAt.epochSeconds) else { throw AgendaError.anchorInPast }
@@ -154,6 +159,7 @@ public final class AgendaStore {
         schedule.workSeconds = workSeconds
         schedule.restSeconds = restSeconds
         schedule.anchorAt = Date(epochSeconds: anchor)
+        schedule.repeatsUntil = Date(epochSeconds: end)
         try save()
     }
 
@@ -223,13 +229,22 @@ public final class AgendaStore {
         schedule.category?.schedules.first { $0.id != schedule.id && $0.endsAt == schedule.startsAt }
     }
 
-    /// The version as the schedule engine sees it.
+    /// The version as the schedule engine sees it: it ends at the earlier of `endsAt` (replaced or
+    /// archived) and `repeatsUntil` (the period the user chose).
     public func version(of schedule: CategorySchedule) -> ScheduleVersion? {
         guard let categoryID = schedule.category?.id else { return nil }
+        let end = [schedule.endsAt, schedule.repeatsUntil].compactMap { $0?.epochSeconds }.min()
         return ScheduleVersion(
             id: schedule.id, categoryID: categoryID, workSeconds: Int64(schedule.workSeconds),
             restSeconds: Int64(schedule.restSeconds), anchorAt: schedule.anchorAt.epochSeconds,
-            startsAt: schedule.startsAt.epochSeconds, endsAt: schedule.endsAt?.epochSeconds)
+            startsAt: schedule.startsAt.epochSeconds, endsAt: end)
+    }
+
+    /// End of `period` counted from the anchor's month; it must leave room for the first shift.
+    func periodEnd(_ period: RepeatPeriod, anchor: Int64) throws -> Int64 {
+        let end = period.end(startingOn: CivilCalendar.date(containing: anchor))
+        guard end > anchor else { throw AgendaError.invalidRepeatEnd }
+        return end
     }
 
     func snapshot(of override: ShiftOverride) -> Override? {

@@ -1,3 +1,4 @@
+import AgendouCore
 import AgendouStore
 import SwiftUI
 
@@ -81,7 +82,7 @@ struct CategoryForm: View {
                     do {
                         try store.startFirstSchedule(
                             for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds,
-                            anchorAt: anchor, startsAt: startsAt)
+                            anchorAt: anchor, startsAt: startsAt, period: .months(1))
                     } catch {
                         try? store.deletePermanently(category)
                         throw error

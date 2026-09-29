@@ -24,6 +24,8 @@ extension AgendaError {
         case .notScheduled: String(localized: "Só plantões da escala podem ser cancelados.")
         case .notAdjusted: String(localized: "Esse plantão não foi ajustado.")
         case .notFound: String(localized: "Não encontrado.")
+        case .invalidRepeatEnd:
+            String(localized: "O prazo precisa cobrir o primeiro plantão e, ao renovar, passar do prazo atual.")
         }
     }
 }

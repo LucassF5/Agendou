@@ -100,14 +100,15 @@ struct ScheduleForm: View {
             case .first(let category):
                 try store.startFirstSchedule(
                     for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
-                    startsAt: startsAt)
+                    startsAt: startsAt, period: .months(1))
             case .change(let category):
                 try store.changeSchedule(
-                    for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor)
+                    for: category, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
+                    period: .months(1))
             case .correct(let schedule):
                 try store.correctSchedule(
                     schedule, workSeconds: draft.workSeconds, restSeconds: draft.restSeconds, anchorAt: anchor,
-                    startsAt: asksStartDate ? startsAt : nil)
+                    startsAt: asksStartDate ? startsAt : nil, period: .months(1))
             }
             dismiss()
         } catch {

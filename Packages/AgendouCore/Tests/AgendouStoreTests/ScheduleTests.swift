@@ -10,7 +10,8 @@ struct FirstScheduleTests {
         let category = try agenda.store.createCategory(name: "UTI", color: .teal)
         let anchor = at(2026, 10, 1, 7).addingTimeInterval(0.75)
         let schedule = try agenda.store.startFirstSchedule(
-            for: category, workSeconds: 12 * hour, restSeconds: 36 * hour, anchorAt: anchor, startsAt: anchor)
+            for: category, workSeconds: 12 * hour, restSeconds: 36 * hour, anchorAt: anchor, startsAt: anchor,
+            period: .months(24))
         #expect(schedule.anchorAt == at(2026, 10, 1, 7))
         #expect(schedule.startsAt == at(2026, 10, 1, 7))
         #expect(schedule.endsAt == nil)
@@ -24,7 +25,7 @@ struct FirstScheduleTests {
         #expect(throws: AgendaError.invalidDuration) {
             try agenda.store.startFirstSchedule(
                 for: category, workSeconds: workHours * hour, restSeconds: restHours * hour,
-                anchorAt: at(2026, 10, 1, 7), startsAt: at(2026, 10, 1, 7))
+                anchorAt: at(2026, 10, 1, 7), startsAt: at(2026, 10, 1, 7), period: .months(24))
         }
     }
 
@@ -34,7 +35,7 @@ struct FirstScheduleTests {
         #expect(throws: AgendaError.startsAfterAnchor) {
             try agenda.store.startFirstSchedule(
                 for: category, workSeconds: 12 * hour, restSeconds: 36 * hour,
-                anchorAt: at(2026, 10, 1, 7), startsAt: at(2026, 10, 1, 8))
+                anchorAt: at(2026, 10, 1, 7), startsAt: at(2026, 10, 1, 8), period: .months(24))
         }
     }
 
@@ -57,7 +58,7 @@ struct FirstScheduleTests {
         #expect(throws: AgendaError.categoryAlreadyHasSchedule) {
             try agenda.store.startFirstSchedule(
                 for: category, workSeconds: 12 * hour, restSeconds: 36 * hour,
-                anchorAt: at(2026, 10, 2, 7), startsAt: at(2026, 10, 2, 7))
+                anchorAt: at(2026, 10, 2, 7), startsAt: at(2026, 10, 2, 7), period: .months(24))
         }
     }
 }
@@ -69,7 +70,8 @@ struct ChangeScheduleTests {
         let old = try #require(agenda.store.openSchedule(of: category))
 
         let new = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7),
+            period: .months(24))
 
         #expect(old.endsAt == at(2026, 10, 2, 7))
         #expect(new.startsAt == at(2026, 10, 2, 7))
@@ -84,7 +86,8 @@ struct ChangeScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         #expect(throws: AgendaError.anchorInPast) {
             try agenda.store.changeSchedule(
-                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: agenda.now - 1)
+                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: agenda.now - 1,
+                period: .months(24))
         }
     }
 
@@ -93,7 +96,8 @@ struct ChangeScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 10, 10, 7))
         #expect(throws: AgendaError.anchorNotAfterCurrentStart) {
             try agenda.store.changeSchedule(
-                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 10, 7))
+                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 10, 7),
+                period: .months(24))
         }
     }
 
@@ -102,7 +106,8 @@ struct ChangeScheduleTests {
         let category = try agenda.store.createCategory(name: "UTI", color: .teal)
         #expect(throws: AgendaError.noOpenSchedule) {
             try agenda.store.changeSchedule(
-                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7))
+                for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7),
+                period: .months(24))
         }
     }
 
@@ -111,7 +116,8 @@ struct ChangeScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         #expect(throws: AgendaError.invalidDuration) {
             try agenda.store.changeSchedule(
-                for: category, workSeconds: 0, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7))
+                for: category, workSeconds: 0, restSeconds: 48 * hour, anchorAt: at(2026, 10, 2, 7), period: .months(24)
+            )
         }
     }
 
@@ -124,7 +130,8 @@ struct ChangeScheduleTests {
         #expect(august.occurrences.count == 15)  // Aug 2, 4, ..., 30
 
         _ = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 9, 29, 19))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 9, 29, 19),
+            period: .months(24))
 
         #expect(agenda.month(2026, 8) == august)
         #expect(agenda.store.expand(in: at(2026, 9, 1, 0).epochSeconds..<agenda.now.epochSeconds) == septemberSoFar)
@@ -141,7 +148,7 @@ struct CorrectScheduleTests {
 
         try agenda.store.correctSchedule(
             schedule, workSeconds: 12 * hour, restSeconds: 60 * hour, anchorAt: at(2026, 9, 29, 7),
-            startsAt: at(2026, 9, 29, 7))
+            startsAt: at(2026, 9, 29, 7), period: .months(24))
         #expect(schedule.restSeconds == 60 * hour)
     }
 
@@ -154,7 +161,7 @@ struct CorrectScheduleTests {
 
         try agenda.store.correctSchedule(
             schedule, workSeconds: 24 * hour, restSeconds: 72 * hour, anchorAt: at(2026, 10, 2, 7),
-            startsAt: at(2026, 10, 2, 7))
+            startsAt: at(2026, 10, 2, 7), period: .months(24))
         #expect(schedule.anchorAt == at(2026, 10, 2, 7))
         #expect(schedule.workSeconds == 24 * hour)
     }
@@ -168,7 +175,7 @@ struct CorrectScheduleTests {
         #expect(throws: AgendaError.scheduleLocked) {
             try agenda.store.correctSchedule(
                 schedule, workSeconds: 12 * hour, restSeconds: 60 * hour, anchorAt: at(2026, 9, 1, 7),
-                startsAt: at(2026, 9, 1, 7))
+                startsAt: at(2026, 9, 1, 7), period: .months(24))
         }
     }
 
@@ -177,7 +184,8 @@ struct CorrectScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 10, 1, 7))
         let first = try #require(agenda.store.openSchedule(of: category))
         _ = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 5, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 5, 7),
+            period: .months(24))
         #expect(!agenda.store.isEditable(first))
     }
 
@@ -188,7 +196,7 @@ struct CorrectScheduleTests {
         #expect(throws: AgendaError.startsAfterAnchor) {
             try agenda.store.correctSchedule(
                 schedule, workSeconds: 12 * hour, restSeconds: 36 * hour, anchorAt: at(2026, 10, 1, 7),
-                startsAt: at(2026, 10, 2, 7))
+                startsAt: at(2026, 10, 2, 7), period: .months(24))
         }
     }
 
@@ -197,10 +205,12 @@ struct CorrectScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         let old = try #require(agenda.store.openSchedule(of: category))
         let new = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7),
+            period: .months(24))
 
         try agenda.store.correctSchedule(
-            new, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 1, 7), startsAt: nil)
+            new, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 1, 7), startsAt: nil,
+            period: .months(24))
 
         #expect(new.startsAt == at(2026, 10, 1, 7))
         #expect(old.endsAt == at(2026, 10, 1, 7))
@@ -210,10 +220,12 @@ struct CorrectScheduleTests {
         let agenda = TestAgenda(now: at(2026, 9, 29, 12))
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         let new = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7),
+            period: .months(24))
         #expect(throws: AgendaError.anchorInPast) {
             try agenda.store.correctSchedule(
-                new, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 9, 28, 7), startsAt: nil)
+                new, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 9, 28, 7), startsAt: nil,
+                period: .months(24))
         }
     }
 
@@ -222,7 +234,8 @@ struct CorrectScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         let old = try #require(agenda.store.openSchedule(of: category))
         let new = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7),
+            period: .months(24))
 
         #expect(agenda.store.previousSchedule(of: new)?.id == old.id)
         #expect(agenda.store.previousSchedule(of: old) == nil)
@@ -234,7 +247,8 @@ struct CorrectScheduleTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         let old = try #require(agenda.store.openSchedule(of: category))
         let new = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7),
+            period: .months(24))
 
         try agenda.store.deleteSchedule(new)
 

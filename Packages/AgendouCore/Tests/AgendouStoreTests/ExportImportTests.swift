@@ -12,7 +12,7 @@ struct ExportImportTests {
         let agenda = TestAgenda(now: at(2026, 9, 29, 12))
         let uti = try agenda.category12x36(name: "UTI", anchor: at(2026, 9, 1, 7), startsAt: at(2026, 8, 1, 0))
         _ = try agenda.store.changeSchedule(
-            for: uti, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: uti, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7), period: .months(24))
         let ps = try agenda.category12x36(name: "PS", anchor: at(2026, 9, 2, 19))
         _ = try agenda.store.addExtra(to: ps, startsAt: at(2026, 9, 10, 7), endsAt: at(2026, 9, 10, 13))
         let september = agenda.month(2026, 9).occurrences

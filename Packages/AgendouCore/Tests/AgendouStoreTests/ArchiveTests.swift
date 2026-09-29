@@ -26,7 +26,8 @@ struct ArchiveTests {
         let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
         let old = try #require(agenda.store.openSchedule(of: category))
         _ = try agenda.store.changeSchedule(
-            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7))
+            for: category, workSeconds: 24 * hour, restSeconds: 48 * hour, anchorAt: at(2026, 10, 3, 7),
+            period: .months(24))
 
         try agenda.store.archive(category)
 
@@ -55,7 +56,7 @@ struct ArchiveTests {
         #expect(throws: AgendaError.categoryArchived) {
             try agenda.store.startFirstSchedule(
                 for: category, workSeconds: 12 * hour, restSeconds: 36 * hour, anchorAt: at(2026, 10, 1, 7),
-                startsAt: at(2026, 10, 1, 7))
+                startsAt: at(2026, 10, 1, 7), period: .months(24))
         }
         #expect(throws: AgendaError.categoryArchived) { try agenda.store.archive(category) }
     }

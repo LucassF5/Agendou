@@ -21,4 +21,6 @@ public enum AgendaError: Error, Equatable, Sendable {
     case notScheduled
     case notAdjusted
     case notFound
+    /// The period does not cover the first shift, or a renewal does not go past the current end.
+    case invalidRepeatEnd
 }
