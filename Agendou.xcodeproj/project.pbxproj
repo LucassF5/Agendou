@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A6E0000000000000000000A1 /* AgendouCore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000A0 /* AgendouCore */; };
+		A6E0000000000000000000B1 /* AgendouStore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000B0 /* AgendouStore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6E0000000000000000000A1 /* AgendouCore in Frameworks */,
+				A6E0000000000000000000B1 /* AgendouStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +83,7 @@
 			name = Agendou;
 			packageProductDependencies = (
 				A6E0000000000000000000A0 /* AgendouCore */,
+				A6E0000000000000000000B0 /* AgendouStore */,
 			);
 			productName = Agendou;
 			productReference = A6E000000000000000000004 /* Agendou.app */;
@@ -308,6 +311,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A6E0000000000000000000A2 /* XCLocalSwiftPackageReference "Packages/AgendouCore" */;
 			productName = AgendouCore;
+		};
+		A6E0000000000000000000B0 /* AgendouStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6E0000000000000000000A2 /* XCLocalSwiftPackageReference "Packages/AgendouCore" */;
+			productName = AgendouStore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

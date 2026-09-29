@@ -18,7 +18,9 @@ Agendou/                 app SwiftUI (Swift 6, MainActor por padrão)
   Features/              uma pasta por aba: Home, Calendar, Categories, Settings
   Resources/             Assets.xcassets, Localizable.xcstrings (pt-BR)
 Config/                  entitlements (App Group group.com.lucasfranco.agendou)
-Packages/AgendouCore/    lógica pura da escala, sem SwiftUI nem SwiftData
+Packages/AgendouCore/    Swift package com dois módulos:
+  AgendouCore             lógica pura da escala e do calendário civil, sem SwiftUI nem SwiftData
+  AgendouStore            modelos SwiftData e AgendaStore, a única porta de escrita (regras testadas)
 ```
 
 ## Abrindo no Xcode
@@ -44,7 +46,7 @@ xcodebuild -project Agendou.xcodeproj -scheme Agendou \
   -destination 'platform=iOS Simulator,name=iPhone 17' build
 ```
 
-Testes do núcleo (Swift Testing, rodam no Mac, sem simulador):
+Testes do núcleo e das regras de dados (Swift Testing, rodam no Mac, sem simulador):
 
 ```sh
 swift test --package-path Packages/AgendouCore
