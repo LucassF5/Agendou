@@ -71,7 +71,9 @@ struct ExportImportTests {
         let json = try #require(String(data: try agenda.store.exportData(), encoding: .utf8))
         let object = try #require(try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any])
 
-        #expect(object["schemaVersion"] as? Int == 1)
+        #expect(object["schemaVersion"] as? Int == 2)
+        let schedules = try #require(object["schedules"] as? [[String: Any]])
+        #expect(schedules.allSatisfy { $0["repeatsUntil"] is String })
         #expect(object["exportedAt"] as? String == "2026-09-29T15:00:00Z")
         #expect(
             Set(object.keys) == ["schemaVersion", "exportedAt", "categories", "schedules", "overrides", "dayNotes"])
@@ -80,6 +82,16 @@ struct ExportImportTests {
         let notes = try #require(object["dayNotes"] as? [[String: Any]])
         #expect(notes.first?["day"] as? String == "2026-09-05")
         #expect(!json.contains("."), "instants have no fractional seconds and nothing else has a dot")
+    }
+
+    @Test func roundTripsPeriods() throws {
+        let source = try populated()
+        let target = TestAgenda(now: source.now)
+        try target.store.replaceAll(with: try AgendaExport.decode(source.store.exportData()))
+        #expect(
+            target.store.makeExport().schedules.map(\.repeatsUntil)
+                == source.store.makeExport().schedules.map(\.repeatsUntil))
+        #expect(target.store.makeExport().schedules.allSatisfy { $0.repeatsUntil != nil })
     }
 
     @Test func replacingWithAnInvalidExportLeavesTheStoreUntouched() throws {
@@ -97,7 +109,7 @@ struct ImportValidationTests {
     private let category = UUID()
 
     private func document(
-        schemaVersion: Int = 1, categories: String? = nil, schedules: String = "[]", overrides: String = "[]",
+        schemaVersion: Int = 2, categories: String? = nil, schedules: String = "[]", overrides: String = "[]",
         dayNotes: String = "[]"
     ) -> Data {
         let categories =
@@ -156,7 +168,7 @@ struct ImportValidationTests {
     }
 
     @Test func rejectsANewerSchemaVersion() {
-        #expect(throws: AgendaImportError.unsupportedVersion(2)) { try AgendaExport.decode(document(schemaVersion: 2)) }
+        #expect(throws: AgendaImportError.unsupportedVersion(3)) { try AgendaExport.decode(document(schemaVersion: 3)) }
     }
 
     @Test func rejectsReferencesToMissingCategories() {
@@ -231,6 +243,19 @@ struct ImportValidationTests {
                 document(
                     dayNotes:
                         #"[{"id": "\#(UUID())", "day": "\#(day)", "body": "x", "updatedAt": "2026-09-05T10:00:00Z"}]"#))
+        }
+    }
+
+    @Test func importsVersionOneFilesWithoutPeriods() throws {
+        let export = try AgendaExport.decode(document(schemaVersion: 1, schedules: "[\(schedule())]"))
+        #expect(export.schedules.first?.repeatsUntil == nil)
+    }
+
+    @Test func rejectsAPeriodEndingBeforeTheVersionStarts() {
+        let record = schedule().replacingOccurrences(
+            of: #""createdAt""#, with: #""repeatsUntil": "2026-08-01T00:00:00Z", "createdAt""#)
+        #expect(throws: AgendaImportError.invalidSchedule) {
+            try AgendaExport.decode(document(schemaVersion: 2, schedules: "[\(record)]"))
         }
     }
 

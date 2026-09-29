@@ -26,7 +26,7 @@ extension AgendaStore {
                     .init(
                         id: schedule.id, categoryId: $0.id, workSeconds: schedule.workSeconds,
                         restSeconds: schedule.restSeconds, anchorAt: schedule.anchorAt, startsAt: schedule.startsAt,
-                        endsAt: schedule.endsAt, createdAt: schedule.createdAt)
+                        endsAt: schedule.endsAt, repeatsUntil: schedule.repeatsUntil, createdAt: schedule.createdAt)
                 }
             },
             overrides: overrides.compactMap { override in
@@ -67,7 +67,7 @@ extension AgendaStore {
                     id: record.id, category: categories[record.categoryId], workSeconds: record.workSeconds,
                     restSeconds: record.restSeconds, anchorAt: normalized(record.anchorAt),
                     startsAt: normalized(record.startsAt), endsAt: record.endsAt.map(normalized),
-                    createdAt: normalized(record.createdAt)))
+                    repeatsUntil: record.repeatsUntil.map(normalized), createdAt: normalized(record.createdAt)))
         }
         for record in export.overrides {
             let kind: Override.Kind = record.kind == "extra" ? .extra : .cancellation

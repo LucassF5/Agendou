@@ -4,7 +4,8 @@ import Foundation
 /// The backup file: the stored state only, never computed occurrences. Instants are ISO 8601 UTC
 /// without fractional seconds.
 public struct AgendaExport: Codable, Equatable, Sendable {
-    public static let currentSchemaVersion = 1
+    /// 2 added `repeatsUntil` to schedules; version 1 files still import, without periods.
+    public static let currentSchemaVersion = 2
 
     public struct CategoryRecord: Codable, Equatable, Sendable {
         public var id: UUID
@@ -22,6 +23,8 @@ public struct AgendaExport: Codable, Equatable, Sendable {
         public var anchorAt: Date
         public var startsAt: Date
         public var endsAt: Date?
+        /// Exclusive end of the period; absent in version 1 files.
+        public var repeatsUntil: Date?
         public var createdAt: Date
     }
 
@@ -73,7 +76,7 @@ public struct AgendaExport: Codable, Equatable, Sendable {
         guard let version = try? decoder.decode(VersionProbe.self, from: data).schemaVersion else {
             throw AgendaImportError.unreadable
         }
-        guard version == currentSchemaVersion else { throw AgendaImportError.unsupportedVersion(version) }
+        guard (1...currentSchemaVersion).contains(version) else { throw AgendaImportError.unsupportedVersion(version) }
         guard let export = try? decoder.decode(AgendaExport.self, from: data) else {
             throw AgendaImportError.unreadable
         }
@@ -99,7 +102,8 @@ public struct AgendaExport: Codable, Equatable, Sendable {
 
         for schedule in schedules {
             guard schedule.workSeconds > 0, schedule.restSeconds > 0, schedule.startsAt <= schedule.anchorAt,
-                schedule.endsAt.map({ $0 > schedule.startsAt }) ?? true
+                schedule.endsAt.map({ $0 > schedule.startsAt }) ?? true,
+                schedule.repeatsUntil.map({ $0 > schedule.startsAt }) ?? true
             else { throw AgendaImportError.invalidSchedule }
         }
         // Versions of a category follow one another: each ends at or before the next starts.
