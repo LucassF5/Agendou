@@ -154,7 +154,7 @@ extension XCUIElement {
 }
 
 extension XCTestCase {
-    /// The tour's cut-out sits over `element`.
+    /// The tour's cut-out sits over `element`, and not over the whole screen.
     @MainActor
     func assertHighlights(
         _ app: XCUIApplication, _ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line
@@ -162,8 +162,30 @@ extension XCTestCase {
         let cutout = app.descendants(matching: .any)["tour.cutout"]
         XCTAssertTrue(cutout.waitForExistence(timeout: 5), "cut-out", file: file, line: line)
         XCTAssertTrue(element.waitForExistence(timeout: 5), "highlighted element", file: file, line: line)
+        // List cells and their content differ by a few points either way, so compare overlap, not containment:
+        // most of the smaller of the two rectangles lies inside the other.
+        let target = element.frame
+        let covered = cutout.frame.intersection(target)
+        let smaller = min(cutout.frame.width * cutout.frame.height, target.width * target.height)
         XCTAssertTrue(
-            cutout.frame.intersects(element.frame), "\(cutout.frame) does not cover \(element.frame)", file: file,
+            !covered.isNull && covered.width * covered.height >= 0.7 * smaller,
+            "\(cutout.frame) does not cover \(target)", file: file, line: line)
+        XCTAssertLessThan(
+            cutout.frame.height, app.frame.height * 0.8, "cut-out covers the screen: \(cutout.frame)", file: file,
             line: line)
+    }
+}
+
+extension XCUIElement {
+    /// Taps once the element stops moving: the tour's balloon slides between the top and the bottom of the
+    /// screen, and a tap during the slide lands where the button no longer is.
+    func tapWhenSettled() {
+        var last = frame
+        for _ in 0..<20 {
+            usleep(100_000)
+            if frame == last { break }
+            last = frame
+        }
+        tap()
     }
 }

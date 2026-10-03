@@ -10,7 +10,9 @@ final class TourWindow {
         guard window == nil,
             let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first
         else { return }
-        let host = UIHostingController(rootView: TourOverlay().environment(controller).agendouEnvironment())
+        let safeArea = scene.windows.first { $0.windowLevel == .normal }?.safeAreaInsets ?? .zero
+        let host = UIHostingController(
+            rootView: TourOverlay(safeArea: safeArea).environment(controller).agendouEnvironment())
         host.view.backgroundColor = .clear
         host.view.accessibilityViewIsModal = true
         let window = UIWindow(windowScene: scene)

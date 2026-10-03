@@ -3,6 +3,9 @@ import SwiftUI
 /// The dimmed screen with a cut-out over the highlighted element and the balloon next to it.
 /// When the element has not reported its frame yet, the balloon sits in the middle without a cut-out.
 struct TourOverlay: View {
+    /// The app window's safe area: the overlay ignores its own so frames match the app's, but the balloon
+    /// must stay clear of the status bar and the home indicator.
+    let safeArea: UIEdgeInsets
     @Environment(TourController.self) private var tour
 
     var body: some View {
@@ -19,13 +22,14 @@ struct TourOverlay: View {
                 .onTapGesture {}
 
                 if let cutout {
+                    // Accessibility before `.position`, which fills its parent: the element keeps the cut-out's frame.
                     Rectangle()
                         .fill(.clear)
                         .frame(width: cutout.width, height: cutout.height)
-                        .position(x: cutout.midX, y: cutout.midY)
                         .accessibilityElement()
                         .accessibilityLabel("Área destacada")
                         .accessibilityIdentifier("tour.cutout")
+                        .position(x: cutout.midX, y: cutout.midY)
                         .allowsHitTesting(false)
                 }
 
@@ -34,7 +38,8 @@ struct TourOverlay: View {
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 16)
                     .frame(maxHeight: .infinity, alignment: alignment(for: cutout, in: bounds))
-                    .padding(.vertical, 24)
+                    .padding(.top, safeArea.top + 8)
+                    .padding(.bottom, safeArea.bottom + 8)
             }
         }
         .ignoresSafeArea()

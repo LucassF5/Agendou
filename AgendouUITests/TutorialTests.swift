@@ -16,7 +16,7 @@ final class TutorialTests: XCTestCase {
         assertHighlights(app, app.descendants(matching: .any)["home.card"])
         snapshot(app, "tour-1")
 
-        app.buttons["tour.next"].tap()
+        app.buttons["tour.next"].tapWhenSettled()
         XCTAssertTrue(
             app.staticTexts["tour.text"].label.hasPrefix("Os próximos dias e as horas do mês"),
             app.staticTexts["tour.text"].label)
@@ -82,7 +82,7 @@ final class TutorialTests: XCTestCase {
             XCTAssertTrue(app.tabBars.buttons[tabs[index]].isSelected, "step \(index + 1) tab")
             assertHighlights(app, highlights[index])
             snapshot(app, "tour-\(index + 1)")
-            if index < stepTexts.count - 1 { app.buttons["tour.next"].tap() }
+            if index < stepTexts.count - 1 { app.buttons["tour.next"].tapWhenSettled() }
         }
         XCTAssertFalse(app.buttons["tour.next"].exists)
         XCTAssertTrue(app.buttons["tour.skip"].exists)
@@ -100,8 +100,12 @@ final class TutorialTests: XCTestCase {
         app.launch()
         let next = app.buttons["tour.next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
-        for _ in 0..<5 { next.tap() }
+        for _ in 0..<5 { next.tapWhenSettled() }
         XCTAssertTrue(app.buttons["shift.menu.UTI Exemplo"].waitForExistence(timeout: 5))
+
+        // The balloon sits above the sheet here; it must stay clear of the status bar.
+        let balloon = app.descendants(matching: .any)["tour.balloon"]
+        XCTAssertGreaterThanOrEqual(balloon.frame.minY, 54, "\(balloon.frame)")
 
         app.buttons["tour.skip"].tap()
 
@@ -122,9 +126,9 @@ final class TutorialTests: XCTestCase {
             app.buttons["settings.tutorial"].revealed(in: app).tap()
             let next = app.buttons["tour.next"]
             XCTAssertTrue(next.waitForExistence(timeout: 5), "round \(round)")
-            for _ in 0..<7 { next.tap() }
+            for _ in 0..<7 { next.tapWhenSettled() }
             let done = app.buttons["tour.done"]
-            XCTAssertTrue(done.waitForExistence(timeout: 5))
+            XCTAssertTrue(done.waitForExistence(timeout: 5), "round \(round): \(app.staticTexts["tour.text"].label)")
             XCTAssertFalse(app.buttons["tour.skip"].exists)
             XCTAssertFalse(app.buttons["tour.setup"].exists)
             done.tap()
@@ -146,7 +150,7 @@ final class TutorialTests: XCTestCase {
         for step in 1...7 {
             XCTAssertTrue(next.isHittable, "Próximo on step \(step)")
             XCTAssertTrue(app.buttons["tour.skip"].isHittable, "Pular on step \(step)")
-            next.tap()
+            next.tapWhenSettled()
         }
         XCTAssertTrue(app.buttons["tour.setup"].isHittable)
         snapshot(app, "tour-large-text")
