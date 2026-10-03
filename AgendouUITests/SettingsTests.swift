@@ -25,6 +25,26 @@ final class SettingsTests: XCTestCase {
         snapshot(app, "share-sheet")
     }
 
+    @MainActor
+    func testReminderToggleShowsTheTimePicker() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.tabBars.buttons["Ajustes"].tap()
+
+        let toggle = app.switches["settings.reminder"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        XCTAssertEqual(toggle.value as? String, "0")
+        XCTAssertFalse(app.descendants(matching: .any)["settings.reminder.time"].exists)
+
+        toggle.switches.firstMatch.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["settings.reminder.time"].waitForExistence(timeout: 5))
+        XCTAssertEqual(toggle.value as? String, "1")
+        snapshot(app, "reminder-on")
+
+        toggle.switches.firstMatch.tap()
+        XCTAssertFalse(app.descendants(matching: .any)["settings.reminder.time"].waitForExistence(timeout: 2))
+    }
+
     /// The plan's backup check: export, start from nothing, import, same data.
     @MainActor
     func testExportThenImportIntoAnEmptyAppRestoresTheData() {

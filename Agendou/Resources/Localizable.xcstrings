@@ -1,14 +1,25 @@
 {
   "sourceLanguage" : "pt-BR",
   "strings" : {
-    "“Até hoje” conta os plantões que já começaram; “no mês” soma também os que ainda vão acontecer." : {
-
+    "%@ a %@ · toque num dia para ver os plantões" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ a %2$@ · toque num dia para ver os plantões"
+          }
+        }
+      }
     },
-    "“Desde quando” não pode ser depois do próximo plantão." : {
-
-    },
-    "%@ – atual" : {
-
+    "%@ de %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ de %2$@"
+          }
+        }
+      }
     },
     "%@ · %@" : {
       "localizations" : {
@@ -30,25 +41,8 @@
         }
       }
     },
-    "%@ a %@ · toque num dia para ver os plantões" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ a %2$@ · toque num dia para ver os plantões"
-          }
-        }
-      }
-    },
-    "%@ de %@" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ de %2$@"
-          }
-        }
-      }
+    "%@ – atual" : {
+
     },
     "%@, %lld plantões, o primeiro às %@" : {
       "localizations" : {
@@ -109,7 +103,13 @@
     "A escala termina agora e os extras futuros são apagados. Não dá para desarquivar." : {
 
     },
+    "Abrir Ajustes" : {
+
+    },
     "Adicionar extra" : {
+
+    },
+    "Agora não" : {
 
     },
     "Ajustado" : {
@@ -148,13 +148,10 @@
     "Arquivar encerra a escala agora e apaga os extras futuros. O passado continua no calendário." : {
 
     },
-    "até %@" : {
+    "Ativas" : {
 
     },
     "Até hoje" : {
-
-    },
-    "Ativas" : {
 
     },
     "Azul" : {
@@ -211,13 +208,7 @@
     "Corrigir escala" : {
 
     },
-    "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
-
-    },
     "Dados importados" : {
-
-    },
-    "Dê um nome à categoria." : {
 
     },
     "Definir escala" : {
@@ -236,6 +227,12 @@
 
     },
     "Duração" : {
+
+    },
+    "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
+
+    },
+    "Dê um nome à categoria." : {
 
     },
     "Editar" : {
@@ -337,25 +334,19 @@
     "Histórico de escalas" : {
 
     },
-    "hoje" : {
-
-    },
     "Hoje" : {
 
     },
     "Hoje, %@" : {
 
     },
-    "horas" : {
+    "Horário" : {
 
     },
     "Imagem" : {
 
     },
     "Importar dados" : {
-
-    },
-    "Índigo" : {
 
     },
     "Início" : {
@@ -365,6 +356,9 @@
 
     },
     "Laranja" : {
+
+    },
+    "Lembrete do plantão" : {
 
     },
     "Locais" : {
@@ -379,15 +373,6 @@
     "Mudei de escala" : {
 
     },
-    "Não encontrado." : {
-
-    },
-    "Não foi possível importar" : {
-
-    },
-    "Não foi possível salvar" : {
-
-    },
     "Nenhum plantão" : {
 
     },
@@ -400,16 +385,28 @@
     "Nenhum plantão pela frente" : {
 
     },
-    "no mês" : {
-
-    },
     "No mês" : {
 
     },
     "Nome" : {
 
     },
+    "Notificações" : {
+
+    },
+    "Notificações desativadas" : {
+
+    },
     "Nova categoria" : {
+
+    },
+    "Não encontrado." : {
+
+    },
+    "Não foi possível importar" : {
+
+    },
+    "Não foi possível salvar" : {
 
     },
     "O arquivo não é um backup do Agendou ou está corrompido." : {
@@ -443,6 +440,9 @@
     "Os dados ficam só neste iPhone: o app não usa internet nem conta." : {
 
     },
+    "Para receber o lembrete, permita as notificações do Agendou nos Ajustes do iPhone." : {
+
+    },
     "Personalizada" : {
 
     },
@@ -452,10 +452,10 @@
     "Plantão extra" : {
 
     },
-    "Plantões" : {
+    "Plantão hoje" : {
 
     },
-    "Plantões · %@" : {
+    "Plantões" : {
 
     },
     "Plantões da escala que foram desmarcados." : {
@@ -464,13 +464,16 @@
     "Plantões de %@" : {
 
     },
+    "Plantões · %@" : {
+
+    },
     "Prazo atual" : {
 
     },
-    "Prévia da imagem" : {
+    "Primeiro plantão na escala nova" : {
 
     },
-    "Primeiro plantão na escala nova" : {
+    "Prévia da imagem" : {
 
     },
     "Próximo ano" : {
@@ -521,13 +524,13 @@
     "Sem prazo" : {
 
     },
-    "Só plantões da escala podem ser cancelados." : {
-
-    },
     "Substituir" : {
 
     },
     "Substituir todos os dados?" : {
+
+    },
+    "Só plantões da escala podem ser cancelados." : {
 
     },
     "Tem escala fixa" : {
@@ -545,10 +548,7 @@
     "Trabalho" : {
 
     },
-    "Último dia" : {
-
-    },
-    "Últimos e próximos dias" : {
+    "Um aviso por dia, só nos dias com plantão. Plantão que passa da meia-noite conta no dia em que começa." : {
 
     },
     "Um vínculo: o lugar e o tipo de plantão." : {
@@ -573,6 +573,33 @@
 
     },
     "Versão" : {
+
+    },
+    "até %@" : {
+
+    },
+    "hoje" : {
+
+    },
+    "horas" : {
+
+    },
+    "no mês" : {
+
+    },
+    "Índigo" : {
+
+    },
+    "Último dia" : {
+
+    },
+    "Últimos e próximos dias" : {
+
+    },
+    "“Até hoje” conta os plantões que já começaram; “no mês” soma também os que ainda vão acontecer." : {
+
+    },
+    "“Desde quando” não pode ser depois do próximo plantão." : {
 
     }
   },

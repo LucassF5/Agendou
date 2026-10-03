@@ -7,6 +7,7 @@ import SwiftUI
 struct AgendouApp: App {
     private let container: ModelContainer
     @State private var store: AgendaStore
+    @State private var notifier: ShiftNotifier
 
     init() {
         // UI tests start from an empty in-memory store and a fresh first launch.
@@ -26,6 +27,10 @@ struct AgendouApp: App {
         let store = AgendaStore(context: container.mainContext)
         store.seedIfFirstLaunch(defaults: defaults)
         _store = State(initialValue: store)
+        _notifier = State(
+            initialValue: ShiftNotifier(
+                store: store, scheduler: isUITesting ? UITestReminderScheduler() : SystemReminderScheduler(),
+                defaults: defaults))
     }
 
     var body: some Scene {
@@ -35,6 +40,7 @@ struct AgendouApp: App {
         }
         .modelContainer(container)
         .environment(store)
+        .environment(notifier)
     }
 }
 
