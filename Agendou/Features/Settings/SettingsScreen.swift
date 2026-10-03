@@ -6,14 +6,18 @@ import UniformTypeIdentifiers
 
 struct SettingsScreen: View {
     @Environment(AgendaStore.self) private var store
+    @Environment(ShiftNotifier.self) private var notifier
+    @Environment(\.openURL) private var openURL
     @State private var importing = false
     @State private var pendingImport: AgendaExport?
     @State private var errorMessage: String?
     @State private var imported = false
+    @State private var notificationsDenied = false
 
     var body: some View {
         NavigationStack {
             Form {
+                reminderSection
                 Section {
                     ShareLink(item: backup(), preview: SharePreview("Backup do Agendou")) {
                         Label("Exportar dados", systemImage: "square.and.arrow.up")
@@ -58,7 +62,50 @@ struct SettingsScreen: View {
             .alert("Dados importados", isPresented: $imported) {
                 Button("OK") {}
             }
+            .alert("Notificações desativadas", isPresented: $notificationsDenied) {
+                Button("Abrir Ajustes") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                }
+                Button("Agora não", role: .cancel) {}
+            } message: {
+                Text("Para receber o lembrete, permita as notificações do Agendou nos Ajustes do iPhone.")
+            }
         }
+    }
+
+    private var reminderSection: some View {
+        Section {
+            Toggle(
+                "Lembrete do plantão",
+                isOn: Binding(
+                    get: { notifier.isEnabled },
+                    set: { enabled in
+                        Task { notificationsDenied = !(await notifier.setEnabled(enabled)) }
+                    })
+            )
+            .accessibilityIdentifier("settings.reminder")
+            if notifier.isEnabled {
+                DatePicker("Horário", selection: reminderTime, displayedComponents: .hourAndMinute)
+                    .accessibilityIdentifier("settings.reminder.time")
+            }
+        } header: {
+            Text("Notificações")
+        } footer: {
+            Text("Um aviso por dia, só nos dias com plantão. Plantão que passa da meia-noite conta no dia em que começa.")
+        }
+    }
+
+    /// The reminder time as a date today, so the picker edits hour and minute only.
+    private var reminderTime: Binding<Date> {
+        Binding(
+            get: {
+                CivilCalendar.calendar.date(
+                    bySettingHour: notifier.hour, minute: notifier.minute, second: 0, of: .now) ?? .now
+            },
+            set: { date in
+                let parts = CivilCalendar.calendar.dateComponents([.hour, .minute], from: date)
+                Task { await notifier.setTime(hour: parts.hour ?? 7, minute: parts.minute ?? 0) }
+            })
     }
 
     private var version: String {
@@ -127,5 +174,6 @@ extension AgendaImportError {
 #Preview {
     SettingsScreen()
         .environment(AgendaStore.preview)
+        .environment(ShiftNotifier.preview)
         .agendouEnvironment()
 }

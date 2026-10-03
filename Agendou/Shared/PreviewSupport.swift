@@ -17,3 +17,9 @@ extension AgendaStore {
         return store
     }()
 }
+
+extension ShiftNotifier {
+    /// A notifier that schedules nothing, for previews.
+    static let preview = ShiftNotifier(
+        store: .preview, scheduler: UITestReminderScheduler(), defaults: UserDefaults(suiteName: "preview")!)
+}

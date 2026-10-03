@@ -7,6 +7,9 @@ enum AppTab: Hashable {
 
 struct RootTabView: View {
     @State private var tab = AppTab.home
+    @Environment(AgendaStore.self) private var store
+    @Environment(ShiftNotifier.self) private var notifier
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         TabView(selection: $tab) {
@@ -23,11 +26,21 @@ struct RootTabView: View {
                 SettingsScreen()
             }
         }
+        // The reminders only cover the next days: refresh them when the app opens and after any change.
+        .task(id: Refresh(revision: store.revision, active: scenePhase == .active)) {
+            if scenePhase == .active { await notifier.resync() }
+        }
+    }
+
+    private struct Refresh: Equatable {
+        let revision: Int
+        let active: Bool
     }
 }
 
 #Preview {
     RootTabView()
         .environment(AgendaStore.preview)
+        .environment(ShiftNotifier.preview)
         .agendouEnvironment()
 }
