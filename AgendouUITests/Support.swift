@@ -1,10 +1,11 @@
 import XCTest
 
 extension XCUIApplication {
-    /// The app with an in-memory store and fresh first-launch state.
-    static func agendou() -> XCUIApplication {
+    /// The app with an in-memory store and fresh first-launch state. The tutorial that opens on a first
+    /// launch is skipped unless `tutorial` is set.
+    static func agendou(tutorial: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-ui-testing"]
+        app.launchArguments = tutorial ? ["-ui-testing"] : ["-ui-testing", "-skip-tutorial"]
         return app
     }
 }
