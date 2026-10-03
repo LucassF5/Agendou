@@ -8,7 +8,6 @@ struct DaySheet: View {
     @Environment(AgendaStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
-    @State private var selected: Occurrence?
     @State private var form: ExtraForm.Mode?
     @State private var note = ""
     @State private var savedNote = ""
@@ -66,10 +65,6 @@ struct DaySheet: View {
                     .accessibilityIdentifier("day.done")
                 }
             }
-            .confirmationDialog(
-                dialogTitle, isPresented: Binding(get: { selected != nil }, set: { if !$0 { selected = nil } }),
-                titleVisibility: .visible, presenting: selected, actions: actions
-            )
             .sheet(item: $form) { ExtraForm(mode: $0, store: store) }
             .errorAlert($errorMessage)
             .onAppear {
@@ -83,17 +78,21 @@ struct DaySheet: View {
     @ViewBuilder
     private func shiftRow(_ occurrence: Occurrence) -> some View {
         let category = store.category(id: occurrence.categoryID)
-        let row = ShiftRow(occurrence: occurrence, category: category)
-        if category?.archivedAt == nil {
-            Button {
-                selected = occurrence
-            } label: {
-                row
+        HStack {
+            ShiftRow(occurrence: occurrence, category: category)
+                .accessibilityIdentifier("shift.\(category?.name ?? "")")
+            if category?.archivedAt == nil {
+                Menu {
+                    actions(occurrence)
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.title3)
+                        .padding(8)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("Ações do plantão")
+                .accessibilityIdentifier("shift.menu.\(category?.name ?? "")")
             }
-            .tint(.primary)
-            .accessibilityIdentifier("shift.\(category?.name ?? "")")
-        } else {
-            row
         }
     }
 
@@ -110,11 +109,6 @@ struct DaySheet: View {
                     .accessibilityIdentifier("restore.\(category?.name ?? "")")
             }
         }
-    }
-
-    private var dialogTitle: String {
-        guard let selected, let category = store.category(id: selected.categoryID) else { return "" }
-        return "\(category.name) · \(Formatting.timeRange(selected))"
     }
 
     @ViewBuilder
@@ -150,7 +144,7 @@ struct DaySheet: View {
     }
 }
 
-/// Color bar, category, time range and origin of a shift.
+/// Color bar, category and time range of a shift.
 struct ShiftRow: View {
     let occurrence: Occurrence
     let category: ShiftCategory?
@@ -167,13 +161,6 @@ struct ShiftRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            if let tag = Formatting.originTag(occurrence) {
-                Text(tag)
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(.fill.tertiary, in: Capsule())
-            }
         }
         .accessibilityElement(children: .combine)
     }
