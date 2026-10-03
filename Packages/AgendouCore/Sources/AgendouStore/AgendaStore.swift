@@ -11,6 +11,8 @@ import SwiftData
 public final class AgendaStore {
     @ObservationIgnored public let context: ModelContext
     @ObservationIgnored private let clock: () -> Date
+    /// Holds a container nobody else owns (the sample agenda's): a context does not keep its container alive.
+    @ObservationIgnored var ownedContainer: ModelContainer?
     /// Bumped on every successful write.
     public private(set) var revision = 0
 
