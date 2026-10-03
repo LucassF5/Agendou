@@ -14,17 +14,17 @@ final class CalendarTests: XCTestCase {
         snapshot(app, "calendar-grid")
         app.openDay(WorkplaceCalendar.nextShiftDay())
 
-        let shift = app.buttons["shift.UTI"]
-        XCTAssertTrue(shift.waitForExistence(timeout: 5))
+        let menu = app.buttons["shift.menu.UTI"]
+        XCTAssertTrue(menu.waitForExistence(timeout: 5))
         snapshot(app, "day-sheet")
-        shift.tap()
+        menu.tap()
         app.buttons["Cancelar plantão"].tap()
 
         let restore = app.buttons["restore.UTI"]
         XCTAssertTrue(restore.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["shift.UTI"].exists)
+        XCTAssertFalse(app.buttons["shift.menu.UTI"].exists)
         restore.tap()
-        XCTAssertTrue(app.buttons["shift.UTI"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["shift.menu.UTI"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["restore.UTI"].exists)
     }
 
@@ -36,18 +36,17 @@ final class CalendarTests: XCTestCase {
         app.openDay(WorkplaceCalendar.nextShiftDay(plusDays: 1))
 
         XCTAssertTrue(app.buttons["day.addExtra"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["shift.UTI"].exists)
+        XCTAssertFalse(app.buttons["shift.menu.UTI"].exists)
         app.buttons["day.addExtra"].tap()
         XCTAssertTrue(app.buttons["extra.save"].waitForExistence(timeout: 5))
         snapshot(app, "extra-form")
         app.buttons["extra.save"].tap()
 
-        let extra = app.buttons["shift.UTI"]
-        XCTAssertTrue(extra.waitForExistence(timeout: 5))
-        XCTAssertTrue(extra.label.contains("Extra"), extra.label)
-        extra.tap()
+        let menu = app.buttons["shift.menu.UTI"]
+        XCTAssertTrue(menu.waitForExistence(timeout: 5))
+        menu.tap()
         app.buttons["Excluir plantão"].tap()
-        XCTAssertTrue(extra.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(menu.waitForNonExistence(timeout: 5))
     }
 
     @MainActor
@@ -57,22 +56,22 @@ final class CalendarTests: XCTestCase {
         app.createCategory("UTI")
         app.openDay(WorkplaceCalendar.nextShiftDay())
 
-        let shift = app.buttons["shift.UTI"]
-        XCTAssertTrue(shift.waitForExistence(timeout: 5))
-        shift.tap()
+        let row = app.descendants(matching: .any)["shift.UTI"]
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        let before = row.label
+        app.buttons["shift.menu.UTI"].tap()
         app.buttons["Editar horário"].tap()
         let duration = app.steppers["extra.duration"]
         XCTAssertTrue(duration.waitForExistence(timeout: 5))
         duration.buttons.element(boundBy: 0).tap()
         app.buttons["extra.save"].tap()
 
-        XCTAssertTrue(app.buttons["shift.UTI"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["shift.UTI"].label.contains("Ajustado"), app.buttons["shift.UTI"].label)
-        app.buttons["shift.UTI"].tap()
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        XCTAssertNotEqual(row.label, before, "the shift now has another length")
+        app.buttons["shift.menu.UTI"].tap()
         app.buttons["Desfazer ajuste"].tap()
-        let restored = app.buttons["shift.UTI"]
-        XCTAssertTrue(restored.waitForExistence(timeout: 5))
-        XCTAssertFalse(restored.label.contains("Ajustado"), restored.label)
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        XCTAssertEqual(row.label, before)
     }
 
     @MainActor

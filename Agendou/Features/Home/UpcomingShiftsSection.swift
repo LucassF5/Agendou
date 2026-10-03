@@ -46,16 +46,9 @@ struct UpcomingShiftsSection: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(Formatting.timeRange(shift))
-                        .font(.subheadline)
-                        .monospacedDigit()
-                    if let tag = Formatting.originTag(shift) {
-                        Text(tag)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                Text(Formatting.timeRange(shift))
+                    .font(.subheadline)
+                    .monospacedDigit()
             }
             .padding(.vertical, 10)
             .contentShape(Rectangle())
