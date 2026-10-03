@@ -3,12 +3,24 @@ import SwiftUI
 /// The dimmed screen with a cut-out over the highlighted element and the balloon next to it.
 /// When the element has not reported its frame yet, the balloon sits in the middle without a cut-out.
 struct TourOverlay: View {
-    /// The app window's safe area: the overlay ignores its own so frames match the app's, but the balloon
-    /// must stay clear of the status bar and the home indicator.
-    let safeArea: UIEdgeInsets
     @Environment(TourController.self) private var tour
 
     var body: some View {
+        // The outer reader keeps the safe area (live, so it follows rotation); the inner one ignores it so
+        // frames match the app's global coordinates.
+        GeometryReader { outer in
+            let safeArea = outer.safeAreaInsets
+            layer(safeArea: safeArea)
+                .task(id: BarItemLookup(step: tour.step, size: outer.size)) { await locateBarItem() }
+        }
+    }
+
+    private struct BarItemLookup: Equatable {
+        let step: TourStep?
+        let size: CGSize
+    }
+
+    private func layer(safeArea: EdgeInsets) -> some View {
         GeometryReader { proxy in
             let bounds = CGRect(origin: .zero, size: proxy.size)
             let cutout = tour.step.flatMap { tour.anchors[$0] }.map { $0.insetBy(dx: -8, dy: -8) }
@@ -44,7 +56,6 @@ struct TourOverlay: View {
         }
         .ignoresSafeArea()
         .animation(.easeInOut(duration: 0.25), value: tour.step)
-        .task(id: tour.step) { await locateBarItem() }
     }
 
     /// For a toolbar button, looks it up in UIKit until its frame stops moving (the tab switch settles).

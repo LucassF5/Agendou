@@ -5,6 +5,10 @@ final class TutorialTests: XCTestCase {
         continueAfterFailure = false
     }
 
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+    }
+
     @MainActor
     func testFirstLaunchHighlightsTheNextShiftOnTheSampleAgenda() {
         let app = XCUIApplication.agendou(tutorial: true)
@@ -143,7 +147,7 @@ final class TutorialTests: XCTestCase {
     @MainActor
     func testBalloonStaysReachableWithVeryLargeText() {
         let app = XCUIApplication.agendou(tutorial: true)
-        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"]
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         let next = app.buttons["tour.next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
@@ -154,5 +158,41 @@ final class TutorialTests: XCTestCase {
         }
         XCTAssertTrue(app.buttons["tour.setup"].isHittable)
         snapshot(app, "tour-large-text")
+    }
+
+    @MainActor
+    func testReplayStartsFromCleanScreensWhateverTheTabsWereLeftIn() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI")
+        // Leave Categories on a pushed detail and Settings scrolled down to "Ver tutorial".
+        app.buttons["category.row.UTI"].tap()
+        app.tabBars.buttons["Ajustes"].tap()
+        app.buttons["settings.tutorial"].revealed(in: app).tap()
+
+        let next = app.buttons["tour.next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        next.tapWhenSettled()
+        next.tapWhenSettled()
+        assertHighlights(app, app.buttons["category.row.UTI Exemplo"])
+        next.tapWhenSettled()
+        assertHighlights(app, app.buttons["Nova categoria"])
+        for _ in 0..<4 { next.tapWhenSettled() }
+        assertHighlights(app, app.switches["settings.reminder"])
+    }
+
+    @MainActor
+    func testBalloonFollowsTheSafeAreaAfterRotating() {
+        let app = XCUIApplication.agendou(tutorial: true)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        app.launch()
+        let next = app.buttons["tour.next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        XCUIDevice.shared.orientation = .portrait
+
+        for _ in 0..<5 { next.tapWhenSettled() }
+        XCTAssertTrue(app.staticTexts["tour.text"].label.hasPrefix("Edite o horário"))
+        let balloon = app.descendants(matching: .any)["tour.balloon"]
+        XCTAssertGreaterThanOrEqual(balloon.frame.minY, 54, "\(balloon.frame)")
     }
 }

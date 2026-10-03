@@ -36,6 +36,10 @@ struct RootTabView: View {
                 SettingsScreen()
             }
         }
+        // Rebuilt when the tour swaps the agenda in or out: pushed screens, scroll positions and the visible
+        // month go back to the start, so the tour never shows a screen left halfway, and the user does not
+        // come back to sample screens afterwards.
+        .id(demoStore == nil)
         .sheet(item: $tourDay) { day in
             DaySheet(day: day)
                 .presentationDetents([.medium, .large])
@@ -55,6 +59,7 @@ struct RootTabView: View {
             guard let step else { return }
             tab = step.tab
             tourDay = step.needsDaySheet ? sampleDay : nil
+            tourWindow.stepChanged()
         }
         .sheet(isPresented: $creatingCategory) { CategoryForm(mode: .create) }
     }

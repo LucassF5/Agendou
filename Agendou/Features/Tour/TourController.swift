@@ -16,8 +16,8 @@ final class TourController {
     private(set) var step: TourStep?
     /// Whether the real agenda has a schedule; decides the last button.
     private(set) var hasSchedule = false
-    /// Global frames reported by `.tourAnchor`. Kept even when the tour is not running, so a step finds
-    /// the frame of a view that was laid out before the tour started.
+    /// Global frames reported by `.tourAnchor`. Cleared when a run starts; the screens are rebuilt at the
+    /// same moment (see `RootTabView`), so every frame comes from the screens the tour is showing.
     var anchors: [TourStep: CGRect] = [:]
     @ObservationIgnored var onExit: ((Exit) -> Void)?
 
@@ -31,6 +31,7 @@ final class TourController {
 
     func start(hasSchedule: Bool) {
         self.hasSchedule = hasSchedule
+        anchors = [:]
         step = TourStep.allCases.first
     }
 
