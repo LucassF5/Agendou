@@ -152,3 +152,18 @@ extension XCUIElement {
         return self
     }
 }
+
+extension XCTestCase {
+    /// The tour's cut-out sits over `element`.
+    @MainActor
+    func assertHighlights(
+        _ app: XCUIApplication, _ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let cutout = app.descendants(matching: .any)["tour.cutout"]
+        XCTAssertTrue(cutout.waitForExistence(timeout: 5), "cut-out", file: file, line: line)
+        XCTAssertTrue(element.waitForExistence(timeout: 5), "highlighted element", file: file, line: line)
+        XCTAssertTrue(
+            cutout.frame.intersects(element.frame), "\(cutout.frame) does not cover \(element.frame)", file: file,
+            line: line)
+    }
+}

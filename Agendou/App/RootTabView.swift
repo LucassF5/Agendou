@@ -1,3 +1,4 @@
+import AgendouCore
 import AgendouStore
 import SwiftUI
 
@@ -6,20 +7,19 @@ enum AppTab: Hashable {
 }
 
 struct RootTabView: View {
-    /// `nil` keeps the tutorial from opening by itself (UI tests, previews).
+    /// `nil` keeps the tour from opening by itself (UI tests, previews).
     let tutorialGate: TutorialGate?
     @State private var tab = AppTab.home
-    @State private var showingTutorial: Bool
-    @State private var setUpAfterTutorial = false
     @State private var creatingCategory = false
+    @State private var tour = TourController()
+    @State private var tourWindow = TourWindow()
+    /// The sample agenda shown while the tour runs; `nil` the rest of the time.
+    @State private var demoStore: AgendaStore?
+    /// The day sheet the tour opens on steps 6 and 7.
+    @State private var tourDay: CivilDate?
     @Environment(AgendaStore.self) private var store
     @Environment(ShiftNotifier.self) private var notifier
     @Environment(\.scenePhase) private var scenePhase
-
-    init(tutorialGate: TutorialGate?) {
-        self.tutorialGate = tutorialGate
-        _showingTutorial = State(initialValue: tutorialGate?.shouldPresentOnLaunch ?? false)
-    }
 
     var body: some View {
         TabView(selection: $tab) {
@@ -36,27 +36,52 @@ struct RootTabView: View {
                 SettingsScreen()
             }
         }
+        .sheet(item: $tourDay) { day in
+            DaySheet(day: day)
+                .presentationDetents([.medium, .large])
+        }
+        .environment(demoStore ?? store)
+        .environment(tour)
         // The reminders only cover the next days: refresh them when the app opens and after any change.
+        // `store` here is always the real one: the tour never schedules or clears reminders.
         .task(id: Refresh(revision: store.revision, active: scenePhase == .active)) {
             if scenePhase == .active { await notifier.resync() }
         }
-        .environment(\.showTutorial) { showingTutorial = true }
-        .fullScreenCover(isPresented: $showingTutorial, onDismiss: afterTutorial) {
-            TutorialScreen(hasSchedule: store.hasAnySchedule) { setUp in
-                setUpAfterTutorial = setUp
-                showingTutorial = false
-            }
+        .environment(\.showTutorial, startTour)
+        .task {
+            if tutorialGate?.shouldPresentOnLaunch == true { startTour() }
+        }
+        .onChange(of: tour.step) { _, step in
+            guard let step else { return }
+            tab = step.tab
+            tourDay = step.needsDaySheet ? sampleDay : nil
         }
         .sheet(isPresented: $creatingCategory) { CategoryForm(mode: .create) }
     }
 
-    /// Counts as seen however it was closed; "Configurar minha escala" goes on to the category form.
-    private func afterTutorial() {
+    /// The day of the sample agenda's next shift, where the day sheet steps happen.
+    private var sampleDay: CivilDate? {
+        (demoStore?.currentOrNextShift()).map { CivilCalendar.date(containing: $0.startsAt) }
+    }
+
+    private func startTour() {
+        guard !tour.isActive, let demo = try? AgendaStore.demo() else { return }
+        demoStore = demo
+        tour.onExit = endTour
+        tour.start(hasSchedule: store.hasAnySchedule)
+        tourWindow.show(tour)
+    }
+
+    /// Counts as seen however it was left; "Configurar minha escala" goes on to the category form.
+    private func endTour(_ reason: TourController.Exit) {
+        tourWindow.hide()
+        tourDay = nil
+        demoStore = nil
         tutorialGate?.markSeen()
-        guard setUpAfterTutorial else { return }
-        setUpAfterTutorial = false
-        tab = .categories
-        creatingCategory = true
+        if reason == .setUp {
+            tab = .categories
+            creatingCategory = true
+        }
     }
 
     private struct Refresh: Equatable {
@@ -66,7 +91,7 @@ struct RootTabView: View {
 }
 
 extension EnvironmentValues {
-    /// Opens the tutorial over the tabs, so its last button can switch to the Categories tab.
+    /// Starts the tour over the tabs, so its last button can switch to the Categories tab.
     @Entry var showTutorial: () -> Void = {}
 }
 

@@ -26,12 +26,14 @@ struct HomeScreen: View {
                             ShiftCard(shift: shift, now: context.date) {
                                 selectedDay = CivilCalendar.date(containing: shift.startsAt)
                             }
+                            .tourAnchor(.nextShift)
                         } else {
                             emptyState
                         }
                         DayStrip(today: CivilCalendar.date(containing: context.date.epochSeconds)) {
                             selectedDay = $0
                         }
+                        .tourAnchor(.dayStrip)
                         if let shift {
                             UpcomingShiftsSection(shifts: store.upcomingShifts(after: shift, limit: 4)) {
                                 selectedDay = $0
