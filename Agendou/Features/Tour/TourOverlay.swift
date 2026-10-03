@@ -39,6 +39,21 @@ struct TourOverlay: View {
         }
         .ignoresSafeArea()
         .animation(.easeInOut(duration: 0.25), value: tour.step)
+        .task(id: tour.step) { await locateBarItem() }
+    }
+
+    /// For a toolbar button, looks it up in UIKit until its frame stops moving (the tab switch settles).
+    private func locateBarItem() async {
+        guard let step = tour.step, let identifier = step.barItemIdentifier else { return }
+        var last: CGRect?
+        for _ in 0..<20 {
+            try? await Task.sleep(for: .milliseconds(100))
+            guard tour.step == step else { return }
+            guard let frame = BarItemFrame.find(identifier) else { continue }
+            tour.anchors[step] = frame
+            if frame == last { return }
+            last = frame
+        }
     }
 
     /// Below the element when it is in the top half of the screen, above it otherwise.

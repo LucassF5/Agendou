@@ -87,6 +87,7 @@ struct SettingsScreen: View {
                     })
             )
             .accessibilityIdentifier("settings.reminder")
+            .tourAnchor(.reminder)
             if notifier.isEnabled {
                 DatePicker("Horário", selection: reminderTime, displayedComponents: .hourAndMinute)
                     .accessibilityIdentifier("settings.reminder.time")

@@ -14,6 +14,7 @@ struct CalendarScreen: View {
             ScrollView {
                 VStack(spacing: 16) {
                     MonthCalendarView(visibleMonth: $visibleMonth, dots: dots()) { selectedDay = $0 }
+                        .tourAnchor(.calendar)
                     MonthSummaryView(month: visibleMonth)
                 }
                 .padding(.horizontal)

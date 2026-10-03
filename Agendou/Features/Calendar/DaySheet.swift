@@ -23,10 +23,11 @@ struct DaySheet: View {
                             .foregroundStyle(.secondary)
                     }
                     ForEach(expansion.occurrences, id: \.self) { occurrence in
-                        shiftRow(occurrence)
+                        shiftRow(occurrence, isFirst: occurrence == expansion.occurrences.first)
                     }
                     Button("Adicionar extra", systemImage: "plus") { form = .add(day) }
                         .accessibilityIdentifier("day.addExtra")
+                        .tourAnchor(.addExtra)
                 }
                 if !expansion.cancelled.isEmpty {
                     Section {
@@ -76,7 +77,7 @@ struct DaySheet: View {
     }
 
     @ViewBuilder
-    private func shiftRow(_ occurrence: Occurrence) -> some View {
+    private func shiftRow(_ occurrence: Occurrence, isFirst: Bool) -> some View {
         let category = store.category(id: occurrence.categoryID)
         HStack {
             ShiftRow(occurrence: occurrence, category: category)
@@ -92,6 +93,7 @@ struct DaySheet: View {
                 }
                 .accessibilityLabel("Ações do plantão")
                 .accessibilityIdentifier("shift.menu.\(category?.name ?? "")")
+                .tourAnchor(.shiftMenu, when: isFirst)
             }
         }
     }
