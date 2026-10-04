@@ -1,10 +1,11 @@
 import XCTest
 
 extension XCUIApplication {
-    /// The app with an in-memory store and fresh first-launch state.
-    static func agendou() -> XCUIApplication {
+    /// The app with an in-memory store and fresh first-launch state. The tutorial that opens on a first
+    /// launch is skipped unless `tutorial` is set.
+    static func agendou(tutorial: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-ui-testing"]
+        app.launchArguments = tutorial ? ["-ui-testing"] : ["-ui-testing", "-skip-tutorial"]
         return app
     }
 }
@@ -149,5 +150,54 @@ extension XCUIElement {
             tries += 1
         }
         return self
+    }
+}
+
+extension XCTestCase {
+    /// The tour's cut-out sits over `element`, and not over the whole screen.
+    @MainActor
+    func assertHighlights(
+        _ app: XCUIApplication, _ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let cutout = app.descendants(matching: .any)["tour.cutout"]
+        XCTAssertTrue(cutout.waitForExistence(timeout: 5), "cut-out", file: file, line: line)
+        XCTAssertTrue(element.waitForExistence(timeout: 5), "highlighted element", file: file, line: line)
+        // List cells and their content differ by a few points either way, so compare overlap, not containment:
+        // most of the smaller of the two rectangles lies inside the other.
+        let target = element.frame
+        let covered = cutout.frame.intersection(target)
+        let smaller = min(cutout.frame.width * cutout.frame.height, target.width * target.height)
+        XCTAssertTrue(
+            !covered.isNull && covered.width * covered.height >= 0.7 * smaller,
+            "\(cutout.frame) does not cover \(target)", file: file, line: line)
+        XCTAssertLessThan(
+            cutout.frame.height, app.frame.height * 0.8, "cut-out covers the screen: \(cutout.frame)", file: file,
+            line: line)
+    }
+}
+
+extension XCUIElement {
+    /// Taps once the element stops moving: the tour's balloon slides between the top and the bottom of the
+    /// screen, and a tap during the slide lands where the button no longer is.
+    func tapWhenSettled() {
+        var last = frame
+        for _ in 0..<20 {
+            usleep(100_000)
+            if frame == last { break }
+            last = frame
+        }
+        tap()
+    }
+}
+
+extension XCUIApplication {
+    /// On a first launch, goes past the intro by its "Pular" to the choice and picks the tour.
+    func startTourFromIntro() {
+        let skip = buttons["intro.skip"]
+        XCTAssertTrue(skip.waitForExistence(timeout: 5), "intro")
+        skip.tap()
+        let tour = buttons["intro.tour"]
+        XCTAssertTrue(tour.waitForExistence(timeout: 5), "intro choice")
+        tour.tap()
     }
 }

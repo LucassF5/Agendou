@@ -8,6 +8,7 @@ struct AgendouApp: App {
     private let container: ModelContainer
     @State private var store: AgendaStore
     @State private var notifier: ShiftNotifier
+    private let tutorialGate: TutorialGate?
 
     init() {
         // UI tests start from an empty in-memory store and a fresh first launch.
@@ -27,6 +28,8 @@ struct AgendouApp: App {
         let store = AgendaStore(context: container.mainContext)
         store.seedIfFirstLaunch(defaults: defaults)
         _store = State(initialValue: store)
+        let skipTutorial = isUITesting && ProcessInfo.processInfo.arguments.contains("-skip-tutorial")
+        tutorialGate = skipTutorial ? nil : TutorialGate(store: store, defaults: defaults)
         _notifier = State(
             initialValue: ShiftNotifier(
                 store: store, scheduler: isUITesting ? UITestReminderScheduler() : SystemReminderScheduler(),
@@ -35,7 +38,7 @@ struct AgendouApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabView()
+            RootTabView(tutorialGate: tutorialGate)
                 .agendouEnvironment()
         }
         .modelContainer(container)

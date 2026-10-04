@@ -124,6 +124,9 @@
     "Anotação" : {
 
     },
+    "Ao abrir o app, você vê o próximo plantão e quanto falta." : {
+
+    },
     "Arquivada" : {
 
     },
@@ -163,6 +166,15 @@
     "Backup do Agendou" : {
 
     },
+    "Backup dos seus dados" : {
+
+    },
+    "Bem-vindo ao Agendou" : {
+
+    },
+    "Cada lugar onde você trabalha vira uma categoria, com a escala (12x36, 24x48…)." : {
+
+    },
     "Cada plantão aparece no dia em que começa." : {
 
     },
@@ -170,6 +182,9 @@
 
     },
     "Calendário" : {
+
+    },
+    "Calendário com o resumo de horas do mês" : {
 
     },
     "Cancelados" : {
@@ -193,6 +208,12 @@
     "Começa %@" : {
 
     },
+    "Compartilhar o mês como imagem ou texto" : {
+
+    },
+    "Concluir" : {
+
+    },
     "Configurar escala" : {
 
     },
@@ -206,6 +227,9 @@
 
     },
     "Corrigir escala" : {
+
+    },
+    "Crie uma categoria aqui. Sem escala fixa? Crie sem escala e marque os dias à mão." : {
 
     },
     "Dados importados" : {
@@ -244,6 +268,12 @@
     "Editar horário" : {
 
     },
+    "Edite o horário, cancele ou exclua um plantão." : {
+
+    },
+    "Ele organiza seus plantões a partir da sua escala. Tudo fica só neste iPhone." : {
+
+    },
     "Em andamento" : {
 
     },
@@ -272,6 +302,9 @@
 
     },
     "Escala terminou em %@" : {
+
+    },
+    "Escalas (12x36, 24x48…) que preenchem o calendário sozinhas" : {
 
     },
     "Escalas terminando" : {
@@ -319,6 +352,9 @@
     "Exportar dados" : {
 
     },
+    "Fazer o tour" : {
+
+    },
     "Fechar" : {
 
     },
@@ -358,13 +394,22 @@
     "Lembrete do plantão" : {
 
     },
+    "Lembrete no dia do plantão" : {
+
+    },
     "Locais" : {
+
+    },
+    "Marque um plantão avulso, fora da escala." : {
 
     },
     "Marrom" : {
 
     },
     "Menta" : {
+
+    },
+    "Mostramos onde fica cada coisa, nas telas de verdade, com dados de exemplo. Leva menos de um minuto." : {
 
     },
     "Mudei de escala" : {
@@ -425,16 +470,25 @@
     "O backup tem dados inconsistentes e não foi importado. Nada foi alterado." : {
 
     },
+    "O calendário se preenche sozinho, com a cor de cada categoria." : {
+
+    },
     "O prazo precisa cobrir o primeiro plantão e, ao renovar, passar do prazo atual." : {
 
     },
     "O que aconteceu nesse dia?" : {
 
     },
+    "O que o Agendou faz" : {
+
+    },
     "OK" : {
 
     },
     "Os dados ficam só neste iPhone: o app não usa internet nem conta." : {
+
+    },
+    "Os próximos dias e as horas do mês. Toque num dia para ver os detalhes." : {
 
     },
     "Para receber o lembrete, permita as notificações do Agendou nos Ajustes do iPhone." : {
@@ -455,6 +509,9 @@
     "Plantões" : {
 
     },
+    "Plantões avulsos, para quem não tem escala fixa" : {
+
+    },
     "Plantões da escala que foram desmarcados." : {
 
     },
@@ -473,6 +530,9 @@
     "Prévia da imagem" : {
 
     },
+    "Próximo" : {
+
+    },
     "Próximo ano" : {
 
     },
@@ -482,7 +542,19 @@
     "Próximos plantões" : {
 
     },
+    "Pular" : {
+
+    },
+    "Pular e começar a usar" : {
+
+    },
     "Quando começa seu próximo plantão?" : {
+
+    },
+    "Quer conhecer o app num tour rápido?" : {
+
+    },
+    "Receba um aviso no dia do plantão, no horário que preferir." : {
 
     },
     "Recuar a data preenche o passado no calendário com essa escala." : {
@@ -560,6 +632,9 @@
     "Ver no calendário" : {
 
     },
+    "Ver tutorial" : {
+
+    },
     "Verde" : {
 
     },
@@ -582,6 +657,9 @@
 
     },
     "no mês" : {
+
+    },
+    "Área destacada" : {
 
     },
     "Índigo" : {

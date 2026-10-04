@@ -8,6 +8,7 @@ struct SettingsScreen: View {
     @Environment(AgendaStore.self) private var store
     @Environment(ShiftNotifier.self) private var notifier
     @Environment(\.openURL) private var openURL
+    @Environment(\.showTutorial) private var showTutorial
     @State private var importing = false
     @State private var pendingImport: AgendaExport?
     @State private var errorMessage: String?
@@ -37,6 +38,8 @@ struct SettingsScreen: View {
                     )
                 }
                 Section {
+                    Button("Ver tutorial", systemImage: "questionmark.circle", action: showTutorial)
+                        .accessibilityIdentifier("settings.tutorial")
                     LabeledContent("Versão") {
                         Text(version)
                             .accessibilityIdentifier("settings.version")
@@ -84,6 +87,7 @@ struct SettingsScreen: View {
                     })
             )
             .accessibilityIdentifier("settings.reminder")
+            .tourAnchor(.reminder)
             if notifier.isEnabled {
                 DatePicker("Horário", selection: reminderTime, displayedComponents: .hourAndMinute)
                     .accessibilityIdentifier("settings.reminder.time")
@@ -91,7 +95,9 @@ struct SettingsScreen: View {
         } header: {
             Text("Notificações")
         } footer: {
-            Text("Um aviso por dia, só nos dias com plantão. Plantão que passa da meia-noite conta no dia em que começa.")
+            Text(
+                "Um aviso por dia, só nos dias com plantão. Plantão que passa da meia-noite conta no dia em que começa."
+            )
         }
     }
 

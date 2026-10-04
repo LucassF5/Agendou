@@ -34,7 +34,10 @@ struct CategoriesScreen: View {
                 }
                 if !active.isEmpty {
                     Section("Ativas") {
-                        ForEach(active) { row($0) }
+                        ForEach(active) { category in
+                            row(category)
+                                .tourAnchor(.category, when: category.id == active.first?.id)
+                        }
                     }
                 }
                 if !archived.isEmpty {
@@ -46,6 +49,7 @@ struct CategoriesScreen: View {
             .navigationTitle("Categorias")
             .toolbar {
                 Button("Nova categoria", systemImage: "plus") { creating = true }
+                    .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
             }
             .navigationDestination(for: UUID.self) { CategoryDetailScreen(categoryID: $0) }
             .sheet(isPresented: $creating) { CategoryForm(mode: .create) }

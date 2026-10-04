@@ -11,6 +11,8 @@ import SwiftData
 public final class AgendaStore {
     @ObservationIgnored public let context: ModelContext
     @ObservationIgnored private let clock: () -> Date
+    /// Holds a container nobody else owns (the sample agenda's): a context does not keep its container alive.
+    @ObservationIgnored var ownedContainer: ModelContainer?
     /// Bumped on every successful write.
     public private(set) var revision = 0
 
@@ -64,6 +66,12 @@ public final class AgendaStore {
     }
 
     // MARK: - Schedules
+
+    /// Whether any schedule was ever set up, open or closed: someone who had one is not a new user.
+    public var hasAnySchedule: Bool {
+        _ = revision
+        return ((try? context.fetchCount(FetchDescriptor<CategorySchedule>())) ?? 0) > 0
+    }
 
     /// Versions of a category, oldest first.
     public func schedules(of category: ShiftCategory) -> [CategorySchedule] {
