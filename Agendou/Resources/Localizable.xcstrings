@@ -166,6 +166,12 @@
     "Backup do Agendou" : {
 
     },
+    "Backup dos seus dados" : {
+
+    },
+    "Bem-vindo ao Agendou" : {
+
+    },
     "Cada lugar onde você trabalha vira uma categoria, com a escala (12x36, 24x48…)." : {
 
     },
@@ -176,6 +182,9 @@
 
     },
     "Calendário" : {
+
+    },
+    "Calendário com o resumo de horas do mês" : {
 
     },
     "Cancelados" : {
@@ -197,6 +206,9 @@
 
     },
     "Começa %@" : {
+
+    },
+    "Compartilhar o mês como imagem ou texto" : {
 
     },
     "Concluir" : {
@@ -259,6 +271,9 @@
     "Edite o horário, cancele ou exclua um plantão." : {
 
     },
+    "Ele organiza seus plantões a partir da sua escala. Tudo fica só neste iPhone." : {
+
+    },
     "Em andamento" : {
 
     },
@@ -287,6 +302,9 @@
 
     },
     "Escala terminou em %@" : {
+
+    },
+    "Escalas (12x36, 24x48…) que preenchem o calendário sozinhas" : {
 
     },
     "Escalas terminando" : {
@@ -334,6 +352,9 @@
     "Exportar dados" : {
 
     },
+    "Fazer o tour" : {
+
+    },
     "Fechar" : {
 
     },
@@ -373,6 +394,9 @@
     "Lembrete do plantão" : {
 
     },
+    "Lembrete no dia do plantão" : {
+
+    },
     "Locais" : {
 
     },
@@ -383,6 +407,9 @@
 
     },
     "Menta" : {
+
+    },
+    "Mostramos onde fica cada coisa, nas telas de verdade, com dados de exemplo. Leva menos de um minuto." : {
 
     },
     "Mudei de escala" : {
@@ -452,6 +479,9 @@
     "O que aconteceu nesse dia?" : {
 
     },
+    "O que o Agendou faz" : {
+
+    },
     "OK" : {
 
     },
@@ -477,6 +507,9 @@
 
     },
     "Plantões" : {
+
+    },
+    "Plantões avulsos, para quem não tem escala fixa" : {
 
     },
     "Plantões da escala que foram desmarcados." : {
@@ -512,7 +545,13 @@
     "Pular" : {
 
     },
+    "Pular e começar a usar" : {
+
+    },
     "Quando começa seu próximo plantão?" : {
+
+    },
+    "Quer conhecer o app num tour rápido?" : {
 
     },
     "Receba um aviso no dia do plantão, no horário que preferir." : {

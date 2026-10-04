@@ -189,3 +189,15 @@ extension XCUIElement {
         tap()
     }
 }
+
+extension XCUIApplication {
+    /// On a first launch, goes past the intro by its "Pular" to the choice and picks the tour.
+    func startTourFromIntro() {
+        let skip = buttons["intro.skip"]
+        XCTAssertTrue(skip.waitForExistence(timeout: 5), "intro")
+        skip.tap()
+        let tour = buttons["intro.tour"]
+        XCTAssertTrue(tour.waitForExistence(timeout: 5), "intro choice")
+        tour.tap()
+    }
+}

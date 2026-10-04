@@ -17,6 +17,10 @@ struct RootTabView: View {
     @State private var demoStore: AgendaStore?
     /// The day sheet the tour opens on steps 6 and 7.
     @State private var tourDay: CivilDate?
+    /// The intro shown before anything else on a first launch.
+    @State private var showingIntro = false
+    /// What the intro's choice asked for, acted on once its cover is gone.
+    @State private var introChoice: IntroChoice?
     @Environment(AgendaStore.self) private var store
     @Environment(ShiftNotifier.self) private var notifier
     @Environment(\.scenePhase) private var scenePhase
@@ -53,7 +57,18 @@ struct RootTabView: View {
         }
         .environment(\.showTutorial, startTour)
         .task {
-            if tutorialGate?.shouldPresentOnLaunch == true { startTour() }
+            if tutorialGate?.shouldPresentOnLaunch == true { showingIntro = true }
+        }
+        .fullScreenCover(isPresented: $showingIntro, onDismiss: afterIntro) {
+            IntroScreen(
+                onTour: {
+                    introChoice = .tour
+                    showingIntro = false
+                },
+                onStart: {
+                    introChoice = .start
+                    showingIntro = false
+                })
         }
         .onChange(of: tour.step) { _, step in
             guard let step else { return }
@@ -69,6 +84,26 @@ struct RootTabView: View {
         (demoStore?.currentOrNextShift()).map { CivilCalendar.date(containing: $0.startsAt) }
     }
 
+    private enum IntroChoice {
+        case tour, start
+    }
+
+    /// "Fazer o tour" starts it; "Pular e começar a usar" counts as seen and goes to the category form.
+    private func afterIntro() {
+        defer { introChoice = nil }
+        switch introChoice {
+        case .tour:
+            startTour()
+        case .start, nil:
+            tutorialGate?.markSeen()
+            if !store.hasAnySchedule {
+                tab = .categories
+                creatingCategory = true
+            }
+        }
+    }
+
+    /// Runs the tour itself; "Ver tutorial" in Settings comes straight here, without the intro.
     private func startTour() {
         guard !tour.isActive, let demo = try? AgendaStore.demo() else { return }
         demoStore = demo
