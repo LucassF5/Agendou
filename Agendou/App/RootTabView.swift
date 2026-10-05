@@ -1,6 +1,7 @@
 import AgendouCore
 import AgendouStore
 import SwiftUI
+import WidgetKit
 
 enum AppTab: Hashable {
     case home, calendar, categories, settings
@@ -51,9 +52,12 @@ struct RootTabView: View {
         .environment(demoStore ?? store)
         .environment(tour)
         // The reminders only cover the next days: refresh them when the app opens and after any change.
+        // The widget reads the same data: it reloads on the same triggers.
         // `store` here is always the real one: the tour never schedules or clears reminders.
         .task(id: Refresh(revision: store.revision, active: scenePhase == .active)) {
-            if scenePhase == .active { await notifier.resync() }
+            guard scenePhase == .active else { return }
+            WidgetCenter.shared.reloadAllTimelines()
+            await notifier.resync()
         }
         .environment(\.showTutorial, startTour)
         .task {
