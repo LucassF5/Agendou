@@ -79,3 +79,30 @@ struct UpcomingShiftsTests {
         #expect(upcoming.map(\.startsAt) == [agenda.now.addingTimeInterval(59 * 86_400).epochSeconds])
     }
 }
+
+struct ShiftsFromNowTests {
+    @Test func startsWithTheShiftInProgress() throws {
+        let agenda = TestAgenda(now: at(2026, 10, 1, 10))
+        _ = try agenda.category12x36(anchor: at(2026, 10, 1, 7))
+
+        let starts = agenda.store.shiftsFromNow(horizon: 5 * 86_400).map(\.startsAt)
+
+        #expect(starts == [1, 3, 5].map { at(2026, 10, $0, 7).epochSeconds })
+    }
+
+    @Test func isEmptyWithoutSchedules() {
+        let agenda = TestAgenda(now: at(2026, 10, 1, 10))
+
+        #expect(agenda.store.shiftsFromNow().isEmpty)
+    }
+
+    @Test func anArchivedCategoryKeepsOnlyTheShiftInProgress() throws {
+        let agenda = TestAgenda(now: at(2026, 10, 1, 10))
+        let category = try agenda.category12x36(anchor: at(2026, 9, 1, 7))
+        try agenda.store.archive(category)
+
+        let starts = agenda.store.shiftsFromNow(horizon: 10 * 86_400).map(\.startsAt)
+
+        #expect(starts == [at(2026, 10, 1, 7).epochSeconds])
+    }
+}
