@@ -85,20 +85,27 @@ extension ScheduleEngine {
     /// How far ahead `currentOrNext` looks for the next shift.
     public static let nextShiftHorizon: Int64 = 400 * 86_400
 
+    /// The shifts not yet over at `now`, soonest first: the one in progress, if any, and every one that
+    /// starts before `now + horizon`.
+    public static func occurrencesNotOver(
+        schedules: [ScheduleVersion], overrides: [Override], now: Int64, horizon: Int64 = nextShiftHorizon
+    ) -> [Occurrence] {
+        // Look back by the longest shift so one that started long ago but is still running is found.
+        let longestWork = schedules.map(\.workSeconds).max() ?? 0
+        let longestExtra = overrides.filter { $0.kind == .extra }.map { $0.endsAt - $0.startsAt }.max() ?? 0
+        let lookback = max(longestWork, longestExtra, 0)
+        return expand(schedules: schedules, overrides: overrides, in: (now - lookback)..<(now + horizon))
+            .occurrences
+            .filter { now < $0.endsAt }
+    }
+
     /// The shift in progress at `now` (`start <= now < end`), or else the next one to start. This is the
     /// one place where a shift counts as "now" by its whole length rather than by its start.
     public static func currentOrNext(
         schedules: [ScheduleVersion], overrides: [Override], now: Int64, horizon: Int64 = nextShiftHorizon
     ) -> Occurrence? {
-        // Look back by the longest shift so one that started long ago but is still running is found.
-        let longestWork = schedules.map(\.workSeconds).max() ?? 0
-        let longestExtra = overrides.filter { $0.kind == .extra }.map { $0.endsAt - $0.startsAt }.max() ?? 0
-        let lookback = max(longestWork, longestExtra, 0)
-        let occurrences = expand(schedules: schedules, overrides: overrides, in: (now - lookback)..<(now + horizon))
-            .occurrences
-        if let current = occurrences.first(where: { $0.startsAt <= now && now < $0.endsAt }) {
-            return current
-        }
-        return occurrences.first { $0.startsAt > now }
+        let occurrences = occurrencesNotOver(schedules: schedules, overrides: overrides, now: now, horizon: horizon)
+        // Everything left ends after `now`, so one that has started is the one in progress.
+        return occurrences.first { $0.startsAt <= now } ?? occurrences.first
     }
 }
