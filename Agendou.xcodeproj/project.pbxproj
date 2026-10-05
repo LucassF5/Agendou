@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		A6E0000000000000000000A1 /* AgendouCore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000A0 /* AgendouCore */; };
 		A6E0000000000000000000B1 /* AgendouStore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000B0 /* AgendouStore */; };
+		A6E0000000000000000000DA /* AgendouCore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000DC /* AgendouCore */; };
+		A6E0000000000000000000DB /* AgendouStore in Frameworks */ = {isa = PBXBuildFile; productRef = A6E0000000000000000000DD /* AgendouStore */; };
+		A6E0000000000000000000E0 /* AgendouWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A6E0000000000000000000D2 /* AgendouWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,12 +22,36 @@
 			remoteGlobalIDString = A6E000000000000000000020;
 			remoteInfo = Agendou;
 		};
+		A6E0000000000000000000DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A6E000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6E0000000000000000000D3;
+			remoteInfo = AgendouWidget;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6E0000000000000000000E1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A6E0000000000000000000E0 /* AgendouWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A6E000000000000000000004 /* Agendou.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Agendou.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6E000000000000000000011 /* Agendou.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Agendou.entitlements; sourceTree = "<group>"; };
 		A6E0000000000000000000C1 /* AgendouUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgendouUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6E0000000000000000000D2 /* AgendouWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AgendouWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6E0000000000000000000E2 /* AgendouWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AgendouWidget.entitlements; sourceTree = "<group>"; };
+		A6E0000000000000000000E3 /* AgendouWidget-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AgendouWidget-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -36,6 +63,16 @@
 		A6E0000000000000000000C0 /* AgendouUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AgendouUITests;
+			sourceTree = "<group>";
+		};
+		A6E0000000000000000000D0 /* AgendouWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AgendouWidget;
+			sourceTree = "<group>";
+		};
+		A6E0000000000000000000D1 /* AgendouShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AgendouShared;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -57,6 +94,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A6E0000000000000000000D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6E0000000000000000000DA /* AgendouCore in Frameworks */,
+				A6E0000000000000000000DB /* AgendouStore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -65,6 +111,8 @@
 			children = (
 				A6E000000000000000000010 /* Agendou */,
 				A6E0000000000000000000C0 /* AgendouUITests */,
+				A6E0000000000000000000D0 /* AgendouWidget */,
+				A6E0000000000000000000D1 /* AgendouShared */,
 				A6E000000000000000000012 /* Config */,
 				A6E000000000000000000003 /* Products */,
 			);
@@ -75,6 +123,7 @@
 			children = (
 				A6E000000000000000000004 /* Agendou.app */,
 				A6E0000000000000000000C1 /* AgendouUITests.xctest */,
+				A6E0000000000000000000D2 /* AgendouWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				A6E000000000000000000011 /* Agendou.entitlements */,
+				A6E0000000000000000000E2 /* AgendouWidget.entitlements */,
+				A6E0000000000000000000E3 /* AgendouWidget-Info.plist */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -97,13 +148,16 @@
 				A6E000000000000000000022 /* Sources */,
 				A6E000000000000000000023 /* Frameworks */,
 				A6E000000000000000000024 /* Resources */,
+				A6E0000000000000000000E1 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A6E0000000000000000000DF /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A6E000000000000000000010 /* Agendou */,
+				A6E0000000000000000000D1 /* AgendouShared */,
 			);
 			name = Agendou;
 			packageProductDependencies = (
@@ -137,6 +191,31 @@
 			productReference = A6E0000000000000000000C1 /* AgendouUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A6E0000000000000000000D3 /* AgendouWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6E0000000000000000000D4 /* Build configuration list for PBXNativeTarget "AgendouWidget" */;
+			buildPhases = (
+				A6E0000000000000000000D7 /* Sources */,
+				A6E0000000000000000000D8 /* Frameworks */,
+				A6E0000000000000000000D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A6E0000000000000000000D0 /* AgendouWidget */,
+				A6E0000000000000000000D1 /* AgendouShared */,
+			);
+			name = AgendouWidget;
+			packageProductDependencies = (
+				A6E0000000000000000000DC /* AgendouCore */,
+				A6E0000000000000000000DD /* AgendouStore */,
+			);
+			productName = AgendouWidget;
+			productReference = A6E0000000000000000000D2 /* AgendouWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -153,6 +232,9 @@
 					A6E0000000000000000000C2 = {
 						CreatedOnToolsVersion = 27.0;
 						TestTargetID = A6E000000000000000000020;
+					};
+					A6E0000000000000000000D3 = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -175,6 +257,7 @@
 			targets = (
 				A6E000000000000000000020 /* Agendou */,
 				A6E0000000000000000000C2 /* AgendouUITests */,
+				A6E0000000000000000000D3 /* AgendouWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -188,6 +271,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A6E0000000000000000000C8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6E0000000000000000000D9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -211,6 +301,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A6E0000000000000000000D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -218,6 +315,11 @@
 			isa = PBXTargetDependency;
 			target = A6E000000000000000000020 /* Agendou */;
 			targetProxy = A6E0000000000000000000C9 /* PBXContainerItemProxy */;
+		};
+		A6E0000000000000000000DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6E0000000000000000000D3 /* AgendouWidget */;
+			targetProxy = A6E0000000000000000000DE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -391,6 +493,70 @@
 			};
 			name = Release;
 		};
+		A6E0000000000000000000D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/AgendouWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FN69GGASF3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AgendouWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Agendou;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lucasfranco.agendou.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A6E0000000000000000000D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/AgendouWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FN69GGASF3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AgendouWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Agendou;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lucasfranco.agendou.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -421,6 +587,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A6E0000000000000000000D4 /* Build configuration list for PBXNativeTarget "AgendouWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6E0000000000000000000D5 /* Debug */,
+				A6E0000000000000000000D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -437,6 +612,16 @@
 			productName = AgendouCore;
 		};
 		A6E0000000000000000000B0 /* AgendouStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6E0000000000000000000A2 /* XCLocalSwiftPackageReference "Packages/AgendouCore" */;
+			productName = AgendouStore;
+		};
+		A6E0000000000000000000DC /* AgendouCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6E0000000000000000000A2 /* XCLocalSwiftPackageReference "Packages/AgendouCore" */;
+			productName = AgendouCore;
+		};
+		A6E0000000000000000000DD /* AgendouStore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A6E0000000000000000000A2 /* XCLocalSwiftPackageReference "Packages/AgendouCore" */;
 			productName = AgendouStore;
