@@ -3,23 +3,34 @@ import AgendouStore
 import Foundation
 import SwiftData
 import WidgetKit
+import os
 
 /// Reads the app's database (read-only) from the App Group and plans the widget's timeline.
 @MainActor
 enum NextShiftLoader {
     /// How far ahead entries are planned; the headline of each one looks further.
     static let window: Int64 = 14 * 86_400
+    /// When to try again if the database cannot be opened, as before the first unlock after a reboot.
+    static let openRetry: TimeInterval = 15 * 60
+
+    private static let logger = Logger(subsystem: "com.lucasfranco.agendou.widget", category: "timeline")
 
     static func timeline(now: Date) -> Timeline<NextShiftEntry> {
         guard let loaded = load(now: now) else {
-            return Timeline(
-                entries: [.empty(at: now)], policy: .after(now.addingTimeInterval(Double(ShiftTimeline.emptyRefresh))))
+            return Timeline(entries: [.empty(at: now)], policy: .after(now.addingTimeInterval(openRetry)))
         }
         return Timeline(entries: loaded.entries, policy: .after(loaded.refresh))
     }
 
+    /// `nil` when the database cannot be opened.
     private static func load(now: Date) -> (entries: [NextShiftEntry], refresh: Date)? {
-        guard let container = try? AgendouContainer.make() else { return nil }
+        let container: ModelContainer
+        do {
+            container = try AgendouContainer.make()
+        } catch {
+            logger.error("Could not open the database: \(error.localizedDescription, privacy: .public)")
+            return nil
+        }
         // A context does not keep its container alive: hold it until every value has been copied out.
         return withExtendedLifetime(container) {
             let store = AgendaStore(context: container.mainContext, clock: { now })
