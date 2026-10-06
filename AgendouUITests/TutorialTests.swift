@@ -54,7 +54,7 @@ final class TutorialTests: XCTestCase {
 
         XCTAssertTrue(skip.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.buttons["home.setup"].waitForExistence(timeout: 5), "real, empty Home")
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         XCTAssertFalse(app.buttons["category.row.UTI Exemplo"].waitForExistence(timeout: 2))
     }
 
@@ -83,7 +83,7 @@ final class TutorialTests: XCTestCase {
             app.switches["settings.reminder"],
         ]
         let tabs = [
-            "Início", "Início", "Categorias", "Categorias", "Calendário", "Calendário", "Calendário", "Ajustes",
+            "Início", "Início", "Escalas", "Escalas", "Calendário", "Calendário", "Calendário", "Ajustes",
         ]
         for index in stepTexts.indices {
             XCTAssertTrue(text.label.hasPrefix(stepTexts[index]), "step \(index + 1): \(text.label)")
@@ -98,7 +98,7 @@ final class TutorialTests: XCTestCase {
         app.buttons["tour.setup"].tap()
         XCTAssertTrue(app.textFields["category.name"].waitForExistence(timeout: 5))
         app.buttons["Cancelar"].tap()
-        XCTAssertTrue(app.tabBars.buttons["Categorias"].isSelected)
+        XCTAssertTrue(app.tabBars.buttons["Escalas"].isSelected)
         XCTAssertFalse(app.buttons["category.row.UTI Exemplo"].exists)
     }
 
@@ -144,7 +144,7 @@ final class TutorialTests: XCTestCase {
             XCTAssertTrue(done.waitForNonExistence(timeout: 5))
         }
 
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         XCTAssertTrue(app.buttons["category.row.UTI"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["category.row.UTI Exemplo"].exists)
     }
@@ -253,7 +253,7 @@ final class TutorialTests: XCTestCase {
         XCTAssertTrue(app.textFields["category.name"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["tour.text"].exists)
         app.buttons["Cancelar"].tap()
-        XCTAssertTrue(app.tabBars.buttons["Categorias"].isSelected)
+        XCTAssertTrue(app.tabBars.buttons["Escalas"].isSelected)
         XCTAssertFalse(app.buttons["category.row.UTI Exemplo"].exists)
     }
 }

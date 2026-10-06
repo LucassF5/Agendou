@@ -25,7 +25,7 @@ extension XCUIApplication {
     /// Creates a category with a preset schedule through the onboarding. The first shift is the next 07:00;
     /// `months` is the repeat period ("1", "3", "6"), long by default so tests near a month's end hold.
     func createCategory(_ name: String, preset: String = "12x36", repeat months: String = "6") {
-        tabBars.buttons["Categorias"].tap()
+        tabBars.buttons["Escalas"].tap()
         buttons["onboarding.start"].tap()
         let field = textFields["category.name"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
@@ -99,7 +99,7 @@ enum WorkplaceCalendar {
 extension XCUIApplication {
     /// Adds another category through the "+" button, with a preset schedule starting at the next 07:00.
     func addCategory(_ name: String, preset: String) {
-        tabBars.buttons["Categorias"].tap()
+        tabBars.buttons["Escalas"].tap()
         buttons["Nova categoria"].tap()
         let field = textFields["category.name"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))

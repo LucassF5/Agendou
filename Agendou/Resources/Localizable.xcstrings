@@ -208,9 +208,6 @@
     "Categoria excluída" : {
 
     },
-    "Categorias" : {
-
-    },
     "Começa %@" : {
 
     },
@@ -311,6 +308,9 @@
 
     },
     "Escala terminou em %@" : {
+
+    },
+    "Escalas" : {
 
     },
     "Escalas (12x36, 24x48…) que preenchem o calendário sozinhas" : {

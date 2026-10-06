@@ -1,6 +1,6 @@
 import XCTest
 
-final class CategoriesTests: XCTestCase {
+final class SchedulesTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
     }
@@ -9,7 +9,7 @@ final class CategoriesTests: XCTestCase {
     func testFirstLaunchHasTheExtraCategoryAndOffersOnboarding() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
 
         XCTAssertTrue(app.buttons["category.row.Extra"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["onboarding.start"].exists)
@@ -20,7 +20,7 @@ final class CategoriesTests: XCTestCase {
     func testCreatesACategoryWithA12x36Schedule() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["onboarding.start"].tap()
 
         let name = app.textFields["category.name"]
@@ -45,7 +45,7 @@ final class CategoriesTests: XCTestCase {
     func testChangingTheScheduleKeepsTheOldOneInHistory() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["onboarding.start"].tap()
         let name = app.textFields["category.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
@@ -69,7 +69,7 @@ final class CategoriesTests: XCTestCase {
     func testMarksDaysOfACategoryWithoutSchedule() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["category.row.Extra"].tap()
         app.buttons["category.pickDays"].tap()
 

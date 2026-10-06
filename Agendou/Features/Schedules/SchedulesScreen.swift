@@ -1,7 +1,8 @@
 import AgendouStore
 import SwiftUI
 
-struct CategoriesScreen: View {
+/// The "Escalas" tab: each place where the user works, with its schedule or without one.
+struct SchedulesScreen: View {
     @Environment(AgendaStore.self) private var store
     @State private var creating = false
 
@@ -46,12 +47,12 @@ struct CategoriesScreen: View {
                     }
                 }
             }
-            .navigationTitle("Categorias")
+            .navigationTitle("Escalas")
             .toolbar {
                 Button("Nova categoria", systemImage: "plus") { creating = true }
                     .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
             }
-            .navigationDestination(for: UUID.self) { CategoryDetailScreen(categoryID: $0) }
+            .navigationDestination(for: UUID.self) { ScheduleDetailScreen(categoryID: $0) }
             .sheet(isPresented: $creating) { CategoryForm(mode: .create) }
         }
     }
@@ -82,7 +83,7 @@ struct CategoriesScreen: View {
 }
 
 #Preview {
-    CategoriesScreen()
+    SchedulesScreen()
         .environment(AgendaStore.preview)
         .agendouEnvironment()
 }

@@ -7,7 +7,7 @@ enum TourStep: Int, CaseIterable {
     var tab: AppTab {
         switch self {
         case .nextShift, .dayStrip: .home
-        case .category, .addCategory: .categories
+        case .category, .addCategory: .schedules
         case .calendar, .shiftMenu, .addExtra: .calendar
         case .reminder: .settings
         }

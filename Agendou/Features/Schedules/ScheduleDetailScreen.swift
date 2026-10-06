@@ -2,7 +2,9 @@ import AgendouCore
 import AgendouStore
 import SwiftUI
 
-struct CategoryDetailScreen: View {
+/// A category and its schedule: the current one, what can be done with it, the versions before it, and
+/// the category's own name, color and archiving.
+struct ScheduleDetailScreen: View {
     let categoryID: UUID
     @Environment(AgendaStore.self) private var store
     @Environment(\.dismiss) private var dismiss
@@ -183,7 +185,7 @@ struct CategoryDetailScreen: View {
 
 #Preview {
     NavigationStack {
-        CategoryDetailScreen(categoryID: AgendaStore.preview.activeCategories()[0].id)
+        ScheduleDetailScreen(categoryID: AgendaStore.preview.activeCategories()[0].id)
     }
     .environment(AgendaStore.preview)
     .agendouEnvironment()

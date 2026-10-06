@@ -4,7 +4,7 @@ import SwiftUI
 import WidgetKit
 
 enum AppTab: Hashable {
-    case home, calendar, categories, settings
+    case home, calendar, schedules, settings
 }
 
 struct RootTabView: View {
@@ -29,13 +29,13 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $tab) {
             Tab("Início", systemImage: "house", value: .home) {
-                HomeScreen(onSetup: { tab = .categories }, onOpenCalendar: { tab = .calendar })
+                HomeScreen(onSetup: { tab = .schedules }, onOpenCalendar: { tab = .calendar })
             }
             Tab("Calendário", systemImage: "calendar", value: .calendar) {
                 CalendarScreen()
             }
-            Tab("Categorias", systemImage: "square.stack", value: .categories) {
-                CategoriesScreen()
+            Tab("Escalas", systemImage: "square.stack", value: .schedules) {
+                SchedulesScreen()
             }
             Tab("Ajustes", systemImage: "gearshape", value: .settings) {
                 SettingsScreen()
@@ -101,7 +101,7 @@ struct RootTabView: View {
         case .start, nil:
             tutorialGate?.markSeen()
             if !store.hasAnySchedule {
-                tab = .categories
+                tab = .schedules
                 creatingCategory = true
             }
         }
@@ -123,7 +123,7 @@ struct RootTabView: View {
         demoStore = nil
         tutorialGate?.markSeen()
         if reason == .setUp {
-            tab = .categories
+            tab = .schedules
             creatingCategory = true
         }
     }
@@ -135,7 +135,7 @@ struct RootTabView: View {
 }
 
 extension EnvironmentValues {
-    /// Starts the tour over the tabs, so its last button can switch to the Categories tab.
+    /// Starts the tour over the tabs, so its last button can switch to the Escalas tab.
     @Entry var showTutorial: () -> Void = {}
 }
 

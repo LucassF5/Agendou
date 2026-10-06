@@ -4,7 +4,7 @@ import SwiftUI
 
 /// The shift in progress or the next one, the days around today, the next shifts and the month so far.
 struct HomeScreen: View {
-    /// Switches to the Categories tab.
+    /// Switches to the Escalas tab.
     var onSetup: () -> Void
     /// Switches to the Calendar tab.
     var onOpenCalendar: () -> Void
