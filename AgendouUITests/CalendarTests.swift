@@ -50,6 +50,63 @@ final class CalendarTests: XCTestCase {
     }
 
     @MainActor
+    func testMarksSeveralDaysAtOnce() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.tabBars.buttons["Calendário"].tap()
+        app.buttons["calendar.addShifts"].tap()
+
+        let save = app.buttons["addShifts.save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertFalse(save.isEnabled, "no day picked yet")
+        app.pickDaysOfNextMonth([10, 20, 25])
+        XCTAssertEqual(save.label, "Adicionar 3 plantões")
+        snapshot(app, "pick-days")
+        save.tap()
+        XCTAssertTrue(save.waitForNonExistence(timeout: 5))
+
+        // `calendarCell` moves the grid to next month; the other days are looked up there.
+        XCTAssertTrue(app.cellShowsDots(app.calendarCell(WorkplaceCalendar.nextMonth(day: 20))))
+        let month = WorkplaceCalendar.monthNames[WorkplaceCalendar.nextMonth(day: 1).month! - 1]
+        func cell(_ day: Int) -> XCUIElement {
+            app.buttons.matching(NSPredicate(format: "label ENDSWITH %@", ", \(day) de \(month)")).firstMatch
+        }
+        XCTAssertFalse(app.cellShowsDots(cell(21)))
+        cell(10).tap()
+        XCTAssertTrue(app.buttons["shift.menu.Extra"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testChangesTheScheduleOfACategoryWithOneFromTheAddButton() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI")
+        app.tabBars.buttons["Calendário"].tap()
+        app.buttons["calendar.addShifts"].tap()
+
+        let category = app.buttons["addShifts.category"]
+        XCTAssertTrue(category.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.otherElements["addShifts.calendar"].exists, "Extra, without a schedule, picks days")
+        category.tap()
+        app.buttons["UTI"].tap()
+
+        let preset = app.buttons["preset.24x48"]
+        XCTAssertTrue(preset.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.otherElements["addShifts.calendar"].exists, "the schedule makes the shifts")
+        preset.tap()
+        let save = app.buttons["addShifts.save"]
+        XCTAssertEqual(save.label, "Salvar escala")
+        snapshot(app, "add-shifts-schedule")
+        save.tap()
+        XCTAssertTrue(save.waitForNonExistence(timeout: 5))
+
+        app.tabBars.buttons["Categorias"].tap()
+        app.buttons["category.row.UTI"].tap()
+        XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["schedule.current"].label, "24x48")
+    }
+
+    @MainActor
     func testAdjustsAScheduledShiftAndUndoesIt() {
         let app = XCUIApplication.agendou()
         app.launch()

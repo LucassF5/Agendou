@@ -20,6 +20,27 @@ extension AgendaStore {
         return extra
     }
 
+    /// "Marcar dias": one extra per day, all at the same time, saved together. A day where the category
+    /// already has a shift starting at that time is skipped.
+    @discardableResult
+    public func addExtras(
+        to category: ShiftCategory, on days: some Sequence<CivilDate>, hour: Int, minute: Int, durationSeconds: Int
+    ) throws -> [ShiftOverride] {
+        try requireActive(category)
+        guard durationSeconds > 0 else { throw AgendaError.invalidDuration }
+        var added: [ShiftOverride] = []
+        for day in Set(days).sorted() {
+            let start = CivilCalendar.instant(of: day, hour: hour, minute: minute)
+            let taken = expand(in: CivilCalendar.interval(of: day)).occurrences.contains {
+                $0.categoryID == category.id && $0.startsAt == start
+            }
+            if taken { continue }
+            added.append(insertOverride(.extra, in: category, start..<(start + Int64(durationSeconds))))
+        }
+        try save()
+        return added
+    }
+
     public func updateExtra(_ extra: ShiftOverride, startsAt: Date, endsAt: Date) throws {
         guard extra.kindRaw == Override.Kind.extra.rawValue, let category = extra.category else {
             throw AgendaError.notFound

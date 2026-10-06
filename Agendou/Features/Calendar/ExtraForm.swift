@@ -116,7 +116,7 @@ struct ExtraForm: View {
     }
 
     /// The category's usual shift on that day, or 07:00 for 12 hours.
-    private static func defaultTimes(for category: ShiftCategory?, on day: CivilDate, store: AgendaStore)
+    static func defaultTimes(for category: ShiftCategory?, on day: CivilDate, store: AgendaStore)
         -> DateInterval
     {
         if let category, let interval = store.extraDefaults(for: category, on: day) { return interval }

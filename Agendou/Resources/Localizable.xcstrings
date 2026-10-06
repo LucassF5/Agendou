@@ -106,7 +106,13 @@
     "Abrir Ajustes" : {
 
     },
+    "Adicionar %@" : {
+
+    },
     "Adicionar extra" : {
+
+    },
+    "Adicionar plantões" : {
 
     },
     "Agora não" : {
@@ -247,6 +253,9 @@
     "Desmarque um local para tirá-lo da imagem e do texto." : {
 
     },
+    "Dias" : {
+
+    },
     "Diga onde você trabalha e qual é a escala (12x36, 24x48…). O calendário se preenche sozinho." : {
 
     },
@@ -308,6 +317,9 @@
 
     },
     "Escalas terminando" : {
+
+    },
+    "Escolha os dias" : {
 
     },
     "Essa escala não pode mais ser alterada: um plantão dela já começou e ela tem mais de 24 horas. Use “Mudei de escala”." : {
@@ -398,6 +410,9 @@
 
     },
     "Locais" : {
+
+    },
+    "Marcar dias" : {
 
     },
     "Marque um plantão avulso, fora da escala." : {
@@ -500,6 +515,9 @@
     "Personalizado" : {
 
     },
+    "Plantão" : {
+
+    },
     "Plantão extra" : {
 
     },
@@ -584,6 +602,9 @@
     "Salvar" : {
 
     },
+    "Salvar escala" : {
+
+    },
     "Sem escala" : {
 
     },
@@ -609,6 +630,9 @@
 
     },
     "Texto" : {
+
+    },
+    "Toque nos dias do plantão. Os pontos mostram os plantões já marcados." : {
 
     },
     "Total: %@" : {

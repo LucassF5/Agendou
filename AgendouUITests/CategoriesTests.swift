@@ -64,4 +64,22 @@ final class CategoriesTests: XCTestCase {
         XCTAssertEqual(app.staticTexts.matching(identifier: "schedule.history").count, 2)
         snapshot(app, "category-detail")
     }
+
+    @MainActor
+    func testMarksDaysOfACategoryWithoutSchedule() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.tabBars.buttons["Categorias"].tap()
+        app.buttons["category.row.Extra"].tap()
+        app.buttons["category.pickDays"].tap()
+
+        app.pickDaysOfNextMonth([15])
+        let save = app.buttons["addShifts.save"]
+        XCTAssertEqual(save.label, "Adicionar 1 plantão")
+        save.tap()
+        XCTAssertTrue(save.waitForNonExistence(timeout: 5))
+
+        app.openDay(WorkplaceCalendar.nextMonth(day: 15))
+        XCTAssertTrue(app.buttons["shift.menu.Extra"].waitForExistence(timeout: 5))
+    }
 }

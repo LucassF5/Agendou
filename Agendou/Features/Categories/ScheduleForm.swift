@@ -31,19 +31,10 @@ struct ScheduleForm: View {
             _startsAt = State(initialValue: anchor)
             _repeatDraft = State(initialValue: RepeatDraft())
         case .change(let category):
-            // Next shift of the current rotation that is still ahead, so the change lands on a real shift.
-            // The rotation is followed past its period: a one-month schedule changed right away would
-            // otherwise have no shift left and fall back to its own anchor.
-            let open = store.openSchedule(of: category)
-            var rotation = open.flatMap(store.version(of:))
-            rotation?.endsAt = nil
-            let after = max(now.epochSeconds, rotation?.startsAt ?? 0) + 1
-            let next = rotation?.firstOccurrenceStart(atOrAfter: after).map(Date.init(epochSeconds:))
-            _draft = State(
-                initialValue: open.map { ScheduleDraft(workSeconds: $0.workSeconds, restSeconds: $0.restSeconds) }
-                    ?? ScheduleDraft())
-            _anchor = State(initialValue: next ?? DefaultTimes.nextShiftStart(after: now))
-            _startsAt = State(initialValue: next ?? DefaultTimes.nextShiftStart(after: now))
+            let defaults = Self.changeDefaults(for: category, store: store)
+            _draft = State(initialValue: defaults.draft)
+            _anchor = State(initialValue: defaults.anchor)
+            _startsAt = State(initialValue: defaults.anchor)
             _repeatDraft = State(initialValue: RepeatDraft())
         case .correct(let schedule):
             _draft = State(
@@ -52,6 +43,24 @@ struct ScheduleForm: View {
             _startsAt = State(initialValue: schedule.startsAt)
             _repeatDraft = State(initialValue: RepeatDraft(repeatsUntil: schedule.repeatsUntil))
         }
+    }
+
+    /// "Mudei de escala" starts from the current pattern, on the next shift of the current rotation that is
+    /// still ahead, so the change lands on a real shift.
+    static func changeDefaults(for category: ShiftCategory, store: AgendaStore) -> (draft: ScheduleDraft, anchor: Date)
+    {
+        // The rotation is followed past its period: a one-month schedule changed right away would otherwise
+        // have no shift left and fall back to its own anchor.
+        let now = Date.now
+        let open = store.openSchedule(of: category)
+        var rotation = open.flatMap(store.version(of:))
+        rotation?.endsAt = nil
+        let after = max(now.epochSeconds, rotation?.startsAt ?? 0) + 1
+        let next = rotation?.firstOccurrenceStart(atOrAfter: after).map(Date.init(epochSeconds:))
+        return (
+            open.map { ScheduleDraft(workSeconds: $0.workSeconds, restSeconds: $0.restSeconds) } ?? ScheduleDraft(),
+            next ?? DefaultTimes.nextShiftStart(after: now)
+        )
     }
 
     private var title: LocalizedStringKey {
@@ -78,12 +87,7 @@ struct ScheduleForm: View {
                 if asksStartDate {
                     FirstScheduleDates(anchor: $anchor, startsAt: $startsAt)
                 } else {
-                    Section {
-                        DatePicker("Primeiro plantão na escala nova", selection: $anchor, in: Date.now...)
-                            .accessibilityIdentifier("schedule.anchor")
-                    } footer: {
-                        Text("A escala nova começa nesse plantão. O que já passou não muda.")
-                    }
+                    NewScheduleStart(anchor: $anchor)
                 }
                 RepeatFields(draft: $repeatDraft, startDay: anchorDay)
             }
@@ -130,6 +134,20 @@ struct ScheduleForm: View {
             dismiss()
         } catch {
             errorMessage = userMessage(for: error)
+        }
+    }
+}
+
+/// "Primeiro plantão na escala nova", when the schedule changes.
+struct NewScheduleStart: View {
+    @Binding var anchor: Date
+
+    var body: some View {
+        Section {
+            DatePicker("Primeiro plantão na escala nova", selection: $anchor, in: Date.now...)
+                .accessibilityIdentifier("schedule.anchor")
+        } footer: {
+            Text("A escala nova começa nesse plantão. O que já passou não muda.")
         }
     }
 }

@@ -1,14 +1,34 @@
 import AgendouCore
+import AgendouStore
 import SwiftUI
 import UIKit
 
 /// The month grid: native `UICalendarView` (decorations, gestures and VoiceOver come for free), in the
 /// workplace calendar. A dot marks each category with a shift **starting** on that day.
 struct MonthCalendarView: UIViewRepresentable {
+    enum Selection {
+        /// Tapping a day reports it and leaves nothing selected.
+        case single((CivilDate) -> Void)
+        /// Tapping a day adds it to the set or takes it out.
+        case multiple(Binding<Set<CivilDate>>)
+    }
+
     @Binding var visibleMonth: CivilMonth
     /// Colors of the categories with a shift starting on each day, in display order.
     var dots: [CivilDate: [Color]]
-    var onSelect: (CivilDate) -> Void
+    var selection: Selection
+
+    init(visibleMonth: Binding<CivilMonth>, dots: [CivilDate: [Color]], onSelect: @escaping (CivilDate) -> Void) {
+        _visibleMonth = visibleMonth
+        self.dots = dots
+        selection = .single(onSelect)
+    }
+
+    init(visibleMonth: Binding<CivilMonth>, dots: [CivilDate: [Color]], selectedDays: Binding<Set<CivilDate>>) {
+        _visibleMonth = visibleMonth
+        self.dots = dots
+        selection = .multiple(selectedDays)
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
@@ -20,7 +40,14 @@ struct MonthCalendarView: UIViewRepresentable {
         view.timeZone = CivilCalendar.timeZone
         view.locale = Formatting.locale
         view.delegate = context.coordinator
-        view.selectionBehavior = UICalendarSelectionSingleDate(delegate: context.coordinator)
+        switch selection {
+        case .single:
+            view.selectionBehavior = UICalendarSelectionSingleDate(delegate: context.coordinator)
+        case .multiple(let days):
+            let behavior = UICalendarSelectionMultiDate(delegate: context.coordinator)
+            behavior.selectedDates = days.wrappedValue.map(components(of:))
+            view.selectionBehavior = behavior
+        }
         view.visibleDateComponents = components(of: visibleMonth)
         view.setContentHuggingPriority(.required, for: .vertical)
         return view
@@ -39,6 +66,11 @@ struct MonthCalendarView: UIViewRepresentable {
                 forDateComponents: days.map { DateComponents(year: $0.year, month: $0.month, day: $0.day) },
                 animated: false)
         }
+        if case .multiple(let days) = selection, let behavior = view.selectionBehavior as? UICalendarSelectionMultiDate,
+            Set(behavior.selectedDates.compactMap(CivilDate.init(components:))) != days.wrappedValue
+        {
+            behavior.setSelectedDates(days.wrappedValue.map(components(of:)), animated: false)
+        }
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UICalendarView, context: Context) -> CGSize? {
@@ -53,7 +85,13 @@ struct MonthCalendarView: UIViewRepresentable {
         DateComponents(calendar: CivilCalendar.calendar, year: month.year, month: month.month, day: 1)
     }
 
-    final class Coordinator: NSObject, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
+    private func components(of day: CivilDate) -> DateComponents {
+        DateComponents(calendar: CivilCalendar.calendar, year: day.year, month: day.month, day: day.day)
+    }
+
+    final class Coordinator: NSObject, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate,
+        UICalendarSelectionMultiDateDelegate
+    {
         var parent: MonthCalendarView
         var shownDots: [CivilDate: [Color]] = [:]
 
@@ -85,8 +123,25 @@ struct MonthCalendarView: UIViewRepresentable {
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
             // Deselect right away so tapping the same day again reopens it.
             selection.setSelected(nil, animated: false)
-            if let dateComponents, let date = CivilDate(components: dateComponents) {
-                parent.onSelect(date)
+            if case .single(let onSelect) = parent.selection, let dateComponents,
+                let date = CivilDate(components: dateComponents)
+            {
+                onSelect(date)
+            }
+        }
+
+        func multiDateSelection(_ selection: UICalendarSelectionMultiDate, didSelectDate dateComponents: DateComponents)
+        {
+            if case .multiple(let days) = parent.selection, let date = CivilDate(components: dateComponents) {
+                days.wrappedValue.insert(date)
+            }
+        }
+
+        func multiDateSelection(
+            _ selection: UICalendarSelectionMultiDate, didDeselectDate dateComponents: DateComponents
+        ) {
+            if case .multiple(let days) = parent.selection, let date = CivilDate(components: dateComponents) {
+                days.wrappedValue.remove(date)
             }
         }
     }
@@ -130,5 +185,20 @@ extension CivilMonth {
     init?(components: DateComponents) {
         guard let year = components.year, let month = components.month else { return nil }
         self.init(year: year, month: month)
+    }
+}
+
+extension AgendaStore {
+    /// One dot per category with a shift starting on the day, in the order the shifts start.
+    func dayDots(in month: CivilMonth) -> [CivilDate: [Color]] {
+        let expansion = expand(in: CivilCalendar.interval(of: month))
+        var dots: [CivilDate: [Color]] = [:]
+        var seen: [CivilDate: Set<UUID>] = [:]
+        for occurrence in expansion.occurrences {
+            let day = CivilCalendar.date(containing: occurrence.startsAt)
+            guard seen[day, default: []].insert(occurrence.categoryID).inserted else { continue }
+            dots[day, default: []].append(category(id: occurrence.categoryID)?.color ?? .gray)
+        }
+        return dots
     }
 }

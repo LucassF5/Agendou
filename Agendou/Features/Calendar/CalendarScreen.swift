@@ -8,13 +8,16 @@ struct CalendarScreen: View {
     @State private var selectedDay: CivilDate?
     @State private var showingYear = false
     @State private var sharing = false
+    @State private var addingShifts = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    MonthCalendarView(visibleMonth: $visibleMonth, dots: dots()) { selectedDay = $0 }
-                        .tourAnchor(.calendar)
+                    MonthCalendarView(visibleMonth: $visibleMonth, dots: store.dayDots(in: visibleMonth)) {
+                        selectedDay = $0
+                    }
+                    .tourAnchor(.calendar)
                     MonthSummaryView(month: visibleMonth)
                 }
                 .padding(.horizontal)
@@ -31,6 +34,10 @@ struct CalendarScreen: View {
                         visibleMonth = CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds))
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Adicionar plantões", systemImage: "plus") { addingShifts = true }
+                        .accessibilityIdentifier("calendar.addShifts")
+                }
             }
             .navigationDestination(isPresented: $showingYear) {
                 YearScreen(year: visibleMonth.year) { month in
@@ -45,20 +52,10 @@ struct CalendarScreen: View {
             .sheet(isPresented: $sharing) {
                 ShareMonthScreen(month: visibleMonth)
             }
+            .sheet(isPresented: $addingShifts) {
+                AddShiftsForm(month: visibleMonth, store: store)
+            }
         }
-    }
-
-    /// One dot per category with a shift starting on the day, in the order the shifts start.
-    private func dots() -> [CivilDate: [Color]] {
-        let expansion = store.expand(in: CivilCalendar.interval(of: visibleMonth))
-        var dots: [CivilDate: [Color]] = [:]
-        var seen: [CivilDate: Set<UUID>] = [:]
-        for occurrence in expansion.occurrences {
-            let day = CivilCalendar.date(containing: occurrence.startsAt)
-            guard seen[day, default: []].insert(occurrence.categoryID).inserted else { continue }
-            dots[day, default: []].append(store.category(id: occurrence.categoryID)?.color ?? .gray)
-        }
-        return dots
     }
 }
 
