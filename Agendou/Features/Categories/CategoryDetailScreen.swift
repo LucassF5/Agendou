@@ -8,7 +8,7 @@ struct CategoryDetailScreen: View {
     @Environment(\.dismiss) private var dismiss
 
     private enum Sheet: Identifiable {
-        case edit, first, change, correct, renew
+        case edit, first, change, correct, renew, pickDays
 
         var id: Self { self }
     }
@@ -70,6 +70,8 @@ struct CategoryDetailScreen: View {
                             Button("Excluir escala", role: .destructive) { confirmingScheduleDelete = true }
                         }
                     } else {
+                        Button("Marcar dias") { sheet = .pickDays }
+                            .accessibilityIdentifier("category.pickDays")
                         Button("Definir escala") { sheet = .first }
                             .accessibilityIdentifier("schedule.first")
                     }
@@ -125,6 +127,10 @@ struct CategoryDetailScreen: View {
                 if let open { ScheduleForm(mode: .correct(open), store: store) }
             case .renew:
                 if let open { RenewForm(schedule: open) }
+            case .pickDays:
+                PickDaysForm(
+                    category: category, month: CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds)),
+                    store: store)
             }
         }
         .confirmationDialog("Arquivar \(category.name)?", isPresented: $confirmingArchive, titleVisibility: .visible) {

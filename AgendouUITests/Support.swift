@@ -71,6 +71,14 @@ enum WorkplaceCalendar {
         return String(format: "%02d/%02d", components.day!, components.month!)
     }
 
+    /// `day` of next month: always in the future, and every month has a 25th.
+    static func nextMonth(day: Int) -> DateComponents {
+        var components = calendar.dateComponents(
+            [.year, .month], from: calendar.date(byAdding: .month, value: 1, to: .now)!)
+        components.day = day
+        return components
+    }
+
     /// Identifier of a day in the Home strip, `daysFromToday` away.
     static func homeDayID(daysFromToday days: Int) -> String {
         let components = calendar.dateComponents(
@@ -114,6 +122,22 @@ extension XCUIApplication {
         let cell = buttons.matching(NSPredicate(format: "label ENDSWITH %@", ", \(date.day!) de \(month)")).firstMatch
         XCTAssertTrue(cell.waitForExistence(timeout: 5), "day \(date)")
         return cell
+    }
+
+    /// In the "Marcar dias" sheet, moves to next month and taps `days` in its grid.
+    func pickDaysOfNextMonth(_ days: [Int]) {
+        let grid = otherElements["pickDays.calendar"]
+        XCTAssertTrue(grid.waitForExistence(timeout: 5), "day picker")
+        grid.buttons["DatePicker.NextMonth"].tap()
+        let month = WorkplaceCalendar.monthNames[WorkplaceCalendar.nextMonth(day: 1).month! - 1]
+        for day in days {
+            let cell = grid.buttons.matching(NSPredicate(format: "label ENDSWITH %@", ", \(day) de \(month)"))
+                .firstMatch
+            XCTAssertTrue(cell.waitForExistence(timeout: 5), "day \(day)")
+            // The last weeks of the grid start out under the bottom bar.
+            if cell.frame.maxY > buttons["pickDays.save"].frame.minY { swipeUp() }
+            cell.tap()
+        }
     }
 
     /// Whether the area under the day number of a grid cell has colored (not gray) pixels: the dots.

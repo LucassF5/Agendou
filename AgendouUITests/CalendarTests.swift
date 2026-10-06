@@ -50,6 +50,33 @@ final class CalendarTests: XCTestCase {
     }
 
     @MainActor
+    func testMarksSeveralDaysAtOnce() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.tabBars.buttons["Calendário"].tap()
+        app.buttons["calendar.pickDays"].tap()
+
+        let save = app.buttons["pickDays.save"]
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertFalse(save.isEnabled, "no day picked yet")
+        app.pickDaysOfNextMonth([10, 20, 25])
+        XCTAssertEqual(save.label, "Adicionar 3 plantões")
+        snapshot(app, "pick-days")
+        save.tap()
+        XCTAssertTrue(save.waitForNonExistence(timeout: 5))
+
+        // `calendarCell` moves the grid to next month; the other days are looked up there.
+        XCTAssertTrue(app.cellShowsDots(app.calendarCell(WorkplaceCalendar.nextMonth(day: 20))))
+        let month = WorkplaceCalendar.monthNames[WorkplaceCalendar.nextMonth(day: 1).month! - 1]
+        func cell(_ day: Int) -> XCUIElement {
+            app.buttons.matching(NSPredicate(format: "label ENDSWITH %@", ", \(day) de \(month)")).firstMatch
+        }
+        XCTAssertFalse(app.cellShowsDots(cell(21)))
+        cell(10).tap()
+        XCTAssertTrue(app.buttons["shift.menu.Extra"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
     func testAdjustsAScheduledShiftAndUndoesIt() {
         let app = XCUIApplication.agendou()
         app.launch()
