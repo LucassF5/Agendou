@@ -110,7 +110,7 @@ private struct IntroPage: View {
 private struct FeaturesPage: View {
     private let features: [(symbol: String, color: CategoryColor, text: LocalizedStringResource)] = [
         ("calendar.badge.clock", .teal, "Escalas (12x36, 24x48…) que preenchem o calendário sozinhas"),
-        ("plus.circle", .orange, "Plantões avulsos, para quem não tem escala fixa"),
+        ("plus.circle", .orange, "Plantões avulsos: marque vários dias de uma vez"),
         ("calendar", .indigo, "Calendário com o resumo de horas do mês"),
         ("bell", .pink, "Lembrete no dia do plantão"),
         ("square.and.arrow.up", .blue, "Compartilhar o mês como imagem ou texto"),

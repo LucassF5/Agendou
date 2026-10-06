@@ -60,8 +60,9 @@ final class TutorialTests: XCTestCase {
 
     /// The balloon text of each step, in order (the start of it is enough).
     private let stepTexts = [
-        "Ao abrir o app", "Os próximos dias", "Cada lugar onde você trabalha", "Crie um local aqui",
-        "O calendário se preenche", "Edite o horário", "Marque um plantão avulso", "Receba um aviso",
+        "Ao abrir o app", "Os próximos dias", "Cada lugar onde você trabalha, com a escala",
+        "Crie um local aqui. Com escala fixa", "O calendário se preenche", "No +, marque vários dias",
+        "Edite o horário", "Marque um plantão avulso só neste dia", "Receba um aviso",
     ]
 
     @MainActor
@@ -78,12 +79,14 @@ final class TutorialTests: XCTestCase {
             app.buttons["category.row.UTI Exemplo"],
             app.buttons["Novo local"],
             app.buttons.matching(NSPredicate(format: "label CONTAINS ' de '")).firstMatch,
+            app.buttons["calendar.addShifts"],
             app.buttons["shift.menu.UTI Exemplo"],
             app.buttons["day.addExtra"],
             app.switches["settings.reminder"],
         ]
         let tabs = [
-            "Início", "Início", "Escalas", "Escalas", "Calendário", "Calendário", "Calendário", "Ajustes",
+            "Início", "Início", "Escalas", "Escalas", "Calendário", "Calendário", "Calendário", "Calendário",
+            "Ajustes",
         ]
         for index in stepTexts.indices {
             XCTAssertTrue(text.label.hasPrefix(stepTexts[index]), "step \(index + 1): \(text.label)")
@@ -109,7 +112,7 @@ final class TutorialTests: XCTestCase {
         app.startTourFromIntro()
         let next = app.buttons["tour.next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
-        for _ in 0..<5 { next.tapWhenSettled() }
+        for _ in 0..<6 { next.tapWhenSettled() }
         XCTAssertTrue(app.buttons["shift.menu.UTI Exemplo"].waitForExistence(timeout: 5))
 
         // The balloon sits above the sheet here; it must stay clear of the status bar.
@@ -135,7 +138,7 @@ final class TutorialTests: XCTestCase {
             app.buttons["settings.tutorial"].revealed(in: app).tap()
             let next = app.buttons["tour.next"]
             XCTAssertTrue(next.waitForExistence(timeout: 5), "round \(round)")
-            for _ in 0..<7 { next.tapWhenSettled() }
+            for _ in 0..<8 { next.tapWhenSettled() }
             let done = app.buttons["tour.done"]
             XCTAssertTrue(done.waitForExistence(timeout: 5), "round \(round): \(app.staticTexts["tour.text"].label)")
             XCTAssertFalse(app.buttons["tour.skip"].exists)
@@ -157,7 +160,7 @@ final class TutorialTests: XCTestCase {
         app.startTourFromIntro()
         let next = app.buttons["tour.next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
-        for step in 1...7 {
+        for step in 1...8 {
             XCTAssertTrue(next.isHittable, "Próximo on step \(step)")
             XCTAssertTrue(app.buttons["tour.skip"].isHittable, "Pular on step \(step)")
             next.tapWhenSettled()
@@ -183,7 +186,7 @@ final class TutorialTests: XCTestCase {
         assertHighlights(app, app.buttons["category.row.UTI Exemplo"])
         next.tapWhenSettled()
         assertHighlights(app, app.buttons["Novo local"])
-        for _ in 0..<4 { next.tapWhenSettled() }
+        for _ in 0..<5 { next.tapWhenSettled() }
         assertHighlights(app, app.switches["settings.reminder"])
     }
 
@@ -197,7 +200,7 @@ final class TutorialTests: XCTestCase {
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         XCUIDevice.shared.orientation = .portrait
 
-        for _ in 0..<5 { next.tapWhenSettled() }
+        for _ in 0..<6 { next.tapWhenSettled() }
         XCTAssertTrue(app.staticTexts["tour.text"].label.hasPrefix("Edite o horário"))
         let balloon = app.descendants(matching: .any)["tour.balloon"]
         XCTAssertGreaterThanOrEqual(balloon.frame.minY, 54, "\(balloon.frame)")
@@ -215,6 +218,7 @@ final class TutorialTests: XCTestCase {
         snapshot(app, "intro-1")
         app.buttons["intro.next"].tap()
         XCTAssertTrue(app.staticTexts["O que o Agendou faz"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Plantões avulsos: marque vários dias de uma vez"].exists)
         snapshot(app, "intro-2")
         app.buttons["intro.next"].tap()
 

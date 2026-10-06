@@ -175,7 +175,7 @@
     "Bem-vindo ao Agendou" : {
 
     },
-    "Cada lugar onde você trabalha fica aqui, com a escala (12x36, 24x48…)." : {
+    "Cada lugar onde você trabalha, com a escala (12x36, 24x48…). Toque para renovar ou mudar a escala." : {
 
     },
     "Cada plantão aparece no dia em que começa." : {
@@ -223,7 +223,7 @@
     "Corrigir escala" : {
 
     },
-    "Crie um local aqui. Sem escala fixa? Crie sem escala e marque os dias à mão." : {
+    "Crie um local aqui. Com escala fixa, você define a escala logo depois; sem escala, marca os dias à mão." : {
 
     },
     "Dados importados" : {
@@ -415,7 +415,7 @@
     "Marcar dias" : {
 
     },
-    "Marque um plantão avulso, fora da escala." : {
+    "Marque um plantão avulso só neste dia." : {
 
     },
     "Marrom" : {
@@ -440,6 +440,9 @@
 
     },
     "Nenhum plantão pela frente" : {
+
+    },
+    "No +, marque vários dias de plantão de uma vez ou mude a escala de um local." : {
 
     },
     "No mês" : {
@@ -533,7 +536,7 @@
     "Plantões" : {
 
     },
-    "Plantões avulsos, para quem não tem escala fixa" : {
+    "Plantões avulsos: marque vários dias de uma vez" : {
 
     },
     "Plantões da escala que foram desmarcados." : {
