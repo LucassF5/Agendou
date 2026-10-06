@@ -77,6 +77,81 @@ struct ExtraTests {
     }
 }
 
+struct SeveralExtrasTests {
+    private let days = [
+        CivilDate(year: 2026, month: 10, day: 1), CivilDate(year: 2026, month: 10, day: 5),
+        CivilDate(year: 2026, month: 11, day: 2),
+    ]
+
+    @Test func addsOneShiftPerDayAtTheChosenTime() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.store.createCategory(name: "Extra", color: .orange)
+
+        let added = try agenda.store.addExtras(
+            to: category, on: days, hour: 19, minute: 30, durationSeconds: 12 * hour)
+
+        #expect(added.count == 3)
+        for (year, month, day) in [(2026, 10, 1), (2026, 10, 5), (2026, 11, 2)] {
+            let shifts = agenda.day(year, month, day).occurrences
+            #expect(shifts.map(\.startsAt) == [at(year, month, day, 19, 30).epochSeconds])
+            #expect(shifts.map { $0.endsAt - $0.startsAt } == [Int64(12 * hour)])
+        }
+    }
+
+    @Test func skipsDaysThatAlreadyHaveTheShift() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.store.createCategory(name: "Extra", color: .orange)
+        _ = try agenda.store.addExtra(to: category, startsAt: at(2026, 10, 1, 7), endsAt: at(2026, 10, 1, 13))
+
+        let added = try agenda.store.addExtras(to: category, on: days, hour: 7, minute: 0, durationSeconds: 12 * hour)
+
+        #expect(added.count == 2)
+        #expect(agenda.day(2026, 10, 1).occurrences.map(\.endsAt) == [at(2026, 10, 1, 13).epochSeconds])
+    }
+
+    @Test func skipsDaysWhereTheScheduleAlreadyStartsAShift() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.category12x36(anchor: at(2026, 10, 1, 7))
+
+        let added = try agenda.store.addExtras(
+            to: category, on: [CivilDate(year: 2026, month: 10, day: 1), CivilDate(year: 2026, month: 10, day: 2)],
+            hour: 7, minute: 0, durationSeconds: 12 * hour)
+
+        #expect(added.map(\.startsAt) == [at(2026, 10, 2, 7)])
+        #expect(agenda.day(2026, 10, 1).occurrences.count == 1)
+    }
+
+    @Test func aDayListedTwiceGetsOneShift() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.store.createCategory(name: "Extra", color: .orange)
+
+        try agenda.store.addExtras(
+            to: category, on: [days[0], days[0]], hour: 7, minute: 0, durationSeconds: 12 * hour)
+
+        #expect(agenda.day(2026, 10, 1).occurrences.count == 1)
+    }
+
+    @Test func rejectsNonPositiveLengthAndSavesNothing() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.store.createCategory(name: "Extra", color: .orange)
+
+        #expect(throws: AgendaError.invalidDuration) {
+            try agenda.store.addExtras(to: category, on: days, hour: 7, minute: 0, durationSeconds: 0)
+        }
+        #expect(category.overrides.isEmpty)
+    }
+
+    @Test func rejectsAnArchivedCategory() throws {
+        let agenda = TestAgenda()
+        let category = try agenda.store.createCategory(name: "Extra", color: .orange)
+        try agenda.store.archive(category)
+
+        #expect(throws: AgendaError.categoryArchived) {
+            try agenda.store.addExtras(to: category, on: days, hour: 7, minute: 0, durationSeconds: 12 * hour)
+        }
+    }
+}
+
 struct CancellationTests {
     @Test func movesTheShiftToCancelledAndBack() throws {
         let agenda = TestAgenda()
