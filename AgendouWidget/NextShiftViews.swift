@@ -8,9 +8,18 @@ private enum NextShiftText {
         locale: Formatting.locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone
     ).weekday(.abbreviated)
 
+    private static let wideWeekday = Date.FormatStyle(
+        locale: Formatting.locale, calendar: CivilCalendar.calendar, timeZone: CivilCalendar.timeZone
+    ).weekday(.wide)
+
     /// "ter", without the period pt-BR puts after the abbreviation.
     static func weekdayName(_ date: Date) -> String {
         date.formatted(weekday).replacingOccurrences(of: ".", with: "")
+    }
+
+    /// "terça-feira", for VoiceOver.
+    static func wideWeekdayName(_ date: Date) -> String {
+        date.formatted(wideWeekday)
     }
 
     /// "ter 29/09".
@@ -42,7 +51,11 @@ struct NextShiftView: View {
             default: SmallView(entry: entry, shift: shift)
             }
         } else {
-            EmptyShiftView(family: family)
+            switch family {
+            case .accessoryCircular: CircularNoShiftView(isUnavailable: entry.isUnavailable)
+            case .accessoryRectangular: RectangularNoShiftView(isUnavailable: entry.isUnavailable)
+            default: NoShiftView(isUnavailable: entry.isUnavailable)
+            }
         }
     }
 
@@ -73,8 +86,21 @@ private struct Countdown: View {
     }
 }
 
-private func status(_ entry: NextShiftEntry) -> LocalizedStringKey {
-    entry.isInProgress ? "Em andamento" : "Próximo plantão"
+/// "Próximo plantão" or "Em andamento" after a dot in the shift's color. The text stays in the primary
+/// color: in the shift's color on its own tint it is too faint in light mode.
+private struct Status: View {
+    let entry: NextShiftEntry
+    let shift: WidgetShift
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle().fill(shift.color.color).frame(width: 8, height: 8)
+            Text(entry.isInProgress ? "Em andamento" : "Próximo plantão")
+                .font(.caption.weight(.semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+    }
 }
 
 private struct SmallView: View {
@@ -83,19 +109,21 @@ private struct SmallView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(status(entry))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(shift.color.color)
+            Status(entry: entry, shift: shift)
             Text(shift.categoryName)
                 .font(.headline)
                 .lineLimit(2)
             Spacer(minLength: 4)
             Text(NextShiftText.day(shift))
                 .font(.caption)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             Text(NextShiftText.range(shift))
                 .font(.caption)
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             Countdown(entry: entry, shift: shift)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -103,6 +131,7 @@ private struct SmallView: View {
                 .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -130,6 +159,7 @@ private struct MediumView: View {
                                 .monospacedDigit()
                                 .foregroundStyle(.secondary)
                         }
+                        .accessibilityElement(children: .combine)
                     }
                 }
                 Spacer(minLength: 0)
@@ -157,6 +187,7 @@ private struct RectangularView: View {
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -185,21 +216,69 @@ private struct CircularView: View {
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+    }
+
+    /// What VoiceOver reads instead of the ring or the bare "ter 19:00".
+    private var label: Text {
+        let name = shift.categoryName
+        if entry.isInProgress {
+            return Text("Em andamento: \(name), termina às \(Formatting.time(shift.end))")
+        }
+        let weekday = NextShiftText.wideWeekdayName(shift.start)
+        return Text("Próximo plantão: \(name), \(weekday) às \(Formatting.time(shift.start))")
     }
 }
 
-private struct EmptyShiftView: View {
-    let family: WidgetFamily
+/// No shift to show: none ahead, or the database could not be opened (`isUnavailable`).
+private struct NoShiftView: View {
+    let isUnavailable: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Sem plantões à frente")
+            Text(isUnavailable ? "Plantões indisponíveis" : "Sem plantões à frente")
                 .font(.headline)
-            Text("Abra o Agendou para configurar a escala.")
+            Text(isUnavailable ? "Desbloqueie o iPhone ou abra o Agendou." : "Abra o Agendou para configurar a escala.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(
-            maxWidth: .infinity, maxHeight: .infinity, alignment: family == .accessoryCircular ? .center : .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// `NoShiftView` for the lock screen's rectangle: the headline may take two lines, the hint is shorter.
+private struct RectangularNoShiftView: View {
+    let isUnavailable: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(isUnavailable ? "Plantões indisponíveis" : "Sem plantões à frente")
+                .font(.headline)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+            Text("Abra o Agendou")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// `NoShiftView` for the lock screen's circle: a symbol, with the headline for VoiceOver.
+private struct CircularNoShiftView: View {
+    let isUnavailable: Bool
+
+    var body: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            Image(systemName: isUnavailable ? "exclamationmark.circle" : "calendar")
+                .font(.title2)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(isUnavailable ? Text("Plantões indisponíveis") : Text("Sem plantões à frente"))
     }
 }

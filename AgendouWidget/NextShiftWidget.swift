@@ -40,6 +40,7 @@ struct NextShiftWidget: Widget {
     NextShiftEntry.sample
     NextShiftEntry.sampleInProgress
     NextShiftEntry.empty(at: .now)
+    NextShiftEntry.unavailable(at: .now)
 }
 
 #Preview("Médio", as: .systemMedium) {
@@ -48,6 +49,7 @@ struct NextShiftWidget: Widget {
     NextShiftEntry.sample
     NextShiftEntry.sampleInProgress
     NextShiftEntry.empty(at: .now)
+    NextShiftEntry.unavailable(at: .now)
 }
 
 #Preview("Retangular", as: .accessoryRectangular) {
@@ -56,6 +58,7 @@ struct NextShiftWidget: Widget {
     NextShiftEntry.sample
     NextShiftEntry.sampleInProgress
     NextShiftEntry.empty(at: .now)
+    NextShiftEntry.unavailable(at: .now)
 }
 
 #Preview("Circular", as: .accessoryCircular) {
@@ -64,4 +67,5 @@ struct NextShiftWidget: Widget {
     NextShiftEntry.sample
     NextShiftEntry.sampleInProgress
     NextShiftEntry.empty(at: .now)
+    NextShiftEntry.unavailable(at: .now)
 }

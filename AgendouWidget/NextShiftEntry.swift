@@ -17,15 +17,20 @@ nonisolated struct NextShiftEntry: TimelineEntry, Sendable {
     let date: Date
     /// In progress at `date`, or else the next one. `nil` when there is none.
     let shift: WidgetShift?
+    /// `shift` has started at `date` (`ShiftTimelineEntry.isInProgress`).
+    let isInProgress: Bool
     /// The shifts after `shift`, at most two.
     let following: [WidgetShift]
-
-    var isInProgress: Bool {
-        shift.map { $0.startsAt <= date.epochSeconds } ?? false
-    }
+    /// The database could not be opened, as before the first unlock after a reboot: the shifts are unknown,
+    /// which is not the same as having none.
+    let isUnavailable: Bool
 
     static func empty(at date: Date) -> NextShiftEntry {
-        NextShiftEntry(date: date, shift: nil, following: [])
+        NextShiftEntry(date: date, shift: nil, isInProgress: false, following: [], isUnavailable: false)
+    }
+
+    static func unavailable(at date: Date) -> NextShiftEntry {
+        NextShiftEntry(date: date, shift: nil, isInProgress: false, following: [], isUnavailable: true)
     }
 
     /// For the gallery and previews: a shift starting in three hours, then two more.
@@ -38,10 +43,12 @@ nonisolated struct NextShiftEntry: TimelineEntry, Sendable {
         return NextShiftEntry(
             date: now,
             shift: shift("UTI Hospital X", .teal, from: first),
+            isInProgress: false,
             following: [
                 shift("UTI Hospital X", .teal, from: first + 48 * 3_600),
                 shift("Extra", .orange, from: first + 96 * 3_600),
-            ])
+            ],
+            isUnavailable: false)
     }
 
     /// For previews: the same shift, already running for four hours.
@@ -52,6 +59,8 @@ nonisolated struct NextShiftEntry: TimelineEntry, Sendable {
             date: now,
             shift: WidgetShift(
                 categoryName: "UTI Hospital X", color: .teal, startsAt: start, endsAt: start + 12 * 3_600),
-            following: sample.following)
+            isInProgress: true,
+            following: sample.following,
+            isUnavailable: false)
     }
 }
