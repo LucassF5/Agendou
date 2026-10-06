@@ -128,7 +128,7 @@ struct CategoryDetailScreen: View {
             case .renew:
                 if let open { RenewForm(schedule: open) }
             case .pickDays:
-                PickDaysForm(
+                AddShiftsForm(
                     category: category, month: CivilMonth(CivilCalendar.date(containing: Date.now.epochSeconds)),
                     store: store)
             }

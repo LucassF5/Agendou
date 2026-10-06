@@ -8,7 +8,7 @@ struct CalendarScreen: View {
     @State private var selectedDay: CivilDate?
     @State private var showingYear = false
     @State private var sharing = false
-    @State private var pickingDays = false
+    @State private var addingShifts = false
 
     var body: some View {
         NavigationStack {
@@ -35,8 +35,8 @@ struct CalendarScreen: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Marcar dias", systemImage: "plus") { pickingDays = true }
-                        .accessibilityIdentifier("calendar.pickDays")
+                    Button("Adicionar plantões", systemImage: "plus") { addingShifts = true }
+                        .accessibilityIdentifier("calendar.addShifts")
                 }
             }
             .navigationDestination(isPresented: $showingYear) {
@@ -52,8 +52,8 @@ struct CalendarScreen: View {
             .sheet(isPresented: $sharing) {
                 ShareMonthScreen(month: visibleMonth)
             }
-            .sheet(isPresented: $pickingDays) {
-                PickDaysForm(month: visibleMonth, store: store)
+            .sheet(isPresented: $addingShifts) {
+                AddShiftsForm(month: visibleMonth, store: store)
             }
         }
     }

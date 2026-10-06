@@ -14,6 +14,13 @@ enum Formatting {
         scheduleLabel(workSeconds: schedule.workSeconds, restSeconds: schedule.restSeconds)
     }
 
+    /// "12x36 · até 06/04", or just "12x36" without an end.
+    static func scheduleSummary(_ schedule: CategorySchedule) -> String {
+        let label = scheduleLabel(schedule)
+        guard let end = schedule.repeatsUntil else { return label }
+        return "\(label) · \(String(localized: "até \(shortDay(lastDay(ofPeriodEndingAt: end)))"))"
+    }
+
     /// "12h", "12h30".
     static func duration(_ seconds: Int) -> String {
         let minutes = seconds / 60

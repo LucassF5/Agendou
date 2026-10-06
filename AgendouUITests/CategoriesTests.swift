@@ -74,7 +74,7 @@ final class CategoriesTests: XCTestCase {
         app.buttons["category.pickDays"].tap()
 
         app.pickDaysOfNextMonth([15])
-        let save = app.buttons["pickDays.save"]
+        let save = app.buttons["addShifts.save"]
         XCTAssertEqual(save.label, "Adicionar 1 plantão")
         save.tap()
         XCTAssertTrue(save.waitForNonExistence(timeout: 5))

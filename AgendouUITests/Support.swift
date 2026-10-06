@@ -126,7 +126,7 @@ extension XCUIApplication {
 
     /// In the "Marcar dias" sheet, moves to next month and taps `days` in its grid.
     func pickDaysOfNextMonth(_ days: [Int]) {
-        let grid = otherElements["pickDays.calendar"]
+        let grid = otherElements["addShifts.calendar"]
         XCTAssertTrue(grid.waitForExistence(timeout: 5), "day picker")
         grid.buttons["DatePicker.NextMonth"].tap()
         let month = WorkplaceCalendar.monthNames[WorkplaceCalendar.nextMonth(day: 1).month! - 1]
@@ -135,7 +135,7 @@ extension XCUIApplication {
                 .firstMatch
             XCTAssertTrue(cell.waitForExistence(timeout: 5), "day \(day)")
             // The last weeks of the grid start out under the bottom bar.
-            if cell.frame.maxY > buttons["pickDays.save"].frame.minY { swipeUp() }
+            if cell.frame.maxY > buttons["addShifts.save"].frame.minY { swipeUp() }
             cell.tap()
         }
     }
