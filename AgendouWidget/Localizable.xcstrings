@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "pt-BR",
+  "strings" : {
+    "%@ · %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%lld plantões" : {
+
+    },
+    "1 plantão" : {
+
+    },
+    "Abra o Agendou para configurar a escala." : {
+
+    },
+    "Começa em %@" : {
+
+    },
+    "Em andamento" : {
+
+    },
+    "Próximo plantão" : {
+
+    },
+    "Sem outros plantões à vista" : {
+
+    },
+    "Sem plantões à frente" : {
+
+    },
+    "Termina em %@" : {
+
+    },
+    "Veja o plantão em andamento ou o próximo sem abrir o app." : {
+
+    }
+  },
+  "version" : "1.0"
+}
