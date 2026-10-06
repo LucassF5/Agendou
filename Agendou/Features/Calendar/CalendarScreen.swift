@@ -36,7 +36,7 @@ struct CalendarScreen: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Adicionar plantões", systemImage: "plus") { addingShifts = true }
-                        .accessibilityIdentifier(TourStep.addShifts.barItemIdentifier ?? "")
+                        .accessibilityIdentifier("calendar.addShifts")
                 }
             }
             .navigationDestination(isPresented: $showingYear) {

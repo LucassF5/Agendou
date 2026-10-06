@@ -60,12 +60,12 @@ struct TourOverlay: View {
 
     /// For a toolbar button, looks it up in UIKit until its frame stops moving (the tab switch settles).
     private func locateBarItem() async {
-        guard let step = tour.step, let identifier = step.barItemIdentifier else { return }
+        guard let step = tour.step, let title = step.barItemTitle else { return }
         var last: CGRect?
         for _ in 0..<20 {
             try? await Task.sleep(for: .milliseconds(100))
             guard tour.step == step else { return }
-            guard let frame = BarItemFrame.find(identifier) else { continue }
+            guard let frame = BarItemFrame.find(title) else { continue }
             tour.anchors[step] = frame
             if frame == last { return }
             last = frame

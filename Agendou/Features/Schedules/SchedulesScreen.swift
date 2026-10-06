@@ -54,7 +54,7 @@ struct SchedulesScreen: View {
             .navigationTitle("Escalas")
             .toolbar {
                 Button("Novo local", systemImage: "plus") { creating = true }
-                    .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
+                    .accessibilityIdentifier("schedules.add")
             }
             .navigationDestination(for: UUID.self) { ScheduleDetailScreen(categoryID: $0) }
             .sheet(isPresented: $creating, onDismiss: defineCreatedSchedule) {

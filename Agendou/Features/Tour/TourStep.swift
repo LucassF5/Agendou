@@ -18,12 +18,12 @@ enum TourStep: Int, CaseIterable {
         self == .shiftMenu || self == .addExtra
     }
 
-    /// Toolbar buttons report no usable frame to SwiftUI, so the tour finds them in UIKit by this
-    /// accessibility identifier instead of through `.tourAnchor`.
-    var barItemIdentifier: String? {
+    /// Toolbar buttons report no usable frame to SwiftUI, so the tour finds them in UIKit instead of through
+    /// `.tourAnchor`, by the title UIKit keeps on their bar button item: it must match the button's title.
+    var barItemTitle: String? {
         switch self {
-        case .addCategory: "categories.add"
-        case .addShifts: "calendar.addShifts"
+        case .addCategory: String(localized: "Novo local")
+        case .addShifts: String(localized: "Adicionar plantões")
         default: nil
         }
     }
