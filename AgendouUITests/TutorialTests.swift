@@ -256,4 +256,26 @@ final class TutorialTests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["Escalas"].isSelected)
         XCTAssertFalse(app.buttons["category.row.UTI Exemplo"].exists)
     }
+
+    @MainActor
+    func testStartUsingGoesOnToDefiningTheSchedule() {
+        let app = XCUIApplication.agendou(tutorial: true)
+        app.launch()
+        let skip = app.buttons["intro.skip"]
+        XCTAssertTrue(skip.waitForExistence(timeout: 5))
+        skip.tap()
+        app.buttons["intro.start"].tap()
+
+        let name = app.textFields["category.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("UTI")
+        app.buttons["category.save"].tap()
+
+        XCTAssertTrue(app.buttons["preset.12x36"].waitForExistence(timeout: 5), "Definir escala")
+        XCTAssertTrue(app.tabBars.buttons["Escalas"].isSelected)
+        app.defineSchedule()
+        XCTAssertTrue(app.buttons["category.row.UTI"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.cellShowsDots(app.calendarCell(WorkplaceCalendar.nextShiftDay())))
+    }
 }

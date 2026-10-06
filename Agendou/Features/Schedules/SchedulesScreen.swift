@@ -5,6 +5,10 @@ import SwiftUI
 struct SchedulesScreen: View {
     @Environment(AgendaStore.self) private var store
     @State private var creating = false
+    /// The category just created with a fixed schedule: "Definir escala" opens once its form is gone, so the
+    /// two sheets never overlap.
+    @State private var created: ShiftCategory?
+    @State private var defining: ShiftCategory?
 
     var body: some View {
         NavigationStack {
@@ -53,8 +57,16 @@ struct SchedulesScreen: View {
                     .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
             }
             .navigationDestination(for: UUID.self) { ScheduleDetailScreen(categoryID: $0) }
-            .sheet(isPresented: $creating) { CategoryForm(mode: .create) }
+            .sheet(isPresented: $creating, onDismiss: defineCreatedSchedule) {
+                CategoryForm(mode: .create) { created = $0 }
+            }
+            .sheet(item: $defining) { ScheduleForm(mode: .first($0), store: store) }
         }
+    }
+
+    private func defineCreatedSchedule() {
+        defining = created
+        created = nil
     }
 
     private func row(_ category: ShiftCategory) -> some View {

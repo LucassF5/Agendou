@@ -12,6 +12,9 @@ struct RootTabView: View {
     let tutorialGate: TutorialGate?
     @State private var tab = AppTab.home
     @State private var creatingCategory = false
+    /// The category just created with a fixed schedule: "Definir escala" opens once its form is gone.
+    @State private var createdCategory: ShiftCategory?
+    @State private var definingCategory: ShiftCategory?
     @State private var tour = TourController()
     @State private var tourWindow = TourWindow()
     /// The sample agenda shown while the tour runs; `nil` the rest of the time.
@@ -80,7 +83,15 @@ struct RootTabView: View {
             tourDay = step.needsDaySheet ? sampleDay : nil
             tourWindow.stepChanged()
         }
-        .sheet(isPresented: $creatingCategory) { CategoryForm(mode: .create) }
+        .sheet(isPresented: $creatingCategory, onDismiss: defineCreatedSchedule) {
+            CategoryForm(mode: .create) { createdCategory = $0 }
+        }
+        .sheet(item: $definingCategory) { ScheduleForm(mode: .first($0), store: store) }
+    }
+
+    private func defineCreatedSchedule() {
+        definingCategory = createdCategory
+        createdCategory = nil
     }
 
     /// The day of the sample agenda's next shift, where the day sheet steps happen.
