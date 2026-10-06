@@ -38,7 +38,7 @@ struct SchedulesScreen: View {
                     }
                 }
                 if !active.isEmpty {
-                    Section("Ativas") {
+                    Section("Ativos") {
                         ForEach(active) { category in
                             row(category)
                                 .tourAnchor(.category, when: category.id == active.first?.id)
@@ -46,14 +46,14 @@ struct SchedulesScreen: View {
                     }
                 }
                 if !archived.isEmpty {
-                    Section("Arquivadas") {
+                    Section("Arquivados") {
                         ForEach(archived) { row($0) }
                     }
                 }
             }
             .navigationTitle("Escalas")
             .toolbar {
-                Button("Nova categoria", systemImage: "plus") { creating = true }
+                Button("Novo local", systemImage: "plus") { creating = true }
                     .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
             }
             .navigationDestination(for: UUID.self) { ScheduleDetailScreen(categoryID: $0) }
@@ -88,7 +88,7 @@ struct SchedulesScreen: View {
     }
 
     private func subtitle(_ category: ShiftCategory) -> String {
-        if category.archivedAt != nil { return String(localized: "Arquivada") }
+        if category.archivedAt != nil { return String(localized: "Arquivado") }
         guard let open = store.openSchedule(of: category) else { return String(localized: "Sem escala") }
         return Formatting.scheduleSummary(open)
     }

@@ -37,7 +37,7 @@ struct RootTabView: View {
             Tab("Calendário", systemImage: "calendar", value: .calendar) {
                 CalendarScreen()
             }
-            Tab("Escalas", systemImage: "square.stack", value: .schedules) {
+            Tab("Escalas", systemImage: "clock.arrow.2.circlepath", value: .schedules) {
                 SchedulesScreen()
             }
             Tab("Ajustes", systemImage: "gearshape", value: .settings) {

@@ -27,6 +27,7 @@ final class SchedulesTests: XCTestCase {
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap()
         name.typeText("UTI Hospital X")
+        XCTAssertTrue(app.navigationBars["Novo local"].exists)
         XCTAssertFalse(app.buttons["preset.12x36"].exists, "the schedule comes after the category")
         snapshot(app, "category-form")
         app.buttons["category.save"].tap()
@@ -52,7 +53,7 @@ final class SchedulesTests: XCTestCase {
         let app = XCUIApplication.agendou()
         app.launch()
         app.tabBars.buttons["Escalas"].tap()
-        app.buttons["Nova categoria"].tap()
+        app.buttons["Novo local"].tap()
         let name = app.textFields["category.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap()
@@ -95,6 +96,7 @@ final class SchedulesTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["schedule.current"].label, "24x48")
         XCTAssertEqual(app.staticTexts.matching(identifier: "schedule.history").count, 2)
+        XCTAssertTrue(app.buttons["Arquivar local"].revealed(in: app).exists)
         snapshot(app, "category-detail")
     }
 

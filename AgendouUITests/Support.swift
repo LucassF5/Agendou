@@ -111,7 +111,7 @@ extension XCUIApplication {
     /// Adds another category through the "+" button, with a preset schedule starting at the next 07:00.
     func addCategory(_ name: String, preset: String) {
         tabBars.buttons["Escalas"].tap()
-        buttons["Nova categoria"].tap()
+        buttons["Novo local"].tap()
         let field = textFields["category.name"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()

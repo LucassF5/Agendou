@@ -82,9 +82,6 @@
     "1 plantão" : {
 
     },
-    "A categoria tem histórico e não pode ser excluída. Arquive em vez disso." : {
-
-    },
     "A duração precisa ser maior que zero." : {
 
     },
@@ -133,13 +130,13 @@
     "Ao abrir o app, você vê o próximo plantão e quanto falta." : {
 
     },
-    "Arquivada" : {
+    "Arquivado" : {
 
     },
-    "Arquivada em" : {
+    "Arquivado em" : {
 
     },
-    "Arquivadas" : {
+    "Arquivados" : {
 
     },
     "Arquivar" : {
@@ -148,13 +145,13 @@
     "Arquivar %@?" : {
 
     },
-    "Arquivar categoria" : {
-
-    },
     "Arquivar encerra a escala agora e apaga os extras futuros. O passado continua no calendário." : {
 
     },
-    "Ativas" : {
+    "Arquivar local" : {
+
+    },
+    "Ativos" : {
 
     },
     "Até hoje" : {
@@ -178,7 +175,7 @@
     "Bem-vindo ao Agendou" : {
 
     },
-    "Cada lugar onde você trabalha vira uma categoria, com a escala (12x36, 24x48…)." : {
+    "Cada lugar onde você trabalha fica aqui, com a escala (12x36, 24x48…)." : {
 
     },
     "Cada plantão aparece no dia em que começa." : {
@@ -200,12 +197,6 @@
 
     },
     "Cancelar plantão" : {
-
-    },
-    "Categoria" : {
-
-    },
-    "Categoria excluída" : {
 
     },
     "Começa %@" : {
@@ -232,7 +223,7 @@
     "Corrigir escala" : {
 
     },
-    "Crie uma categoria aqui. Sem escala fixa? Crie sem escala e marque os dias à mão." : {
+    "Crie um local aqui. Sem escala fixa? Crie sem escala e marque os dias à mão." : {
 
     },
     "Dados importados" : {
@@ -265,16 +256,16 @@
     "Dá para corrigir ou excluir a escala enquanto ela tem menos de 24 horas ou nenhum plantão dela começou." : {
 
     },
-    "Dê um nome à categoria." : {
+    "Dê um nome ao local." : {
 
     },
     "Editar" : {
 
     },
-    "Editar categoria" : {
+    "Editar horário" : {
 
     },
-    "Editar horário" : {
+    "Editar local" : {
 
     },
     "Edite o horário, cancele ou exclua um plantão." : {
@@ -331,16 +322,16 @@
     "Esse plantão não foi ajustado." : {
 
     },
-    "Esta categoria está arquivada." : {
-
-    },
-    "Esta categoria já tem escala. Use “Mudei de escala”." : {
-
-    },
-    "Esta categoria não tem escala em vigor." : {
-
-    },
     "Este backup foi feito por uma versão mais nova do Agendou. Atualize o app para importar." : {
+
+    },
+    "Este local está arquivado." : {
+
+    },
+    "Este local já tem escala. Use “Mudei de escala”." : {
+
+    },
+    "Este local não tem escala em vigor." : {
 
     },
     "Ex.: UTI Hospital X" : {
@@ -355,10 +346,10 @@
     "Excluir a escala atual?" : {
 
     },
-    "Excluir categoria" : {
+    "Excluir escala" : {
 
     },
-    "Excluir escala" : {
+    "Excluir local" : {
 
     },
     "Excluir plantão" : {
@@ -400,7 +391,7 @@
     "Início" : {
 
     },
-    "Já existe um plantão dessa categoria nesse horário." : {
+    "Já existe um plantão desse local nesse horário." : {
 
     },
     "Laranja" : {
@@ -413,6 +404,12 @@
 
     },
     "Locais" : {
+
+    },
+    "Local" : {
+
+    },
+    "Local excluído" : {
 
     },
     "Marcar dias" : {
@@ -457,7 +454,7 @@
     "Notificações desativadas" : {
 
     },
-    "Nova categoria" : {
+    "Novo local" : {
 
     },
     "Não encontrado." : {
@@ -472,23 +469,29 @@
     "O arquivo não é um backup do Agendou ou está corrompido." : {
 
     },
-    "O arquivo tem %lld categorias, %lld escalas, %lld marcações e %lld anotações. Tudo o que está no app agora será apagado." : {
+    "O arquivo tem %lld locais, %lld escalas, %lld marcações e %lld anotações. Tudo o que está no app agora será apagado." : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "O arquivo tem %1$lld categorias, %2$lld escalas, %3$lld marcações e %4$lld anotações. Tudo o que está no app agora será apagado."
+            "value" : "O arquivo tem %1$lld locais, %2$lld escalas, %3$lld marcações e %4$lld anotações. Tudo o que está no app agora será apagado."
           }
         }
       }
     },
-    "O arquivo tem as categorias, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app." : {
+    "O arquivo tem os locais, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app." : {
 
     },
     "O backup tem dados inconsistentes e não foi importado. Nada foi alterado." : {
 
     },
-    "O calendário se preenche sozinho, com a cor de cada categoria." : {
+    "O calendário se preenche sozinho, com a cor de cada local." : {
+
+    },
+    "O local tem histórico e não pode ser excluído. Arquive em vez disso." : {
+
+    },
+    "O lugar e o tipo de plantão." : {
 
     },
     "O prazo precisa cobrir o primeiro plantão e, ao renovar, passar do prazo atual." : {
@@ -611,7 +614,7 @@
     "Sem escala" : {
 
     },
-    "Sem escala, a categoria serve para plantões avulsos." : {
+    "Sem escala, o local serve para plantões avulsos." : {
 
     },
     "Sem prazo" : {
@@ -645,9 +648,6 @@
 
     },
     "Um aviso por dia, só nos dias com plantão. Plantão que passa da meia-noite conta no dia em que começa." : {
-
-    },
-    "Um vínculo: o lugar e o tipo de plantão." : {
 
     },
     "Vale até" : {

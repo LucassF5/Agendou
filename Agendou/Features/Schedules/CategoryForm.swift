@@ -40,7 +40,7 @@ struct CategoryForm: View {
                     TextField("Nome", text: $name, prompt: Text("Ex.: UTI Hospital X"))
                         .accessibilityIdentifier("category.name")
                 } footer: {
-                    Text("Um vínculo: o lugar e o tipo de plantão.")
+                    Text("O lugar e o tipo de plantão.")
                 }
                 Section("Cor") {
                     ColorPalettePicker(selection: $color)
@@ -53,11 +53,11 @@ struct CategoryForm: View {
                         Text(
                             hasSchedule
                                 ? "Depois de salvar, você define a escala."
-                                : "Sem escala, a categoria serve para plantões avulsos.")
+                                : "Sem escala, o local serve para plantões avulsos.")
                     }
                 }
             }
-            .navigationTitle(isCreating ? "Nova categoria" : "Editar categoria")
+            .navigationTitle(isCreating ? "Novo local" : "Editar local")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

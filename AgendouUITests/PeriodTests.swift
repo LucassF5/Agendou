@@ -76,7 +76,7 @@ final class PeriodTests: XCTestCase {
     }
 
     @MainActor
-    func testCategoriesListsSchedulesEndingSoon() {
+    func testSchedulesTabListsTheOnesEndingSoon() {
         let app = XCUIApplication.agendou()
         app.launch()
         app.createCategory("UTI", repeat: "1")

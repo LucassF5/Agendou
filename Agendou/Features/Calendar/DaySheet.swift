@@ -157,7 +157,7 @@ struct ShiftRow: View {
                 .fill(category?.color ?? .gray)
                 .frame(width: 4, height: 36)
             VStack(alignment: .leading, spacing: 2) {
-                Text(category?.name ?? String(localized: "Categoria excluída"))
+                Text(category?.name ?? String(localized: "Local excluído"))
                 Text(Formatting.timeRange(occurrence))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

@@ -6,7 +6,7 @@ final class HomeTests: XCTestCase {
     }
 
     @MainActor
-    func testEmptyStateLeadsToCategories() {
+    func testEmptyStateLeadsToSchedules() {
         let app = XCUIApplication.agendou()
         app.launch()
 

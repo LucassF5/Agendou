@@ -60,7 +60,7 @@ final class TutorialTests: XCTestCase {
 
     /// The balloon text of each step, in order (the start of it is enough).
     private let stepTexts = [
-        "Ao abrir o app", "Os próximos dias", "Cada lugar onde você trabalha", "Crie uma categoria aqui",
+        "Ao abrir o app", "Os próximos dias", "Cada lugar onde você trabalha", "Crie um local aqui",
         "O calendário se preenche", "Edite o horário", "Marque um plantão avulso", "Receba um aviso",
     ]
 
@@ -76,7 +76,7 @@ final class TutorialTests: XCTestCase {
             app.descendants(matching: .any)["home.card"],
             app.staticTexts["home.days.title"],
             app.buttons["category.row.UTI Exemplo"],
-            app.buttons["Nova categoria"],
+            app.buttons["Novo local"],
             app.buttons.matching(NSPredicate(format: "label CONTAINS ' de '")).firstMatch,
             app.buttons["shift.menu.UTI Exemplo"],
             app.buttons["day.addExtra"],
@@ -171,7 +171,7 @@ final class TutorialTests: XCTestCase {
         let app = XCUIApplication.agendou()
         app.launch()
         app.createCategory("UTI")
-        // Leave Categories on a pushed detail and Settings scrolled down to "Ver tutorial".
+        // Leave Escalas on a pushed detail and Settings scrolled down to "Ver tutorial".
         app.buttons["category.row.UTI"].tap()
         app.tabBars.buttons["Ajustes"].tap()
         app.buttons["settings.tutorial"].revealed(in: app).tap()
@@ -182,7 +182,7 @@ final class TutorialTests: XCTestCase {
         next.tapWhenSettled()
         assertHighlights(app, app.buttons["category.row.UTI Exemplo"])
         next.tapWhenSettled()
-        assertHighlights(app, app.buttons["Nova categoria"])
+        assertHighlights(app, app.buttons["Novo local"])
         for _ in 0..<4 { next.tapWhenSettled() }
         assertHighlights(app, app.switches["settings.reminder"])
     }

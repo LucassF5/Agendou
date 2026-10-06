@@ -28,9 +28,9 @@ enum TourStep: Int, CaseIterable {
         switch self {
         case .nextShift: "Ao abrir o app, você vê o próximo plantão e quanto falta."
         case .dayStrip: "Os próximos dias e as horas do mês. Toque num dia para ver os detalhes."
-        case .category: "Cada lugar onde você trabalha vira uma categoria, com a escala (12x36, 24x48…)."
-        case .addCategory: "Crie uma categoria aqui. Sem escala fixa? Crie sem escala e marque os dias à mão."
-        case .calendar: "O calendário se preenche sozinho, com a cor de cada categoria."
+        case .category: "Cada lugar onde você trabalha fica aqui, com a escala (12x36, 24x48…)."
+        case .addCategory: "Crie um local aqui. Sem escala fixa? Crie sem escala e marque os dias à mão."
+        case .calendar: "O calendário se preenche sozinho, com a cor de cada local."
         case .shiftMenu: "Edite o horário, cancele ou exclua um plantão."
         case .addExtra: "Marque um plantão avulso, fora da escala."
         case .reminder: "Receba um aviso no dia do plantão, no horário que preferir."

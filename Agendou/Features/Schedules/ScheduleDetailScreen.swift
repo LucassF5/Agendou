@@ -25,7 +25,7 @@ struct ScheduleDetailScreen: View {
         if let category = store.category(id: categoryID) {
             content(category)
         } else {
-            ContentUnavailableView("Categoria excluída", systemImage: "trash")
+            ContentUnavailableView("Local excluído", systemImage: "trash")
         }
     }
 
@@ -55,7 +55,7 @@ struct ScheduleDetailScreen: View {
                     }
                 }
                 if let archivedAt = category.archivedAt {
-                    LabeledContent("Arquivada em", value: Formatting.date(archivedAt))
+                    LabeledContent("Arquivado em", value: Formatting.date(archivedAt))
                 }
             }
 
@@ -103,10 +103,10 @@ struct ScheduleDetailScreen: View {
 
             Section {
                 if !isArchived {
-                    Button("Arquivar categoria", role: .destructive) { confirmingArchive = true }
+                    Button("Arquivar local", role: .destructive) { confirmingArchive = true }
                 }
                 if store.canDeletePermanently(category) {
-                    Button("Excluir categoria", role: .destructive) { confirmingDelete = true }
+                    Button("Excluir local", role: .destructive) { confirmingDelete = true }
                 }
             } footer: {
                 if !isArchived {
