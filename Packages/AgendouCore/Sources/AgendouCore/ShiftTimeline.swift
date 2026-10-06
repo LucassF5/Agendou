@@ -41,8 +41,8 @@ public enum ShiftTimeline {
         return instants.sorted().prefix(maxEntries).map { entry(at: $0, occurrences: occurrences) }
     }
 
-    /// When the widget should ask for a new timeline: when the last entry starts to hold (the window ends
-    /// there), or `emptyRefresh` after `now` when nothing is going to change.
+    /// When the widget should ask for a new timeline: when the last entry starts to hold (the planned
+    /// entries end there), or `emptyRefresh` after `now` when nothing is going to change.
     public static func refreshDate(for entries: [ShiftTimelineEntry], now: Int64) -> Int64 {
         guard let last = entries.last, last.date > now else { return now + emptyRefresh }
         return last.date
@@ -50,7 +50,7 @@ public enum ShiftTimeline {
 
     private static func entry(at date: Int64, occurrences: [Occurrence]) -> ShiftTimelineEntry {
         let notOver = occurrences.filter { date < $0.endsAt }
-        // Sorted by start: the first one that has started is in progress; else the first one is the next.
+        // Sorted by start and none over at `date`: the first one is in progress if it has started, else the next.
         guard let headline = notOver.first else {
             return ShiftTimelineEntry(date: date, shift: nil, following: [])
         }

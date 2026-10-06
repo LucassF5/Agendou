@@ -82,7 +82,8 @@ public enum ScheduleEngine {
 }
 
 extension ScheduleEngine {
-    /// How far ahead `currentOrNext` looks for the next shift.
+    /// The default horizon of `occurrencesNotOver`, `currentOrNext` and `AgendaStore.shiftsFromNow`: how far
+    /// ahead they look for shifts.
     public static let nextShiftHorizon: Int64 = 400 * 86_400
 
     /// The shifts not yet over at `now`, soonest first: the one in progress, if any, and every one that
@@ -99,13 +100,12 @@ extension ScheduleEngine {
             .filter { now < $0.endsAt }
     }
 
-    /// The shift in progress at `now` (`start <= now < end`), or else the next one to start. This is the
-    /// one place where a shift counts as "now" by its whole length rather than by its start.
+    /// The shift in progress at `now` (`start <= now < end`), or else the next one to start. A shift counts
+    /// here by its whole length, as in `occurrencesNotOver`, not by its start as in `expand`.
     public static func currentOrNext(
         schedules: [ScheduleVersion], overrides: [Override], now: Int64, horizon: Int64 = nextShiftHorizon
     ) -> Occurrence? {
-        let occurrences = occurrencesNotOver(schedules: schedules, overrides: overrides, now: now, horizon: horizon)
-        // Everything left ends after `now`, so one that has started is the one in progress.
-        return occurrences.first { $0.startsAt <= now } ?? occurrences.first
+        // Sorted by start and none over yet: the first one is in progress if it has started, else the next.
+        occurrencesNotOver(schedules: schedules, overrides: overrides, now: now, horizon: horizon).first
     }
 }
