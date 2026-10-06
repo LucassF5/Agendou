@@ -193,6 +193,13 @@ public final class AgendaStore {
         return ScheduleEngine.currentOrNext(schedules: schedules, overrides: overrides, now: now)
     }
 
+    /// The shift in progress and every one starting within `horizon`, soonest first: what the widget plans
+    /// its timeline from. Read-only.
+    public func shiftsFromNow(horizon: Int64 = ScheduleEngine.nextShiftHorizon) -> [Occurrence] {
+        let (schedules, overrides) = engineInput()
+        return ScheduleEngine.occurrencesNotOver(schedules: schedules, overrides: overrides, now: now, horizon: horizon)
+    }
+
     /// How far ahead `upcomingShifts` looks.
     public static let upcomingHorizonDays = 60
 

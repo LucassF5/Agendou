@@ -84,6 +84,27 @@ struct CurrentOrNextTests {
         #expect(
             ScheduleEngine.currentOrNext(schedules: [later], overrides: [], now: at(1, 7))?.startsAt == later.anchorAt)
     }
+
+    @Test func listsTheShiftInProgressAndTheNextOnes() {
+        let starts = ScheduleEngine.occurrencesNotOver(
+            schedules: [schedule], overrides: [], now: at(1, 10), horizon: 5 * 86_400
+        ).map(\.startsAt)
+        #expect(starts == [at(1, 7), at(3, 7), at(5, 7)])
+    }
+
+    @Test func dropsTheShiftsAlreadyOver() {
+        let starts = ScheduleEngine.occurrencesNotOver(
+            schedules: [schedule], overrides: [], now: at(1, 20), horizon: 5 * 86_400
+        ).map(\.startsAt)
+        #expect(starts == [at(3, 7), at(5, 7)])
+    }
+
+    @Test func aShiftEndingExactlyNowIsOver() {
+        let starts = ScheduleEngine.occurrencesNotOver(
+            schedules: [schedule], overrides: [], now: at(1, 19), horizon: 3 * 86_400
+        ).map(\.startsAt)
+        #expect(starts == [at(3, 7)])
+    }
 }
 
 struct CivilDateArithmeticTests {

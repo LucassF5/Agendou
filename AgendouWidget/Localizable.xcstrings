@@ -1,0 +1,75 @@
+{
+  "sourceLanguage" : "pt-BR",
+  "strings" : {
+    "%@ · %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%lld plantões" : {
+
+    },
+    "1 plantão" : {
+
+    },
+    "Abra o Agendou" : {
+
+    },
+    "Abra o Agendou para configurar a escala." : {
+
+    },
+    "Começa em %@" : {
+
+    },
+    "Desbloqueie o iPhone ou abra o Agendou." : {
+
+    },
+    "Em andamento" : {
+
+    },
+    "Em andamento: %@, termina às %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Em andamento: %1$@, termina às %2$@"
+          }
+        }
+      }
+    },
+    "Plantões indisponíveis" : {
+
+    },
+    "Próximo plantão" : {
+
+    },
+    "Próximo plantão: %@, %@ às %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Próximo plantão: %1$@, %2$@ às %3$@"
+          }
+        }
+      }
+    },
+    "Sem outros plantões à vista" : {
+
+    },
+    "Sem plantões à frente" : {
+
+    },
+    "Termina em %@" : {
+
+    },
+    "Veja o plantão em andamento ou o próximo sem abrir o app." : {
+
+    }
+  },
+  "version" : "1.0"
+}

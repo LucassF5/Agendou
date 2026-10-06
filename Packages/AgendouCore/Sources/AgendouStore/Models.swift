@@ -244,4 +244,30 @@ public enum AgendouContainer {
             for: schema, migrationPlan: AgendouMigrationPlan.self,
             configurations: ModelConfiguration(schema: schema, url: url))
     }
+
+    public enum OpenError: Error, Equatable, Sendable {
+        /// The app has not created the store yet: there is nothing to read.
+        case storeNotCreated
+    }
+
+    /// The app's store, opened read-only for an extension: it never saves, never creates the file and
+    /// never migrates it. Throws `OpenError.storeNotCreated` when the app has not created it yet.
+    public static func makeReadOnly() throws -> ModelContainer {
+        try makeReadOnly(
+            ModelConfiguration(schema: schema, allowsSave: false, groupContainer: .identifier(appGroupIdentifier)))
+    }
+
+    /// `makeReadOnly()` for a store at a file URL, for tests.
+    static func makeReadOnly(at url: URL) throws -> ModelContainer {
+        try makeReadOnly(ModelConfiguration(schema: schema, url: url, allowsSave: false))
+    }
+
+    private static func makeReadOnly(_ configuration: ModelConfiguration) throws -> ModelContainer {
+        // Opening a missing store would create an empty one.
+        guard FileManager.default.fileExists(atPath: configuration.url.path(percentEncoded: false)) else {
+            throw OpenError.storeNotCreated
+        }
+        return try ModelContainer(
+            for: schema, migrationPlan: AgendouMigrationPlan.self, configurations: configuration)
+    }
 }
