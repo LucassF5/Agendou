@@ -15,7 +15,7 @@ final class SettingsTests: XCTestCase {
         XCTAssertTrue(export.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["settings.import"].exists)
         let version = app.staticTexts["settings.version"].label
-        XCTAssertTrue(version.contains("0.1.0 (1)"), version)
+        XCTAssertTrue(version.contains("0.2.0 (1)"), version)
         snapshot(app, "settings")
 
         export.tap()
