@@ -22,19 +22,30 @@ extension XCTestCase {
 }
 
 extension XCUIApplication {
-    /// Creates a category with a preset schedule through the onboarding. The first shift is the next 07:00;
-    /// `months` is the repeat period ("1", "3", "6"), long by default so tests near a month's end hold.
+    /// Creates a category with a preset schedule through the onboarding: the category, then "Definir escala",
+    /// which opens right after it. The first shift is the next 07:00; `months` is the repeat period ("1", "3",
+    /// "6"), long by default so tests near a month's end hold. Ends on the Escalas list.
     func createCategory(_ name: String, preset: String = "12x36", repeat months: String = "6") {
-        tabBars.buttons["Categorias"].tap()
+        tabBars.buttons["Escalas"].tap()
         buttons["onboarding.start"].tap()
         let field = textFields["category.name"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
         field.typeText(name)
-        buttons["preset.\(preset)"].tap()
-        buttons["repeat.\(months)"].revealed(in: self).tap()
         buttons["category.save"].tap()
+        defineSchedule(preset: preset, repeat: months)
         XCTAssertTrue(buttons["category.row.\(name)"].waitForExistence(timeout: 5))
+    }
+
+    /// Fills and saves "Definir escala".
+    func defineSchedule(preset: String = "12x36", repeat months: String = "6") {
+        let presetButton = buttons["preset.\(preset)"]
+        XCTAssertTrue(presetButton.waitForExistence(timeout: 5), "Definir escala")
+        presetButton.tap()
+        buttons["repeat.\(months)"].revealed(in: self).tap()
+        let save = buttons["schedule.save"]
+        save.tap()
+        XCTAssertTrue(save.waitForNonExistence(timeout: 5))
     }
 
     /// Opens the day sheet of `date` (at most one month ahead of today) from the Calendar tab.
@@ -99,15 +110,14 @@ enum WorkplaceCalendar {
 extension XCUIApplication {
     /// Adds another category through the "+" button, with a preset schedule starting at the next 07:00.
     func addCategory(_ name: String, preset: String) {
-        tabBars.buttons["Categorias"].tap()
-        buttons["Nova categoria"].tap()
+        tabBars.buttons["Escalas"].tap()
+        buttons["Novo local"].tap()
         let field = textFields["category.name"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.tap()
         field.typeText(name)
-        buttons["preset.\(preset)"].tap()
-        buttons["repeat.6"].revealed(in: self).tap()
         buttons["category.save"].tap()
+        defineSchedule(preset: preset)
         XCTAssertTrue(buttons["category.row.\(name)"].waitForExistence(timeout: 5))
     }
 

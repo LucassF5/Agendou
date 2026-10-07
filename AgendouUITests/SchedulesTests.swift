@@ -1,6 +1,6 @@
 import XCTest
 
-final class CategoriesTests: XCTestCase {
+final class SchedulesTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
     }
@@ -9,7 +9,7 @@ final class CategoriesTests: XCTestCase {
     func testFirstLaunchHasTheExtraCategoryAndOffersOnboarding() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
 
         XCTAssertTrue(app.buttons["category.row.Extra"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["onboarding.start"].exists)
@@ -20,16 +20,23 @@ final class CategoriesTests: XCTestCase {
     func testCreatesACategoryWithA12x36Schedule() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["onboarding.start"].tap()
 
         let name = app.textFields["category.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap()
         name.typeText("UTI Hospital X")
-        app.buttons["preset.12x36"].tap()
+        XCTAssertTrue(app.navigationBars["Novo local"].exists)
+        XCTAssertFalse(app.buttons["preset.12x36"].exists, "the schedule comes after the category")
         snapshot(app, "category-form")
         app.buttons["category.save"].tap()
+
+        // Saving goes on to "Definir escala", in the same tab.
+        XCTAssertTrue(app.buttons["preset.12x36"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Escalas"].isSelected)
+        snapshot(app, "define-schedule-after-create")
+        app.defineSchedule()
 
         let row = app.buttons["category.row.UTI Hospital X"]
         XCTAssertTrue(row.waitForExistence(timeout: 5))
@@ -42,17 +49,44 @@ final class CategoriesTests: XCTestCase {
     }
 
     @MainActor
-    func testChangingTheScheduleKeepsTheOldOneInHistory() {
+    func testCreatingWithoutAScheduleDoesNotAskForOne() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
-        app.buttons["onboarding.start"].tap()
+        app.tabBars.buttons["Escalas"].tap()
+        app.buttons["Novo local"].tap()
         let name = app.textFields["category.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap()
-        name.typeText("UTI")
-        app.buttons["preset.12x36"].tap()
+        name.typeText("Clínica")
+        app.switches["category.hasSchedule"].switches.firstMatch.tap()
         app.buttons["category.save"].tap()
+
+        let row = app.buttons["category.row.Clínica"]
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        XCTAssertTrue(row.label.contains("Sem escala"), row.label)
+        XCTAssertFalse(app.buttons["schedule.save"].waitForExistence(timeout: 2))
+    }
+
+    @MainActor
+    func testDefinesAScheduleForACategoryWithoutOne() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.tabBars.buttons["Escalas"].tap()
+        app.buttons["category.row.Extra"].tap()
+        XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["schedule.current"].label, "Sem escala")
+        app.buttons["schedule.first"].tap()
+        app.defineSchedule(preset: "24x48")
+
+        XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["schedule.current"].label, "24x48")
+    }
+
+    @MainActor
+    func testChangingTheScheduleKeepsTheOldOneInHistory() {
+        let app = XCUIApplication.agendou()
+        app.launch()
+        app.createCategory("UTI")
         app.buttons["category.row.UTI"].tap()
 
         app.buttons["schedule.change"].tap()
@@ -62,6 +96,7 @@ final class CategoriesTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["schedule.current"].label, "24x48")
         XCTAssertEqual(app.staticTexts.matching(identifier: "schedule.history").count, 2)
+        XCTAssertTrue(app.buttons["Arquivar local"].revealed(in: app).exists)
         snapshot(app, "category-detail")
     }
 
@@ -69,7 +104,7 @@ final class CategoriesTests: XCTestCase {
     func testMarksDaysOfACategoryWithoutSchedule() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["category.row.Extra"].tap()
         app.buttons["category.pickDays"].tap()
 

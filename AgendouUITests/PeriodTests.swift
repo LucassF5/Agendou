@@ -22,7 +22,7 @@ final class PeriodTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["summary.count"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["summary.count"].label, "0 plantões")
 
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["category.row.UTI"].tap()
         XCTAssertTrue(app.staticTexts["schedule.until"].waitForExistence(timeout: 5))
         app.buttons["schedule.renew"].tap()
@@ -38,8 +38,9 @@ final class PeriodTests: XCTestCase {
     func testFormShowsTheEndDate() {
         let app = XCUIApplication.agendou()
         app.launch()
-        app.tabBars.buttons["Categorias"].tap()
-        app.buttons["onboarding.start"].tap()
+        app.tabBars.buttons["Escalas"].tap()
+        app.buttons["category.row.Extra"].tap()
+        app.buttons["schedule.first"].tap()
         let three = app.buttons["repeat.3"].revealed(in: app)
         XCTAssertTrue(three.exists)
         three.tap()
@@ -75,7 +76,7 @@ final class PeriodTests: XCTestCase {
     }
 
     @MainActor
-    func testCategoriesListsSchedulesEndingSoon() {
+    func testSchedulesTabListsTheOnesEndingSoon() {
         let app = XCUIApplication.agendou()
         app.launch()
         app.createCategory("UTI", repeat: "1")

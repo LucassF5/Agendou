@@ -15,22 +15,29 @@ extension View {
     }
 }
 
-/// Finds a view of the app (outside the tour's window) by accessibility identifier, in window coordinates.
-/// Used for toolbar buttons: inside a toolbar, SwiftUI reports frames relative to the button itself.
+/// Finds a toolbar button of the app (outside the tour's window), in window coordinates, by the title of its
+/// bar button item. Inside a toolbar, SwiftUI reports frames relative to the button itself, and the button's
+/// accessibility identifier only reaches UIKit's views while an assistive technology or a UI test runs.
 @MainActor
 enum BarItemFrame {
-    static func find(_ identifier: String) -> CGRect? {
+    static func find(_ title: String) -> CGRect? {
         let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
         for window in windows where window.windowLevel == .normal {
-            if let view = search(window, identifier) { return view.convert(view.bounds, to: nil) }
+            if let item = search(window, title), let frame = item.frame(in: window), !frame.isEmpty { return frame }
         }
         return nil
     }
 
-    private static func search(_ view: UIView, _ identifier: String) -> UIView? {
-        if view.accessibilityIdentifier == identifier { return view }
+    private static func search(_ view: UIView, _ title: String) -> UIBarButtonItem? {
+        if let bar = view as? UINavigationBar, let navigationItem = bar.topItem {
+            let groups = navigationItem.leadingItemGroups + navigationItem.trailingItemGroups
+            let items =
+                groups.flatMap(\.barButtonItems) + (navigationItem.leftBarButtonItems ?? [])
+                + (navigationItem.rightBarButtonItems ?? [])
+            if let item = items.first(where: { $0.title == title }) { return item }
+        }
         for subview in view.subviews {
-            if let match = search(subview, identifier) { return match }
+            if let match = search(subview, title) { return match }
         }
         return nil
     }

@@ -15,7 +15,7 @@ Tudo roda no aparelho: sem backend, sem conta, sem rede. Backup é o do próprio
 Agendou.xcodeproj        pastas sincronizadas: arquivo novo em Agendou/ entra no target sozinho
 Agendou/                 app SwiftUI (Swift 6, MainActor por padrão)
   App/                   entrada e abas
-  Features/              uma pasta por aba: Home, Calendar, Categories, Settings
+  Features/              uma pasta por aba: Home, Calendar, Schedules, Settings
   Resources/             Assets.xcassets, Localizable.xcstrings (pt-BR)
 Config/                  entitlements (App Group group.com.lucasfranco.agendou)
 Packages/AgendouCore/    Swift package com dois módulos:

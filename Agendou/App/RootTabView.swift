@@ -4,7 +4,7 @@ import SwiftUI
 import WidgetKit
 
 enum AppTab: Hashable {
-    case home, calendar, categories, settings
+    case home, calendar, schedules, settings
 }
 
 struct RootTabView: View {
@@ -12,6 +12,9 @@ struct RootTabView: View {
     let tutorialGate: TutorialGate?
     @State private var tab = AppTab.home
     @State private var creatingCategory = false
+    /// The category just created with a fixed schedule: "Definir escala" opens once its form is gone.
+    @State private var createdCategory: ShiftCategory?
+    @State private var definingCategory: ShiftCategory?
     @State private var tour = TourController()
     @State private var tourWindow = TourWindow()
     /// The sample agenda shown while the tour runs; `nil` the rest of the time.
@@ -29,13 +32,13 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $tab) {
             Tab("Início", systemImage: "house", value: .home) {
-                HomeScreen(onSetup: { tab = .categories }, onOpenCalendar: { tab = .calendar })
+                HomeScreen(onSetup: { tab = .schedules }, onOpenCalendar: { tab = .calendar })
             }
             Tab("Calendário", systemImage: "calendar", value: .calendar) {
                 CalendarScreen()
             }
-            Tab("Categorias", systemImage: "square.stack", value: .categories) {
-                CategoriesScreen()
+            Tab("Escalas", systemImage: "clock.arrow.2.circlepath", value: .schedules) {
+                SchedulesScreen()
             }
             Tab("Ajustes", systemImage: "gearshape", value: .settings) {
                 SettingsScreen()
@@ -80,7 +83,15 @@ struct RootTabView: View {
             tourDay = step.needsDaySheet ? sampleDay : nil
             tourWindow.stepChanged()
         }
-        .sheet(isPresented: $creatingCategory) { CategoryForm(mode: .create) }
+        .sheet(isPresented: $creatingCategory, onDismiss: defineCreatedSchedule) {
+            CategoryForm(mode: .create) { createdCategory = $0 }
+        }
+        .sheet(item: $definingCategory) { ScheduleForm(mode: .first($0), store: store) }
+    }
+
+    private func defineCreatedSchedule() {
+        definingCategory = createdCategory
+        createdCategory = nil
     }
 
     /// The day of the sample agenda's next shift, where the day sheet steps happen.
@@ -101,7 +112,7 @@ struct RootTabView: View {
         case .start, nil:
             tutorialGate?.markSeen()
             if !store.hasAnySchedule {
-                tab = .categories
+                tab = .schedules
                 creatingCategory = true
             }
         }
@@ -123,7 +134,7 @@ struct RootTabView: View {
         demoStore = nil
         tutorialGate?.markSeen()
         if reason == .setUp {
-            tab = .categories
+            tab = .schedules
             creatingCategory = true
         }
     }
@@ -135,7 +146,7 @@ struct RootTabView: View {
 }
 
 extension EnvironmentValues {
-    /// Starts the tour over the tabs, so its last button can switch to the Categories tab.
+    /// Starts the tour over the tabs, so its last button can switch to the Escalas tab.
     @Entry var showTutorial: () -> Void = {}
 }
 

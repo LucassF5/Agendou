@@ -82,7 +82,7 @@ final class SettingsTests: XCTestCase {
         XCTAssertTrue(app.alerts["Dados importados"].waitForExistence(timeout: 5))
         app.alerts.buttons["OK"].tap()
 
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         let row = app.buttons["category.row.UTI Backup"]
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         XCTAssertTrue(row.label.contains("12x36"), row.label)

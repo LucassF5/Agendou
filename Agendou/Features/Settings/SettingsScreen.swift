@@ -34,7 +34,7 @@ struct SettingsScreen: View {
                     Text("Backup")
                 } footer: {
                     Text(
-                        "O arquivo tem as categorias, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app."
+                        "O arquivo tem os locais, as escalas, os plantões marcados à mão e as anotações. Importar substitui tudo o que está no app."
                     )
                 }
                 Section {
@@ -58,7 +58,7 @@ struct SettingsScreen: View {
                 Button("Substituir", role: .destructive) { replace(with: export) }
             } message: { export in
                 Text(
-                    "O arquivo tem \(export.categories.count) categorias, \(export.schedules.count) escalas, \(export.overrides.count) marcações e \(export.dayNotes.count) anotações. Tudo o que está no app agora será apagado."
+                    "O arquivo tem \(export.categories.count) locais, \(export.schedules.count) escalas, \(export.overrides.count) marcações e \(export.dayNotes.count) anotações. Tudo o que está no app agora será apagado."
                 )
             }
             .errorAlert($errorMessage, title: "Não foi possível importar")

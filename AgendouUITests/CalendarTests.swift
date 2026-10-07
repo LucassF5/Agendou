@@ -100,7 +100,7 @@ final class CalendarTests: XCTestCase {
         save.tap()
         XCTAssertTrue(save.waitForNonExistence(timeout: 5))
 
-        app.tabBars.buttons["Categorias"].tap()
+        app.tabBars.buttons["Escalas"].tap()
         app.buttons["category.row.UTI"].tap()
         XCTAssertTrue(app.staticTexts["schedule.current"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["schedule.current"].label, "24x48")

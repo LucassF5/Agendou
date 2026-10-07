@@ -6,7 +6,7 @@ final class LaunchTests: XCTestCase {
         let app = XCUIApplication.agendou()
         app.launch()
 
-        for tab in ["Início", "Calendário", "Categorias", "Ajustes"] {
+        for tab in ["Início", "Calendário", "Escalas", "Ajustes"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 5), tab)
         }
     }

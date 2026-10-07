@@ -1,9 +1,14 @@
 import AgendouStore
 import SwiftUI
 
-struct CategoriesScreen: View {
+/// The "Escalas" tab: each place where the user works, with its schedule or without one.
+struct SchedulesScreen: View {
     @Environment(AgendaStore.self) private var store
     @State private var creating = false
+    /// The category just created with a fixed schedule: "Definir escala" opens once its form is gone, so the
+    /// two sheets never overlap.
+    @State private var created: ShiftCategory?
+    @State private var defining: ShiftCategory?
 
     var body: some View {
         NavigationStack {
@@ -33,7 +38,7 @@ struct CategoriesScreen: View {
                     }
                 }
                 if !active.isEmpty {
-                    Section("Ativas") {
+                    Section("Ativos") {
                         ForEach(active) { category in
                             row(category)
                                 .tourAnchor(.category, when: category.id == active.first?.id)
@@ -41,19 +46,27 @@ struct CategoriesScreen: View {
                     }
                 }
                 if !archived.isEmpty {
-                    Section("Arquivadas") {
+                    Section("Arquivados") {
                         ForEach(archived) { row($0) }
                     }
                 }
             }
-            .navigationTitle("Categorias")
+            .navigationTitle("Escalas")
             .toolbar {
-                Button("Nova categoria", systemImage: "plus") { creating = true }
-                    .accessibilityIdentifier(TourStep.addCategory.barItemIdentifier ?? "")
+                Button("Novo local", systemImage: "plus") { creating = true }
+                    .accessibilityIdentifier("schedules.add")
             }
-            .navigationDestination(for: UUID.self) { CategoryDetailScreen(categoryID: $0) }
-            .sheet(isPresented: $creating) { CategoryForm(mode: .create) }
+            .navigationDestination(for: UUID.self) { ScheduleDetailScreen(categoryID: $0) }
+            .sheet(isPresented: $creating, onDismiss: defineCreatedSchedule) {
+                CategoryForm(mode: .create) { created = $0 }
+            }
+            .sheet(item: $defining) { ScheduleForm(mode: .first($0), store: store) }
         }
+    }
+
+    private func defineCreatedSchedule() {
+        defining = created
+        created = nil
     }
 
     private func row(_ category: ShiftCategory) -> some View {
@@ -75,14 +88,14 @@ struct CategoriesScreen: View {
     }
 
     private func subtitle(_ category: ShiftCategory) -> String {
-        if category.archivedAt != nil { return String(localized: "Arquivada") }
+        if category.archivedAt != nil { return String(localized: "Arquivado") }
         guard let open = store.openSchedule(of: category) else { return String(localized: "Sem escala") }
         return Formatting.scheduleSummary(open)
     }
 }
 
 #Preview {
-    CategoriesScreen()
+    SchedulesScreen()
         .environment(AgendaStore.preview)
         .agendouEnvironment()
 }

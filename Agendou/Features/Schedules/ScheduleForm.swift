@@ -151,3 +151,30 @@ struct NewScheduleStart: View {
         }
     }
 }
+
+/// "Quando começa seu próximo plantão?" and "Desde quando?", the second prefilled with the first and never
+/// after it.
+struct FirstScheduleDates: View {
+    @Binding var anchor: Date
+    @Binding var startsAt: Date
+    @State private var startsAtFollowsAnchor = true
+
+    var body: some View {
+        Section {
+            DatePicker("Quando começa seu próximo plantão?", selection: $anchor)
+                .accessibilityIdentifier("schedule.anchor")
+        }
+        Section {
+            DatePicker("Desde quando você trabalha nessa escala?", selection: $startsAt, in: ...anchor)
+                .accessibilityIdentifier("schedule.startsAt")
+        } footer: {
+            Text("Recuar a data preenche o passado no calendário com essa escala.")
+        }
+        .onChange(of: anchor) {
+            if startsAtFollowsAnchor || startsAt > anchor { startsAt = anchor }
+        }
+        .onChange(of: startsAt) {
+            startsAtFollowsAnchor = startsAt == anchor
+        }
+    }
+}

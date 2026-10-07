@@ -2,7 +2,9 @@ import AgendouCore
 import AgendouStore
 import SwiftUI
 
-struct CategoryDetailScreen: View {
+/// A category and its schedule: the current one, what can be done with it, the versions before it, and
+/// the category's own name, color and archiving.
+struct ScheduleDetailScreen: View {
     let categoryID: UUID
     @Environment(AgendaStore.self) private var store
     @Environment(\.dismiss) private var dismiss
@@ -23,7 +25,7 @@ struct CategoryDetailScreen: View {
         if let category = store.category(id: categoryID) {
             content(category)
         } else {
-            ContentUnavailableView("Categoria excluída", systemImage: "trash")
+            ContentUnavailableView("Local excluído", systemImage: "trash")
         }
     }
 
@@ -53,7 +55,7 @@ struct CategoryDetailScreen: View {
                     }
                 }
                 if let archivedAt = category.archivedAt {
-                    LabeledContent("Arquivada em", value: Formatting.date(archivedAt))
+                    LabeledContent("Arquivado em", value: Formatting.date(archivedAt))
                 }
             }
 
@@ -101,10 +103,10 @@ struct CategoryDetailScreen: View {
 
             Section {
                 if !isArchived {
-                    Button("Arquivar categoria", role: .destructive) { confirmingArchive = true }
+                    Button("Arquivar local", role: .destructive) { confirmingArchive = true }
                 }
                 if store.canDeletePermanently(category) {
-                    Button("Excluir categoria", role: .destructive) { confirmingDelete = true }
+                    Button("Excluir local", role: .destructive) { confirmingDelete = true }
                 }
             } footer: {
                 if !isArchived {
@@ -183,7 +185,7 @@ struct CategoryDetailScreen: View {
 
 #Preview {
     NavigationStack {
-        CategoryDetailScreen(categoryID: AgendaStore.preview.activeCategories()[0].id)
+        ScheduleDetailScreen(categoryID: AgendaStore.preview.activeCategories()[0].id)
     }
     .environment(AgendaStore.preview)
     .agendouEnvironment()

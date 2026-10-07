@@ -60,7 +60,7 @@ struct AddShiftsForm: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Categoria", selection: $categoryID) {
+                    Picker("Local", selection: $categoryID) {
                         ForEach(store.activeCategories()) { category in
                             Text(category.name).tag(Optional(category.id))
                         }

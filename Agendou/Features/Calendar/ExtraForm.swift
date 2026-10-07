@@ -52,13 +52,13 @@ struct ExtraForm: View {
                 Section {
                     switch mode {
                     case .add:
-                        Picker("Categoria", selection: $categoryID) {
+                        Picker("Local", selection: $categoryID) {
                             ForEach(store.activeCategories()) { category in
                                 Text(category.name).tag(Optional(category.id))
                             }
                         }
                     case .edit(let occurrence):
-                        LabeledContent("Categoria", value: store.category(id: occurrence.categoryID)?.name ?? "")
+                        LabeledContent("Local", value: store.category(id: occurrence.categoryID)?.name ?? "")
                     }
                 }
                 Section {
