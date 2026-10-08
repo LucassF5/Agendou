@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "AgendouCore",
-    platforms: [.iOS(.v26), .macOS(.v26)],
+    platforms: [.iOS("18.6"), .macOS(.v15)],
     products: [
         .library(name: "AgendouCore", targets: ["AgendouCore"]),
         .library(name: "AgendouStore", targets: ["AgendouStore"]),
