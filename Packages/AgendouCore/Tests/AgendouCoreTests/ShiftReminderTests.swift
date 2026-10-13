@@ -28,7 +28,10 @@ struct ShiftReminderTests {
         let reminders = plan([shift(uti, 5, 19), shift(uti, 7, 7)], now: at(1, 12), hour: 6, minute: 30)
 
         #expect(reminders.map(\.fireAt) == [at(5, 6, 30), at(7, 6, 30)])
-        #expect(reminders.map(\.day) == [CivilDate(year: 2026, month: 10, day: 5), CivilDate(year: 2026, month: 10, day: 7)])
+        #expect(
+            reminders.map(\.day) == [
+                CivilDate(year: 2026, month: 10, day: 5), CivilDate(year: 2026, month: 10, day: 7),
+            ])
     }
 
     @Test func daysWithoutShiftsGetNoReminder() {

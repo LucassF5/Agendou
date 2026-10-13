@@ -30,7 +30,9 @@ public enum ShiftReminders {
                 guard fireAt > now, let shifts = byDay[day] else { return nil }
                 return ShiftReminder(
                     day: day, fireAt: fireAt,
-                    shifts: shifts.sorted { ($0.startsAt, $0.categoryID.uuidString) < ($1.startsAt, $1.categoryID.uuidString) })
+                    shifts: shifts.sorted {
+                        ($0.startsAt, $0.categoryID.uuidString) < ($1.startsAt, $1.categoryID.uuidString)
+                    })
             }
     }
 }
